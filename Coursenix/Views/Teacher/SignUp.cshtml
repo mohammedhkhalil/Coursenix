@@ -1,117 +1,117 @@
-﻿<!DOCTYPE html>
+﻿Teacher SignUp
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coursenix</title>
-    <link rel="stylesheet" type="text/css" href="/css/home.css" />
+    <link rel="stylesheet" href="~/css/sign-up.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
     <!-- Header Section -->
     <header class="header">
         <div class="container">
             <div class="logo-container">
-                <a href="#" class="logo">
+                <a href="@Url.Action("Home", "Home")" class="logo">
                     <img src="~/assets/logo.svg" alt="Coursenix Logo" />
                     <span>Coursenix</span>
                 </a>
             </div>
-            <nav class="navigation">
-                <ul>
-                    <li><a href="@Url.Action("Home", "Home")" class="active">Home</a></li>
-                    <li><a href="../HTML/courses.html">Courses</a></li>
-                    <li><a href="#Footer">Contact</a></li>
-                    <li><a href="#Footer">About</a></li>
-                </ul>
-            </nav>
+            <nav class="navigation"></nav>
             <div class="sign-in-container">
                 <a href="@Url.Action("Sign_In", "Home")" class="btn sign-in-btn">Sign in</a>
             </div>
         </div>
     </header>
+    <!-- form -->
+    <main>
+        <div class="form-container">
+            <h1>Start your journey</h1>
+            <p class="subtitle">Create your teacher account</p>
+            <form id="signup-form" novalidate>
+                <div class="form-group">
+                    <input type="text"
+                           id="full-name"
+                           name="full-name"
+                           placeholder="Full name"
+                           required
+                           minlength="3" />
+                    <span class="error-message" id="full-name-error"></span>
+                </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Your Journey to Excellence Starts Here!</h1>
-                <h2 class="highlight">Join Coursenix Now</h2>
-                <p>
-                    Find, book, and manage your courses online with our easy-to-use
-                    platform. Join thousands of students and teachers who are already
-                    enjoying the benefits of Coursenix.
+                <div class="form-group">
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           placeholder="Email address"
+                           required />
+                    <span class="error-message" id="email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="tel"
+                           id="phone"
+                           name="phone"
+                           placeholder="Phone number"
+                           required
+                           pattern="[+]?[\s./0-9]{10,15}" />
+                    <span class="error-message" id="phone-error"></span>
+                </div>
+
+                <div class="form-group password-group">
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           placeholder="Create a password"
+                           required
+                           minlength="8" />
+                    <i class="far fa-eye-slash toggle-password"
+                       data-target="password"></i>
+                    <span class="error-message" id="password-error"></span>
+                </div>
+
+                <div class="form-group password-group">
+                    <input type="password"
+                           id="confirm-password"
+                           name="confirm-password"
+                           placeholder="Repeat a password"
+                           required />
+                    <i class="far fa-eye-slash toggle-password"
+                       data-target="confirm-password"></i>
+                    <span class="error-message" id="confirm-password-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="biography" class="bio-label">Brief Biography</label>
+                    <textarea id="biography"
+                              name="biography"
+                              placeholder="Tell students a bit about yourself and your teaching approach (max 200 words)"
+                              maxlength="1000"
+                              required></textarea>
+                    <div class="word-counter">
+                        <span id="bio-word-count">0</span>/200 words
+                    </div>
+                    <div class="error-message" id="biographyError"></div>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required />
+                    <label for="terms">
+                        I agree to Dresley's <a href="#">Terms of Service</a> and
+                        <a href="#">Privacy Policy</a>
+                    </label>
+                    <span class="error-message" id="terms-error"></span>
+                </div>
+
+                <button type="submit" class="btn-primary">Sign up</button>
+
+                <p class="login-link">
+                    Already have an account? <a href="@Url.Action("Sign_In", "Home")">Sign in</a>
                 </p>
-                <a href="#path" class="btn cta-btn">Join now →</a>
-            </div>
-            <div class="hero-image">
-                <div class="hero-background">
-                    <img src="~/assets/circular-background2.svg"
-                         alt=""
-                         class="hero-bg-img" />
-                </div>
-                <div class="image-stack">
-                    <!-- <div class="arc"></div> -->
-                    <div class="student student-left">
-                        <img src="~/assets/student-left.svg"
-                             alt="Student with books"
-                             class="pill pill-1" />
-                    </div>
-                    <div class="student student-middle">
-                        <img src="~/assets/student-middle.svg"
-                             alt="Student with headphones"
-                             class="pill pill-2" />
-                    </div>
-                    <div class="student student-right">
-                        <img src="~/assets/student-right.svg"
-                             alt="Student with notebooks"
-                             class="pill pill-3" />
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-        <img src="assets/decoration1.svg"
-             alt=""
-             class="decoration decoration-1" />
-    </section>
-    <!-- Choose Your Path Section -->
-    <section class="path-selection" id="path">
-        <img src="~/assets/Arrow1.svg" alt="" class="decoration decoration-1" />
-        <div class="container">
-            <h2 class="section-title">Choose Your Path</h2>
-            <p class="section-description">
-                Whether you're looking to learn or teach, we've got you covered
-            </p>
-
-            <div class="paths">
-                <div class="path-card">
-                    <div class="path-icon">
-                        <img src="~/assets/student.svg" alt="Student icon" />
-                    </div>
-                    <h3>Student</h3>
-                    <p>
-                        Find courses, access study materials, and manage your learning
-                        schedule all in one place
-                    </p>
-                    <a href="@Url.Action("SignUp", "Student")" class="btn path-btn">Get started</a>
-                </div>
-
-                <div class="path-card">
-                    <div class="path-icon">
-                        <img src="~/assets/teacher.svg" alt="Teacher icon" />
-                    </div>
-                    <h3>Teacher</h3>
-                    <p>
-                        Offer your courses, manage class schedules, and track attendance
-                        with our intuitive tools
-                    </p>
-                    <a href="@Url.Action("SignUp", "Teacher")" class="btn path-btn">Get started</a>
-                </div>
-            </div>
-        </div>
-        <img src="~/assets/lamp.svg" alt="" class="decoration decoration-2" />
-    </section>
-
-    <!-- Footer -->
+    </main>
+    <!-- footer section -->
     <footer class="footer" id="Footer">
         <div class="container">
             <div class="footer-columns">
@@ -167,5 +167,6 @@
             </div>
         </div>
     </footer>
+    <script src="~/js/teaher-sign-up.js"></script>
 </body>
 </html>
