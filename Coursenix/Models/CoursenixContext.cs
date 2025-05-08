@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿// Models/CoursenixContext.cs
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Coursenix.Models
 {
     public class CoursenixContext : DbContext
     {
+        public CoursenixContext(DbContextOptions<CoursenixContext> options)
+            : base(options)
+        {
+        }
 
         // DbSets for all entities
         public DbSet<Student> Students { get; set; }
@@ -16,10 +24,30 @@ namespace Coursenix.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        // أضف أو قم بتعديل هذه الدالة
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //optionsBuilder.UseSqlServer(@"Data Source=HISHAMSAYED;Initial Catalog=Coursenix1;Integrated Security=True");
-            //base.OnConfiguring(optionsBuilder);
+            base.OnModelCreating(modelBuilder); // من المهم استدعاء الدالة الأساسية أولاً
+
+            // تحديد الدقة والمقياس للخاصية Price في الكيان Subject
+            modelBuilder.Entity<Subject>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
+
+            // مثال: تحديد العلاقات بين الكيانات بشكل صريح إذا لم يتم اكتشافها تلقائياً أو لتخصيصها
+            modelBuilder.Entity<Subject>()
+               .HasOne(s => s.Teacher)
+               .WithMany(t => t.Subjects)
+               .HasForeignKey(s => s.TeacherId);
+
+            modelBuilder.Entity<Group>()
+               .HasOne(g => g.Subject)
+               .WithMany(s => s.Groups)
+               .HasForeignKey(g => g.SubjectId);
+
+            // ... إلخ لعلاقات Booking, Session, Attendance
+
         }
     }
 }

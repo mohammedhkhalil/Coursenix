@@ -1,0 +1,130 @@
+﻿@* Views/Courses/Create.cshtml *@
+@model Coursenix.Models.ViewModels.CreateCourseViewModel
+
+@{
+    ViewData["Title"] = "Create New Course";
+}
+
+
+@section css{
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/css/create_course.css" />
+}
+
+
+<main class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form asp-controller="Courses" asp-action="Create" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-antiforgery="true" />
+                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+                <section class="mb-4">
+                    <div class="row mb-3">
+                        <div class="col-md-8 course-info">
+                            <h2 class="section-title">Course Basic Information</h2>
+                            <div class="mb-3">
+                                <label asp-for="CourseTitle" class="form-label">Course Title</label>
+                                <input asp-for="CourseTitle" class="form-control" placeholder="Enter course title">
+                                <span asp-validation-for="CourseTitle" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="CoursePrice" class="form-label">Price ($)</label>
+                                <input asp-for="CoursePrice" class="form-control" placeholder="0.00" step="0.01" min="0">
+                                <span asp-validation-for="CoursePrice" class="text-danger"></span> 
+                            </div>
+                        </div>
+                        <div class="col-md-4 thum">
+                            <div class="thumbnail-container text-center">
+                                <p class="mb-1 fw-bold">Course Thumbnail</p>
+                                <div class="">
+                                    <img src="" id="img" alt="Course Thumbnail Preview">
+                                </div>
+                                <label for="ThumbnailFile" class="file_up"> <i class="bi bi-upload me-1"></i>upload file</label>
+                                <input type="file" asp-for="ThumbnailFile" id="ThumbnailFile" accept="image/*"> 
+                                <span asp-validation-for="ThumbnailFile" class="text-danger"></span> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CourseDescription" class="form-label">Course Description</label>
+                        <textarea asp-for="CourseDescription" class="form-control" rows="4" placeholder="Tell what students will learn from in this course"></textarea>
+                        <span asp-validation-for="CourseDescription" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <section class="mb-4">
+                    <h2 class="section-title">Course Details</h2>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="GradeLevels" class="form-label">Grade Levels</label>
+                            <input asp-for="GradeLevels" class="form-control" placeholder="Enter grade levels"> 
+                            <span asp-validation-for="GradeLevels" class="text-danger"></span> 
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Location" class="form-label">Location</label>
+                            <input asp-for="Location" class="form-control" placeholder="Enter Course Location">
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="StudentsPerGroup" class="form-label">Students/Group</label>
+                        <input type="number" asp-for="StudentsPerGroup" class="form-control" placeholder="Enter maximum number of students in each group" min="1">
+                        <span asp-validation-for="StudentsPerGroup" class="text-danger"></span> 
+                    </div>
+                </section>
+
+                <section id="groupsSection" class="mb-4 d-none">
+                    <h2 class="section-title">Groups/Grade</h2>
+                    <div id="gradesContainer">
+                    </div>
+                </section>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success px-4 py-2">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer class="py-3 mt-4 bg-light">
+    <div class="container text-center text-muted">
+        <small>© 2025 Eduvera. All Rights reserved.</small>
+    </div>
+</footer>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JavaScript/create_course.js"></script>
+    <script>
+        const input = document.getElementById('ThumbnailFile'); // استخدم الـ ID الذي تم إنشاؤه بواسطة asp-for
+        const img = document.getElementById('img');
+
+        if (input && img) {
+            input.addEventListener('change', (event) => {
+                if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        img.style.display = 'block'; // إظهار الصورة
+                        img.style.maxWidth = '100%'; // بعض التنسيق الأساسي
+                        img.style.height = 'auto';
+                    }
+                    reader.readAsDataURL(event.target.files[0]);
+                } else {
+                     img.src = ''; // مسح الصورة إذا لم يتم اختيار ملف
+                     img.style.display = 'none'; // إخفاء الصورة
+                }
+            });
+        }
+
+
+    </script>
+}

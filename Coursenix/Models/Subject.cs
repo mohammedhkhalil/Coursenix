@@ -24,6 +24,9 @@ namespace Coursenix.Models
 
         public decimal Price { get; set; }
 
+        [MaxLength(255)] // أو طول مناسب لمسار الملف that added by Abdalrhman
+        public string ThumbnailFileName { get; set; }
+
         [ForeignKey("Teacher")]
         public int TeacherId { get; set; }
 

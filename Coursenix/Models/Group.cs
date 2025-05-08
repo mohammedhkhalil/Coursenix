@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Coursenix.Models
 {
@@ -22,7 +23,7 @@ namespace Coursenix.Models
 
         // Navigation properties
         public Subject Subject { get; set; } // Subject for this group
-        public ICollection<Booking> Bookings { get; set; } // Bookings for this group
+        public ICollection<Booking> Bookings { get; set; } // Bookings for this group                                          
         public ICollection<Session> Sessions { get; set; } // Sessions for this group
     }
 }
