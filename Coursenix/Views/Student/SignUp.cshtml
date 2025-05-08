@@ -1,11 +1,12 @@
 ﻿@* Student SignUp *@
+@model Student
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coursenix</title>
-    <link rel="stylesheet" type="text/css" href="~/css/sign-up.css" />
+    <link rel="stylesheet" href="~/css/sign-up.css" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -31,92 +32,65 @@
             <p class="subtitle">
                 Create your student account and discover thousands of courses
             </p>
-            <form id="signup-form" novalidate>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <form asp-action="SaveNewStudent" asp-controller="Student" method="get" id="signup-form" >
                 <div class="form-group">
-                    <input type="text"
-                           id="full-name"
-                           name="full-name"
-                           placeholder="Full name"
-                           required
-                           minlength="3" />
-                    <span class="error-message" id="full-name-error"></span>
+                    <input asp-for="Name"
+                        placeholder="Name"
+                    />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="email"
-                           id="email"
-                           name="email"
+                    <input asp-for="Email"
                            placeholder="Email address"
-                           required />
-                    <span class="error-message" id="email-error"></span>
+                    />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="tel"
-                           id="phone"
-                           name="phone"
+                    <input asp-for="PhoneNumber"
                            placeholder="Phone number"
-                           required
-                           pattern="[+]?[\s./0-9]{10,15}" />
-                    <span class="error-message" id="phone-error"></span>
+                    />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="tel"
-                           id="parent-phone"
-                           name="parent-phone"
+                    <input asp-for="ParentNumber"
                            placeholder="Parent's phone number"
-                           required
-                           pattern="[+]?[\s./0-9]{10,15}" />
-                    <span class="error-message" id="parent-phone-error"></span>
+                    />
+                    <span asp-validation-for="ParentNumber" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <div class="select-wrapper">
-                        <select id="grade" name="grade" required>
-                            <option value="" disabled selected>Select your grade</option>
-                            <option value="7">Grade 7</option>
-                            <option value="8">Grade 8</option>
-                            <option value="9">Grade 9</option>
-                            <option value="10">Grade 10</option>
-                            <option value="11">Grade 11</option>
-                            <option value="12">Grade 12</option>
+                        <select asp-for="Grade" class="form-control" asp-items="Html.GetEnumSelectList<GradeLevel>()">
+                            <option value="">-- Select Grade --</option>
                         </select>
                         <i class="fas fa-chevron-down"></i>
                     </div>
-                    <span class="error-message" id="grade-error"></span>
+                    <span asp-validation-for="Grade" class="text-danger"></span>
+
                 </div>
 
                 <div class="form-group password-group">
-                    <input type="password"
-                           id="password"
-                           name="password"
-                           placeholder="Create a password"
-                           required
-                           minlength="8" />
-                    <i class="far fa-eye-slash toggle-password"
-                       data-target="password"></i>
-                    <span class="error-message" id="password-error"></span>
+                    <div class="input-wrapper">
+                        <input asp-for="Password"
+                               placeholder="Create a password" />
+                        @* <i class="far fa-eye-slash toggle-password" *@
+                        @*    data-target="Password"></i> *@
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger validation-msg"></span>
                 </div>
 
                 <div class="form-group password-group">
-                    <input type="password"
-                           id="confirm-password"
-                           name="confirm-password"
-                           placeholder="Repeat a password"
-                           required />
-                    <i class="far fa-eye-slash toggle-password"
-                       data-target="confirm-password"></i>
-                    <span class="error-message" id="confirm-password-error"></span>
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="terms" name="terms" required />
-                    <label for="terms">
-                        I agree to Dresley's <a href="#">Terms of Service</a> and
-                        <a href="#">Privacy Policy</a>
-                    </label>
-                    <span class="error-message" id="terms-error"></span>
+                    <input asp-for="ConfirmPassword"
+                           placeholder="Confirm Password is required"
+                    />
+                    @* <i class="far fa-eye-slash toggle-password" *@
+                    @*    data-target="ConfirmPassword" *@
+                    @* ></i> *@
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn-primary">Sign up</button>
@@ -183,6 +157,10 @@
             </div>
         </div>
     </footer>
-    <script src="~/js/student-sign-up.js"></script>
+    <script src="~/js/student-sign-up"></script> 
+    @section Scripts {
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    }
 </body>
 </html>
