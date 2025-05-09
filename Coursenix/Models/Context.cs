@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coursenix.Models
 {
-    public class CoursenixContext : DbContext
+    public class Context : DbContext
     {
 
         // DbSets for all entities
@@ -18,8 +18,8 @@ namespace Coursenix.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer(@"Data Source=HISHAMSAYED;Initial Catalog=Coursenix1;Integrated Security=True");
-            //base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=Coursenix1;Integrated Security=True; TrustServerCertificate=True;");
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

@@ -1,0 +1,665 @@
+[1mdiff --git a/Coursenix/Controllers/StudentController.cs b/Coursenix/Controllers/StudentController.cs[m
+[1mindex 8f2ff67..72fad4d 100644[m
+[1m--- a/Coursenix/Controllers/StudentController.cs[m
+[1m+++ b/Coursenix/Controllers/StudentController.cs[m
+[36m@@ -1,18 +1,28 @@[m
+[31m-﻿using Microsoft.AspNetCore.Mvc;[m
+[32m+[m[32m﻿using Coursenix.Models;[m
+[32m+[m[32musing Microsoft.AspNetCore.Mvc;[m
+ [m
+ namespace Coursenix.Controllers[m
+ {[m
+     public class StudentController : Controller[m
+     {[m
+[31m-[m
+[32m+[m[32m        Context context = new Context();[m
+         public IActionResult SignUp()[m
+         {[m
+             return View("SignUp");[m
+         }[m
+[31m-[m
+[32m+[m[32m        public IActionResult SaveNewStudent(Student student)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if (ModelState.IsValid) {[m
+[32m+[m[32m                context.Students.Add(student);[m
+[32m+[m[32m                context.SaveChanges();[m
+[32m+[m[32m                return RedirectToAction("Home","Home");[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m                return View("SignUp");[m
+[32m+[m[32m        }[m
+         public IActionResult Sign_In()[m
+         {[m
+             return View("Sign_In");[m
+         }[m
+     }[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/Coursenix/Models/Admin.cs b/Coursenix/Models/Admin.cs[m
+[1mindex f545f43..3d064a7 100644[m
+[1m--- a/Coursenix/Models/Admin.cs[m
+[1m+++ b/Coursenix/Models/Admin.cs[m
+[36m@@ -2,10 +2,10 @@[m
+ [m
+ namespace Coursenix.Models[m
+ {[m
+[31m-    [Table("Admins")][m
+     public class Admin[m
+     {[m
+[31m-[m
+[32m+[m[32m        public int Id { get; set; }[m
+[32m+[m[32m        public string Email { get; set; }[m
+         // Any admin-specific properties could be added here[m
+ [m
+     }[m
+[1mdiff --git a/Coursenix/Models/CoursenixContext.cs b/Coursenix/Models/CoursenixContext.cs[m
+[1mdeleted file mode 100644[m
+[1mindex 4e27875..0000000[m
+[1m--- a/Coursenix/Models/CoursenixContext.cs[m
+[1m+++ /dev/null[m
+[36m@@ -1,25 +0,0 @@[m
+[31m-﻿using System.Collections.Generic;[m
+[31m-using Microsoft.EntityFrameworkCore;[m
+[31m-[m
+[31m-namespace Coursenix.Models[m
+[31m-{[m
+[31m-    public class CoursenixContext : DbContext[m
+[31m-    {[m
+[31m-[m
+[31m-        // DbSets for all entities[m
+[31m-        public DbSet<Student> Students { get; set; }[m
+[31m-        public DbSet<Teacher> Teachers { get; set; }[m
+[31m-        public DbSet<Admin> Admins { get; set; }[m
+[31m-        public DbSet<Subject> Subjects { get; set; }[m
+[31m-        public DbSet<Group> Groups { get; set; }[m
+[31m-        public DbSet<Session> Sessions { get; set; }[m
+[31m-        public DbSet<Booking> Bookings { get; set; }[m
+[31m-        public DbSet<Attendance> Attendances { get; set; }[m
+[31m-[m
+[31m-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)[m
+[31m-        {[m
+[31m-            //optionsBuilder.UseSqlServer(@"Data Source=HISHAMSAYED;Initial Catalog=Coursenix1;Integrated Security=True");[m
+[31m-            //base.OnConfiguring(optionsBuilder);[m
+[31m-        }[m
+[31m-    }[m
+[31m-}[m
+[1mdiff --git a/Coursenix/Models/Student.cs b/Coursenix/Models/Student.cs[m
+[1mindex 1531910..c8251ff 100644[m
+[1m--- a/Coursenix/Models/Student.cs[m
+[1m+++ b/Coursenix/Models/Student.cs[m
+[36m@@ -3,42 +3,48 @@[m [musing System.ComponentModel.DataAnnotations;[m
+ [m
+ namespace Coursenix.Models[m
+ {[m
+[32m+[m[32m    public enum GradeLevel[m
+[32m+[m[32m    {[m
+[32m+[m[32m        Grade7 = 7,[m
+[32m+[m[32m        Grade8 = 8,[m
+[32m+[m[32m        Grade9 = 9,[m
+[32m+[m[32m        Grade10 = 10,[m
+[32m+[m[32m        Grade11 = 11,[m
+[32m+[m[32m        Grade12 = 12[m
+[32m+[m[32m    }[m
+ [m
+[31m-    [Table("Students")][m
+     public class Student[m
+     {[m
+[31m-        [Key][m
+         public int StudentId { get; set; }[m
+ [m
+[32m+[m[32m        [Required][m
+[32m+[m[32m        [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters")][m
+[32m+[m[32m        public string Name { get; set; }[m
+         [Required][m
+         [MaxLength(255)][m
+[32m+[m[32m        [EmailAddress(ErrorMessage = "Please enter a valid email address")][m
+         public string Email { get; set; }[m
+[31m-[m
+         [Required][m
+[32m+[m[32m        [DataType(DataType.Password)][m
+         [MaxLength(255)][m
+[32m+[m[32m        [MinLength(8,ErrorMessage = "Use 8 characters or more for your password\r\n")][m
+         public string Password { get; set; }[m
+[32m+[m[32m        [Compare("Password", ErrorMessage = "Password does not match")][m
+[32m+[m[32m        [DataType(DataType.Password)][m
+[32m+[m[32m        [Display(Name = "Confirm Password")][m
+[32m+[m[32m        public string? ConfirmPassword { get; set; }[m
+ [m
+[31m-        [Required][m
+[31m-        [MaxLength(50)][m
+[31m-        public string FirstName { get; set; }[m
+[31m-[m
+[31m-        [Required][m
+[31m-        [MaxLength(50)][m
+[31m-        public string LastName { get; set; }[m
+[31m-[m
+[31m-        [MaxLength(20)][m
+[32m+[m[32m        [MaxLength(11, ErrorMessage = "Enter a valid phone number")][m
+[32m+[m[32m        [RegularExpression(@"(010|011|012|015)\d{8}", ErrorMessage = "Enter a valid phone number")][m
+         public string PhoneNumber { get; set; }[m
+[31m-[m
+[31m-        [MaxLength(255)][m
+[31m-        public string ProfilePicture { get; set; }[m
+[31m-[m
+[31m-        public int GradeLevel { get; set; }[m
+[31m-[m
+[31m-        [MaxLength(20)][m
+[32m+[m[32m        [Required(ErrorMessage = "Please select your grade")][m
+[32m+[m[32m        public GradeLevel Grade { get; set; }[m
+[32m+[m[32m        [MaxLength(11, ErrorMessage = "Enter a valid phone number")][m
+[32m+[m[32m        [RegularExpression(@"(010|011|012|015)\d{8}", ErrorMessage = "Enter a valid phone number")][m
+         public string ParentNumber { get; set; } // Added Parent Number property[m
+ [m
+         // Navigation properties[m
+[31m-        public ICollection<Booking> Bookings { get; set; } // Bookings made by this student[m
+[31m-        public ICollection<Attendance> Attendances { get; set; } // Attendance records[m
+[32m+[m[32m        public ICollection<Booking>? Bookings { get; set; } // Bookings made by this student[m
+[32m+[m[32m        public ICollection<Attendance>? Attendances { get; set; } // Attendance records[m
+     }[m
+ }[m
+[1mdiff --git a/Coursenix/Models/Subject.cs b/Coursenix/Models/Subject.cs[m
+[1mindex a6368a0..c2826e7 100644[m
+[1m--- a/Coursenix/Models/Subject.cs[m
+[1m+++ b/Coursenix/Models/Subject.cs[m
+[36m@@ -22,7 +22,7 @@[m [mnamespace Coursenix.Models[m
+         [MaxLength(255)][m
+         public string Location { get; set; }[m
+ [m
+[31m-        public decimal Price { get; set; }[m
+[32m+[m[32m        public int Price { get; set; }[m
+ [m
+         [ForeignKey("Teacher")][m
+         public int TeacherId { get; set; }[m
+[1mdiff --git a/Coursenix/Models/Teacher.cs b/Coursenix/Models/Teacher.cs[m
+[1mindex 12ee5fd..3c3e774 100644[m
+[1m--- a/Coursenix/Models/Teacher.cs[m
+[1m+++ b/Coursenix/Models/Teacher.cs[m
+[36m@@ -7,26 +7,22 @@[m [mnamespace Coursenix.Models[m
+     [Table("Teachers")][m
+     public class Teacher[m
+     {[m
+[31m-        [Key][m
+         public int TeacherId { get; set; }[m
+ [m
+[31m-        [Required][m
+         [MaxLength(255)][m
+[32m+[m[32m        [EmailAddress(ErrorMessage = "Please enter a valid email address")][m
+         public string Email { get; set; }[m
+ [m
+         [Required][m
+[31m-        [MaxLength(255)][m
+[32m+[m[32m        [MaxLength(255, ErrorMessage = "First name cannot exceed 255 characters")][m
+         public string Password { get; set; }[m
+ [m
+         [Required][m
+[31m-        [MaxLength(50)][m
+[31m-        public string FirstName { get; set; }[m
+[31m-[m
+[31m-        [Required][m
+[31m-        [MaxLength(50)][m
+[31m-        public string LastName { get; set; }[m
+[32m+[m[32m        [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters")][m
+[32m+[m[32m        public string Name { get; set; }[m
+ [m
+[31m-        [MaxLength(20)][m
+[32m+[m[32m        [MaxLength(11,ErrorMessage = "Enter a valid phone number")][m
+[32m+[m[32m        [RegularExpression(@"(010|011|012|015)\d{8}", ErrorMessage = "Enter a valid phone number")][m
+         public string PhoneNumber { get; set; }[m
+ [m
+         [MaxLength(255)][m
+[1mdiff --git a/Coursenix/Views/Shared/Error.cshtml b/Coursenix/Views/Shared/Error.cshtml[m
+[1mindex a1e0478..7be7e61 100644[m
+[1m--- a/Coursenix/Views/Shared/Error.cshtml[m
+[1m+++ b/Coursenix/Views/Shared/Error.cshtml[m
+[36m@@ -3,8 +3,8 @@[m
+     ViewData["Title"] = "Error";[m
+ }[m
+ [m
+[31m-<h1 class="text-danger">Error.</h1>[m
+[31m-<h2 class="text-danger">An error occurred while processing your request.</h2>[m
+[32m+[m[32m <h1 class="text-danger">Error.</h1>[m[41m [m
+[32m+[m[32m <h2 class="text-danger">An error occurred while processing your request.</h2>[m[41m [m
+ [m
+ @if (Model.ShowRequestId)[m
+ {[m
+[1mdiff --git a/Coursenix/Views/Student/SignUp.cshtml b/Coursenix/Views/Student/SignUp.cshtml[m
+[1mindex 3051a44..0ae8565 100644[m
+[1m--- a/Coursenix/Views/Student/SignUp.cshtml[m
+[1m+++ b/Coursenix/Views/Student/SignUp.cshtml[m
+[36m@@ -1,11 +1,12 @@[m
+ ﻿@* Student SignUp *@[m
+[32m+[m[32m@model Student[m
+ <!DOCTYPE html>[m
+ <html lang="en">[m
+ <head>[m
+     <meta charset="UTF-8" />[m
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />[m
+     <title>Coursenix</title>[m
+[31m-    <link rel="stylesheet" type="text/css" href="~/css/sign-up.css" />[m
+[32m+[m[32m    <link rel="stylesheet" href="~/css/sign-up.css" />[m
+     <link rel="stylesheet"[m
+           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />[m
+ </head>[m
+[36m@@ -31,92 +32,65 @@[m
+             <p class="subtitle">[m
+                 Create your student account and discover thousands of courses[m
+             </p>[m
+[31m-            <form id="signup-form" novalidate>[m
+[32m+[m[32m            <div asp-validation-summary="All" class="text-danger"></div>[m
+[32m+[m[32m            <form asp-action="SaveNewStudent" asp-controller="Student" method="get" id="signup-form" >[m
+                 <div class="form-group">[m
+[31m-                    <input type="text"[m
+[31m-                           id="full-name"[m
+[31m-                           name="full-name"[m
+[31m-                           placeholder="Full name"[m
+[31m-                           required[m
+[31m-                           minlength="3" />[m
+[31m-                    <span class="error-message" id="full-name-error"></span>[m
+[32m+[m[32m                    <input asp-for="Name"[m
+[32m+[m[32m                        placeholder="Name"[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                    <span asp-validation-for="Name" class="text-danger"></span>[m
+                 </div>[m
+ [m
+                 <div class="form-group">[m
+[31m-                    <input type="email"[m
+[31m-                           id="email"[m
+[31m-                           name="email"[m
+[32m+[m[32m                    <input asp-for="Email"[m
+                            placeholder="Email address"[m
+[31m-                           required />[m
+[31m-                    <span class="error-message" id="email-error"></span>[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                    <span asp-validation-for="Email" class="text-danger"></span>[m
+                 </div>[m
+ [m
+                 <div class="form-group">[m
+[31m-                    <input type="tel"[m
+[31m-                           id="phone"[m
+[31m-                           name="phone"[m
+[32m+[m[32m                    <input asp-for="PhoneNumber"[m
+                            placeholder="Phone number"[m
+[31m-                           required[m
+[31m-                           pattern="[+]?[\s./0-9]{10,15}" />[m
+[31m-                    <span class="error-message" id="phone-error"></span>[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>[m
+                 </div>[m
+ [m
+                 <div class="form-group">[m
+[31m-                    <input type="tel"[m
+[31m-                           id="parent-phone"[m
+[31m-                           name="parent-phone"[m
+[32m+[m[32m                    <input asp-for="ParentNumber"[m
+                            placeholder="Parent's phone number"[m
+[31m-                           required[m
+[31m-                           pattern="[+]?[\s./0-9]{10,15}" />[m
+[31m-                    <span class="error-message" id="parent-phone-error"></span>[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                    <span asp-validation-for="ParentNumber" class="text-danger"></span>[m
+                 </div>[m
+ [m
+                 <div class="form-group">[m
+                     <div class="select-wrapper">[m
+[31m-                        <select id="grade" name="grade" required>[m
+[31m-                            <option value="" disabled selected>Select your grade</option>[m
+[31m-                            <option value="7">Grade 7</option>[m
+[31m-                            <option value="8">Grade 8</option>[m
+[31m-                            <option value="9">Grade 9</option>[m
+[31m-                            <option value="10">Grade 10</option>[m
+[31m-                            <option value="11">Grade 11</option>[m
+[31m-                            <option value="12">Grade 12</option>[m
+[32m+[m[32m                        <select asp-for="Grade" class="form-control" asp-items="Html.GetEnumSelectList<GradeLevel>()">[m
+[32m+[m[32m                            <option value="">-- Select Grade --</option>[m
+                         </select>[m
+                         <i class="fas fa-chevron-down"></i>[m
+                     </div>[m
+[31m-                    <span class="error-message" id="grade-error"></span>[m
+[31m-                </div>[m
+[32m+[m[32m                    <span asp-validation-for="Grade" class="text-danger"></span>[m
+ [m
+[31m-                <div class="form-group password-group">[m
+[31m-                    <input type="password"[m
+[31m-                           id="password"[m
+[31m-                           name="password"[m
+[31m-                           placeholder="Create a password"[m
+[31m-                           required[m
+[31m-                           minlength="8" />[m
+[31m-                    <i class="far fa-eye-slash toggle-password"[m
+[31m-                       data-target="password"></i>[m
+[31m-                    <span class="error-message" id="password-error"></span>[m
+                 </div>[m
+ [m
+                 <div class="form-group password-group">[m
+[31m-                    <input type="password"[m
+[31m-                           id="confirm-password"[m
+[31m-                           name="confirm-password"[m
+[31m-                           placeholder="Repeat a password"[m
+[31m-                           required />[m
+[31m-                    <i class="far fa-eye-slash toggle-password"[m
+[31m-                       data-target="confirm-password"></i>[m
+[31m-                    <span class="error-message" id="confirm-password-error"></span>[m
+[32m+[m[32m                    <div class="input-wrapper">[m
+[32m+[m[32m                        <input asp-for="Password"[m
+[32m+[m[32m                               placeholder="Create a password" />[m
+[32m+[m[32m                        @* <i class="far fa-eye-slash toggle-password" *@[m
+[32m+[m[32m                        @*    data-target="Password"></i> *@[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                    <span asp-validation-for="Password" class="text-danger validation-msg"></span>[m
+                 </div>[m
+ [m
+[31m-                <div class="form-group checkbox-group">[m
+[31m-                    <input type="checkbox" id="terms" name="terms" required />[m
+[31m-                    <label for="terms">[m
+[31m-                        I agree to Dresley's <a href="#">Terms of Service</a> and[m
+[31m-                        <a href="#">Privacy Policy</a>[m
+[31m-                    </label>[m
+[31m-                    <span class="error-message" id="terms-error"></span>[m
+[32m+[m[32m                <div class="form-group password-group">[m
+[32m+[m[32m                    <input asp-for="ConfirmPassword"[m
+[32m+[m[32m                           placeholder="Confirm Password is required"[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                    @* <i class="far fa-eye-slash toggle-password" *@[m
+[32m+[m[32m                    @*    data-target="ConfirmPassword" *@[m
+[32m+[m[32m                    @* ></i> *@[m
+[32m+[m[32m                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>[m
+                 </div>[m
+ [m
+                 <button type="submit" class="btn-primary">Sign up</button>[m
+[36m@@ -183,6 +157,10 @@[m
+             </div>[m
+         </div>[m
+     </footer>[m
+[31m-    <script src="~/js/student-sign-up.js"></script>[m
+[32m+[m[32m    <script src="~/js/student-sign-up"></script>[m[41m [m
+[32m+[m[32m    @section Scripts {[m
+[32m+[m[32m        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>[m
+[32m+[m[32m        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>[m
+[32m+[m[32m    }[m
+ </body>[m
+ </html>[m
+[1mdiff --git a/Coursenix/wwwroot/js/student-sign-up.js b/Coursenix/wwwroot/js/student-sign-up.js[m
+[1mindex 79a7d2e..2202f6b 100644[m
+[1m--- a/Coursenix/wwwroot/js/student-sign-up.js[m
+[1m+++ b/Coursenix/wwwroot/js/student-sign-up.js[m
+[36m@@ -1,220 +1,59 @@[m
+[31m-document.addEventListener("DOMContentLoaded", () => {[m
+[31m-  // References to form elements[m
+[31m-  const form = document.getElementById("signup-form");[m
+[31m-  const fullNameInput = document.getElementById("full-name");[m
+[31m-  const emailInput = document.getElementById("email");[m
+[31m-  const phoneInput = document.getElementById("phone");[m
+[31m-  const parentPhoneInput = document.getElementById("parent-phone");[m
+[31m-  const gradeSelect = document.getElementById("grade");[m
+[31m-  const passwordInput = document.getElementById("password");[m
+[31m-  const confirmPasswordInput = document.getElementById("confirm-password");[m
+[31m-  const termsCheckbox = document.getElementById("terms");[m
+[31m-[m
+[31m-  // Toggle password visibility[m
+[31m-  document.querySelectorAll(".toggle-password").forEach((icon) => {[m
+[31m-    icon.addEventListener("click", () => {[m
+[31m-      const targetId = icon.getAttribute("data-target");[m
+[31m-      const targetInput = document.getElementById(targetId);[m
+[31m-[m
+[31m-      // Toggle input type between password and text[m
+[31m-      if (targetInput.type === "password") {[m
+[31m-        targetInput.type = "text";[m
+[31m-        icon.classList.replace("fa-eye-slash", "fa-eye");[m
+[31m-      } else {[m
+[31m-        targetInput.type = "password";[m
+[31m-        icon.classList.replace("fa-eye", "fa-eye-slash");[m
+[31m-      }[m
+[31m-    });[m
+[31m-  });[m
+[31m-[m
+[31m-  // Add required attribute validation on the client side[m
+[31m-  const validateInputs = () => {[m
+[31m-    let isValid = true;[m
+[31m-[m
+[31m-    // Reset all error messages[m
+[31m-    document.querySelectorAll(".error-message").forEach((el) => {[m
+[31m-      el.textContent = "";[m
+[31m-    });[m
+[31m-[m
+[31m-    // Validate full name[m
+[31m-    if (!fullNameInput.value.trim()) {[m
+[31m-      displayError("full-name-error", "Full name is required");[m
+[31m-      isValid = false;[m
+[31m-      fullNameInput.classList.add("invalid-input");[m
+[31m-    } else if (fullNameInput.value.trim().length < 3) {[m
+[31m-      displayError([m
+[31m-        "full-name-error",[m
+[31m-        "Full name must be at least 3 characters long"[m
+[31m-      );[m
+[31m-      isValid = false;[m
+[31m-      fullNameInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      fullNameInput.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate email[m
+[31m-    if (!emailInput.value.trim()) {[m
+[31m-      displayError("email-error", "Email address is required");[m
+[31m-      isValid = false;[m
+[31m-      emailInput.classList.add("invalid-input");[m
+[31m-    } else if (!isValidEmail(emailInput.value)) {[m
+[31m-      displayError("email-error", "Please enter a valid email address");[m
+[31m-      isValid = false;[m
+[31m-      emailInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      emailInput.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate phone number[m
+[31m-    if (!phoneInput.value.trim()) {[m
+[31m-      displayError("phone-error", "Phone number is required");[m
+[31m-      isValid = false;[m
+[31m-      phoneInput.classList.add("invalid-input");[m
+[31m-    } else if (!isValidPhone(phoneInput.value)) {[m
+[31m-      displayError("phone-error", "Please enter a valid phone number");[m
+[31m-      isValid = false;[m
+[31m-      phoneInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      phoneInput.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate parent's phone number[m
+[31m-    if (!parentPhoneInput.value.trim()) {[m
+[31m-      displayError("parent-phone-error", "Parent's phone number is required");[m
+[31m-      isValid = false;[m
+[31m-      parentPhoneInput.classList.add("invalid-input");[m
+[31m-    } else if (!isValidPhone(parentPhoneInput.value)) {[m
+[31m-      displayError("parent-phone-error", "Please enter a valid phone number");[m
+[31m-      isValid = false;[m
+[31m-      parentPhoneInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      parentPhoneInput.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate grade selection[m
+[31m-    if (!gradeSelect.value) {[m
+[31m-      displayError("grade-error", "Please select your grade");[m
+[31m-      isValid = false;[m
+[31m-      gradeSelect.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      gradeSelect.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate password[m
+[31m-    if (!passwordInput.value) {[m
+[31m-      displayError("password-error", "Password is required");[m
+[31m-      isValid = false;[m
+[31m-      passwordInput.classList.add("invalid-input");[m
+[31m-    } else if (passwordInput.value.length < 8) {[m
+[31m-      displayError([m
+[31m-        "password-error",[m
+[31m-        "Password must be at least 8 characters long"[m
+[31m-      );[m
+[31m-      isValid = false;[m
+[31m-      passwordInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;[m
+[31m-      var upperCaseLetters = /[A-Z]/g;[m
+[31m-      var lowerCaseLetters = /[a-z]/g;[m
+[31m-      var numbers = /[0-9]/g;[m
+[31m-      if (!passwordInput.value.match(format)) {[m
+[31m-        displayError([m
+[31m-          "password-error",[m
+[31m-          "Password must has at least one special character"[m
+[31m-        );[m
+[31m-        isValid = false;[m
+[31m-        passwordInput.classList.add("invalid-input");[m
+[31m-      } else if (!passwordInput.value.match(upperCaseLetters)) {[m
+[31m-        displayError([m
+[31m-          "password-error",[m
+[31m-          "Password must has at least one upper case character"[m
+[31m-        );[m
+[31m-        isValid = false;[m
+[31m-        passwordInput.classList.add("invalid-input");[m
+[31m-      } else if (!passwordInput.value.match(lowerCaseLetters)) {[m
+[31m-        displayError([m
+[31m-          "password-error",[m
+[31m-          "Password must has at least one lower case character"[m
+[31m-        );[m
+[31m-        isValid = false;[m
+[31m-        passwordInput.classList.add("invalid-input");[m
+[31m-      } else if (!passwordInput.value.match(numbers)) {[m
+[31m-        displayError("password-error", "Password must has at least one number");[m
+[31m-        isValid = false;[m
+[31m-        passwordInput.classList.add("invalid-input");[m
+[31m-      } else {[m
+[31m-        passwordInput.classList.remove("invalid-input");[m
+[31m-      }[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate password confirmation[m
+[31m-    if (!confirmPasswordInput.value) {[m
+[31m-      displayError("confirm-password-error", "Please confirm your password");[m
+[31m-      isValid = false;[m
+[31m-      confirmPasswordInput.classList.add("invalid-input");[m
+[31m-    } else if (passwordInput.value !== confirmPasswordInput.value) {[m
+[31m-      displayError("confirm-password-error", "Passwords do not match");[m
+[31m-      isValid = false;[m
+[31m-      confirmPasswordInput.classList.add("invalid-input");[m
+[31m-    } else {[m
+[31m-      confirmPasswordInput.classList.remove("invalid-input");[m
+[31m-    }[m
+[31m-[m
+[31m-    // Validate terms acceptance[m
+[31m-    if (!termsCheckbox.checked) {[m
+[31m-      displayError([m
+[31m-        "terms-error",[m
+[31m-        "You must agree to the Terms of Service and Privacy Policy"[m
+[31m-      );[m
+[31m-      isValid = false;[m
+[31m-      termsCheckbox.classList.add("invalid-checkbox");[m
+[31m-    } else {[m
+[31m-      termsCheckbox.classList.remove("invalid-checkbox");[m
+[31m-    }[m
+[31m-[m
+[31m-    return isValid;[m
+[31m-  };[m
+[31m-  // Form validation and submission[m
+[31m-  form.addEventListener("submit", (e) => {[m
+[31m-    e.preventDefault();[m
+[31m-[m
+[31m-    const isValid = validateInputs();[m
+[31m-[m
+[31m-    // If all validations pass, submit the form[m
+[31m-    if (isValid) {[m
+[31m-      // In a real application, this would typically involve an API call[m
+[31m-      // For this example, we'll simulate a successful submission[m
+[31m-      alert("Account created successfully! Redirecting to login page...");[m
+[31m-      form.reset();[m
+[31m-      // In a real application, you would redirect the user to a success page or login page[m
+[31m-      // window.location.href = 'login.html';[m
+[31m-    } else {[m
+[31m-      // Scroll to the first error[m
+[31m-      const firstError = document.querySelector(".error-message:not(:empty)");[m
+[31m-      if (firstError) {[m
+[31m-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });[m
+[31m-      }[m
+[31m-    }[m
+[31m-  });[m
+[31m-[m
+[31m-  // Helper function to display error messages[m
+[31m-  function displayError(elementId, message) {[m
+[31m-    const errorElement = document.getElementById(elementId);[m
+[31m-    errorElement.textContent = message;[m
+[31m-  }[m
+[31m-[m
+[31m-  // Helper function to validate email format[m
+[31m-  function isValidEmail(email) {[m
+[31m-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;[m
+[31m-    return emailRegex.test(email);[m
+[31m-  }[m
+[31m-[m
+[31m-  // Helper function to validate phone number[m
+[31m-  function isValidPhone(phone) {[m
+[31m-    // This is a simple validation that allows various formats[m
+[31m-    // In a real application, you might want to use a more specific regex[m
+[31m-    // or a library for phone validation based on your requirements[m
+[31m-    const phoneRegex = /^[+]?[\s./0-9]{10,15}$/;[m
+[31m-    return phoneRegex.test(phone);[m
+[31m-  }[m
+[31m-});[m
+[32m+[m[32m//document.addEventListener("DOMContentLoaded", () => {[m
+[32m+[m[32m//    // References to form elements[m
+[32m+[m[32m//    const form = document.getElementById("signup-form");[m
+[32m+[m[32m//    const fullNameInput = document.getElementById("full-name");[m
+[32m+[m[32m//    const emailInput = document.getElementById("email");[m
+[32m+[m[32m//    const phoneInput = document.getElementById("phone");[m
+[32m+[m[32m//    const parentPhoneInput = document.getElementById("parent-phone");[m
+[32m+[m[32m//    const gradeSelect = document.getElementById("grade");[m
+[32m+[m[32m//    const passwordInput = document.getElementById("password");[m
+[32m+[m[32m//    const confirmPasswordInput = document.getElementById("confirm-password");[m
+[32m+[m[32m//    const termsCheckbox = document.getElementById("terms");[m
+[32m+[m
+[32m+[m[32m//    // Toggle password visibility[m
+[32m+[m[32m//    document.querySelectorAll(".toggle-password").forEach((icon) => {[m
+[32m+[m[32m//        icon.addEventListener("click", () => {[m
+[32m+[m[32m//            const targetId = icon.getAttribute("data-target");[m
+[32m+[m[32m//            const targetInput = document.getElementById(targetId);[m
+[32m+[m
+[32m+[m[32m//            // Toggle input type between password and text[m
+[32m+[m
+[32m+[m[32m//            if (targetInput.type === "password") {[m
+[32m+[m[32m//                targetInput.type = "text";[m
+[32m+[m[32m//                icon.classList.replace("fa-eye-slash", "fa-eye");[m
+[32m+[m[32m//            } else {[m
+[32m+[m[32m//                targetInput.type = "password";[m
+[32m+[m[32m//                icon.classList.replace("fa-eye", "fa-eye-slash");[m
+[32m+[m[32m//            }[m
+[32m+[m[32m//        });[m
+[32m+[m[32m//    });[m
+[32m+[m
+[32m+[m
+[32m+[m[32m//    // Add required attribute validation on the client side[m
+[32m+[m[32m//    const validateInputs = () => {[m
+[32m+[m[32m//        let isValid = true;[m
+[32m+[m[32m//        // Reset all error messages[m
+[32m+[m[32m//        document.querySelectorAll(".error-message").forEach((el) => {[m
+[32m+[m[32m//            el.textContent = "";[m
+[32m+[m[32m//        });[m
+[32m+[m[32m//        // Validate terms acceptance[m
+[32m+[m[32m//        if (!termsCheckbox.checked) {[m
+[32m+[m[32m//            displayError([m
+[32m+[m[32m//                "terms-error",[m
+[32m+[m[32m//                "You must agree to the Terms of Service and Privacy Policy"[m
+[32m+[m[32m//            );[m
+[32m+[m[32m//            isValid = false;[m
+[32m+[m[32m//            termsCheckbox.classList.add("invalid-checkbox");[m
+[32m+[m[32m//        } else {[m
+[32m+[m[32m//            termsCheckbox.classList.remove("invalid-checkbox");[m
+[32m+[m[32m//        }[m
+[32m+[m
+[32m+[m[32m//        return isValid;[m
+[32m+[m[32m//    };[m
+[32m+[m[32m//    // Helper function to display error messages[m
+[32m+[m[32m//    function displayError(elementId, message) {[m
+[32m+[m[32m//        const errorElement = document.getElementById(elementId);[m
+[32m+[m[32m//        errorElement.textContent = message;[m
+[32m+[m[32m//    }[m
+[32m+[m
+[32m+[m[32m//});[m

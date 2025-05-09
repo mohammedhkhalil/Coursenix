@@ -22,7 +22,7 @@ namespace Coursenix.Models
         [MaxLength(255)]
         public string Location { get; set; }
 
-        public decimal Price { get; set; }
+        public int Price { get; set; }
 
         [MaxLength(255)] // أو طول مناسب لمسار الملف that added by Abdalrhman
         public string ThumbnailFileName { get; set; }
