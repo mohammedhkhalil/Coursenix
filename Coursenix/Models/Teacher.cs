@@ -8,6 +8,7 @@ namespace Coursenix.Models
     [Table("Teachers")]
     public class Teacher
     {
+        [Key]
         public int TeacherId { get; set; }
 
         [MaxLength(255)]
@@ -27,6 +28,7 @@ namespace Coursenix.Models
         public string PhoneNumber { get; set; }
 
         [MaxLength(255)]
+        [AllowNull]
         public string ProfilePicture { get; set; }
 
         [MaxLength(255)]
