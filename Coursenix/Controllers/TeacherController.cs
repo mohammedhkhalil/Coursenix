@@ -11,9 +11,9 @@ namespace Coursenix.Controllers
 {
     public class TeacherController : Controller
     {
-        private readonly CoursenixContext _context;
+        private readonly Context _context;
 
-        public TeacherController(CoursenixContext context)
+        public TeacherController(Context context)
         {
             _context = context;
         }
@@ -65,8 +65,7 @@ namespace Coursenix.Controllers
                 {
                     Email = model.Email,
                     Password = hashedPassword,
-                    FirstName = model.FullName, 
-                    LastName = model.FullName,
+                    Name = model.FullName, 
                     PhoneNumber = model.PhoneNumber, // رقم الهاتف
 
                 };

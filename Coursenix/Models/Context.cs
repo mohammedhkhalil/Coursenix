@@ -5,7 +5,10 @@ namespace Coursenix.Models
 {
     public class Context : DbContext
     {
-
+        public Context(DbContextOptions<Context> options)
+     : base(options)
+        {
+        }
         // DbSets for all entities
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }

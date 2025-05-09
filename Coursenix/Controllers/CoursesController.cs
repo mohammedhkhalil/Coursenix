@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Coursenix.Models; 
 using Coursenix.Models.ViewModels; 
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // نحتاجها لاستخدام ToList(), Where(), Select(), Distinct(), OrderBy()
+using System.Linq; 
 using System.Threading.Tasks; 
-using System.IO; // للتعامل مع الملفات
-using Microsoft.AspNetCore.Hosting; // لجلب مسار مجلد wwwroot
+using System.IO; 
+using Microsoft.AspNetCore.Hosting; 
 
 
 namespace Coursenix.Controllers
@@ -15,26 +15,21 @@ namespace Coursenix.Controllers
     // [Authorize(Roles = "Teacher")]
     public class CoursesController : Controller
     {
-        private readonly CoursenixContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment; // نحتاجها لرفع الصور
-        // تم التعليق على UserManager مؤقتاً
+        private readonly Context _context;
+        private readonly IWebHostEnvironment _webHostEnvironment; 
         // private readonly UserManager<Teacher> _userManager;
 
 
-        // Constructor - يتم حقن الخدمات هنا
-        public CoursesController(CoursenixContext context, IWebHostEnvironment webHostEnvironment /*, UserManager<Teacher> userManager */)
+        public CoursesController(Context context, IWebHostEnvironment webHostEnvironment /*, UserManager<Teacher> userManager */)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
-            // _userManager = userManager; // إذا كنت تستخدم Identity
+            // _userManager = userManager; 
         }
 
-        // إجراء لعرض قائمة الدورات مع دعم الفلترة والبحث
         // GET: /Courses/Index
         public async Task<IActionResult> Index(string selectedSubject, int? selectedGrade, string searchQuery)
         {
-            // ... كود إجراء Index الذي قمنا بشرحه سابقاً لجلب وعرض الدورات مع الفلاتر ...
-            // جلب خيارات الفلترة المتاحة
             var allSubjectNames = await _context.Subjects
                                         .Select(s => s.SubjectName)
                                         .Distinct()
@@ -47,7 +42,6 @@ namespace Coursenix.Controllers
                                       .OrderBy(grade => grade)
                                       .ToListAsync();
 
-            // بناء استعلام جلب الدورات مع تطبيق الفلاتر والبحث
             var subjectsQuery = _context.Subjects
                                 .Include(s => s.Teacher)
                                 .AsQueryable();
@@ -64,12 +58,11 @@ namespace Coursenix.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                subjectsQuery = subjectsQuery.Where(s => s.Teacher != null && s.Teacher.FirstName.Contains(searchQuery));
+                subjectsQuery = subjectsQuery.Where(s => s.Teacher != null && s.Teacher.Name.Contains(searchQuery));
             }
 
             var subjects = await subjectsQuery.OrderBy(s => s.SubjectName).ToListAsync();
 
-            // إنشاء ViewModel وتعبئته
             var viewModel = new CourseListViewModel
             {
                 Courses = subjects,
@@ -83,25 +76,20 @@ namespace Coursenix.Controllers
             return View(viewModel);
         }
 
-        // إجراء لعرض نموذج إنشاء دورة جديدة
         // GET: /Courses/Create
         public IActionResult Create()
         {
-            // ببساطة نعرض النموذج
             return View();
         }
 
-        // إجراء لمعالجة إرسال نموذج إنشاء دورة جديدة
         // POST: /Courses/Create
         [HttpPost]
-        [ValidateAntiForgeryToken] // لحماية النموذج من هجمات CSRF
-        // تم التعليق على سمة Authorize مؤقتاً
+        [ValidateAntiForgeryToken] 
         // [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Create(CreateCourseViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // --- بداية: معالجة رفع الصورة المصغرة (Thumbnail) ---
                 string thumbnailFileName = null;
                 if (model.ThumbnailFile != null)
                 {
@@ -128,41 +116,55 @@ namespace Coursenix.Controllers
                     return View(model);
                 }
 
-                // --- جلب Teacher ID ---
-                // !!! هذا القسم تم تعديله مؤقتاً لتجاوز خطأ المصادقة !!!
-                // عدنا لاستخدام قيمة ثابتة لـ TeacherId.
-                // يجب استبدال هذا المنطق بمنطق جلب ID المدرس الذي سجل الدخول فعلياً عند إعداد المصادقة.
-                int currentTeacherId = 12; // قيمة ثابتة مؤقتاً - تأكد أن المدرس رقم 1 موجود في قاعدة البيانات للاختبار
-                // !!! نهاية الحل المؤقت لـ Teacher ID !!!
-
-                // تم حذف أو تعليق الكود الذي يتحقق من المصادقة ويستدعي Challenge() مؤقتاً هنا
-
-
-                // --- إنشاء كائن Subject ---
+                int currentTeacherId = 12; 
                 var subject = new Subject
                 {
                     SubjectName = model.CourseTitle,
                     Description = model.CourseDescription,
-                    Price = model.CoursePrice,
                     GradeLevel = gradeLevel,
                     Location = model.Location,
-                    TeacherId = currentTeacherId, // تعيين الـ ID (المؤقت حالياً) للمدرس
-                    ThumbnailFileName = thumbnailFileName, // تعيين اسم ملف الصورة المصغرة
+                    TeacherId = currentTeacherId, 
+                    ThumbnailFileName = thumbnailFileName, 
                 };
 
-                // --- إضافة وحفظ في قاعدة البيانات ---
                 _context.Subjects.Add(subject);
-                await _context.SaveChangesAsync(); // هذا السطر يحفظ البيانات في قاعدة البيانات
+                await _context.SaveChangesAsync();
 
-                // --- إعادة التوجيه بعد النجاح ---
-                // إعادة التوجيه إلى صفحة عرض الدورات بعد إنشاء دورة جديدة
                 return RedirectToAction("Index", "Courses");
             }
 
-            // إذا كان ModelState غير صالح، أعد عرض النموذج مع الأخطاء
             return View(model);
         }
 
-        // مستقبلاً: إجراء Details, Edit, Delete, إلخ.
+        public async Task<IActionResult> Details(int? id) 
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var subject = await _context.Subjects
+                .Include(s => s.Teacher) 
+                .Include(s => s.Groups)  
+                .FirstOrDefaultAsync(m => m.SubjectId == id);
+
+            if (subject == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new CourseDetailsViewModel
+            {
+                Subject = subject,
+                Groups = subject.Groups?.ToList() 
+                                      ?? new List<Group>() 
+            };
+
+            // viewModel.Groups = viewModel.Groups.OrderBy(g => g.DayOfWeek).ThenBy(g => g.StartTime).ToList();
+
+
+            return View("Details", viewModel);
+        }
+
     }
 }

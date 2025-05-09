@@ -5,7 +5,12 @@ namespace Coursenix.Controllers
 {
     public class StudentController : Controller
     {
-        Context context = new Context();
+        private readonly Context _context;
+
+        public StudentController(Context context)
+        {
+            _context = context; 
+        }
         public IActionResult SignUp()
         {
             return View("SignUp");
@@ -13,8 +18,8 @@ namespace Coursenix.Controllers
         public IActionResult SaveNewStudent(Student student)
         {
             if (ModelState.IsValid) {
-                context.Students.Add(student);
-                context.SaveChanges();
+                _context.Students.Add(student);
+                _context.SaveChanges();
                 return RedirectToAction("Home","Home");
             }
             else
