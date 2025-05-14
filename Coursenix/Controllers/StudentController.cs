@@ -5,12 +5,12 @@ namespace Coursenix.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly Context _context;
+        private readonly Context _context = new Context();
 
-        public StudentController(Context context)
-        {
-            _context = context; 
-        }
+        //public StudentController(Context context)
+        //{
+        //    _context = context; 
+        //}
         public IActionResult SignUp()
         {
             return View("SignUp");
