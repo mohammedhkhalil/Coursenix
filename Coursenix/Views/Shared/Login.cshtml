@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿ @model LoginViewModel
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -50,7 +52,8 @@
         </div>
     </nav>
 
-    <!-- Login Form -->
+   
+    @* Login Form  *@
     <div class="container">
         <div class="login-container">
             <h2 class="text-center mb-4">Welcome Back!</h2>
@@ -58,40 +61,42 @@
                 Enter your credentials to access your account
             </p>
 
-            <div class="mb-3">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input remove-shadow"
-                           type="radio"
-                           name="userType"
-                           id="studentRadio"
-                           value="student"
-                           checked />
-                    <label class="form-check-label" for="studentRadio">I'm a Student</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input remove-shadow"
-                           type="radio"
-                           name="userType"
-                           id="teacherRadio"
-                           value="teacher" />
-                    <label class="form-check-label" for="teacherRadio">I'm a Teacher</label>
-                </div>
-            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
 
-            <form>
+
+
+            <form asp-action="Login" asp-controller="Login" method="post">
                 <div class="mb-3">
-                    <input type="email"
-                           class="form-control form-control-lg remove-shadow"
-                           id="email"
-                           placeholder="Email address"
-                           required />
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input remove-shadow"
+                               type="radio"
+                               asp-for="Role"
+                               value="Student"
+                               checked />
+                        <label class="form-check-label" for="studentRadio">I'm a Student</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input remove-shadow"
+                               type="radio"
+                               asp-for="Role"
+                               value="Teacher" />
+                        <label class="form-check-label" for="teacherRadio">I'm a Teacher</label>
+                    </div>
+                    <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
+
                 <div class="mb-3">
-                    <input type="password"
+                    <input asp-for="Email"
                            class="form-control form-control-lg remove-shadow"
-                           id="password"
-                           placeholder="Password"
-                           required />
+                           placeholder="Email address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input asp-for="Password"
+                           class="form-control form-control-lg remove-shadow"
+                           placeholder="Password" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex justify-content-between mb-4">
@@ -118,13 +123,13 @@
             </div>
 
             <div class="social-login">
-                <button class="btn btn-google">
+                <button class="btn btn-google" type="button">
                     <img src="~/assets/google-icon.jpg"
                          alt="Google"
                          class="social-icon" />
                     sign in
                 </button>
-                <button class="btn btn-facebook">
+                <button class="btn btn-facebook" type="button">
                     <img src="~/assets/facebook-icon2.png"
                          alt="Facebook"
                          class="social-icon" />
@@ -133,6 +138,11 @@
             </div>
         </div>
     </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
 
     <!-- Footer -->
     <footer id="footer">

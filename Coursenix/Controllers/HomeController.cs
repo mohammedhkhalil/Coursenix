@@ -18,9 +18,9 @@ namespace Coursenix.Controllers
             return View("Home");
         }
 
-        public IActionResult Sign_In()
+        public IActionResult Login()
         {
-            return View("Sign_In");
+            return View("Login");
         }
 
         //public IActionResult Privacy()
