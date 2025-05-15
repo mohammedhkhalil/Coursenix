@@ -40,5 +40,6 @@ namespace Coursenix.Models
         public Subject Subject { get; set; } // Subject for this group
         public ICollection<Booking> Bookings { get; set; } // Bookings for this group                                          
         public ICollection<Session> Sessions { get; set; } // Sessions for this group
+        public ICollection<Session> Student { get; set; } // Sessions for this group
     }
 }

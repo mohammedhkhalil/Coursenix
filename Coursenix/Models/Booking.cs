@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Coursenix.Models
 {
-    [Table("Bookings")]
     public class Booking
     {
-        [Key]
         public int BookingId { get; set; }
 
         [ForeignKey("Student")]
@@ -15,7 +13,7 @@ namespace Coursenix.Models
         [ForeignKey("Group")]
         public int GroupId { get; set; }
 
-        [Required]
+        //[Required]
         public DateTime BookingDate { get; set; }
 
         // Navigation properties
