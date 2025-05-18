@@ -28,14 +28,13 @@ namespace Coursenix.Models
         public string PhoneNumber { get; set; }
 
         [MaxLength(255)]
-        [AllowNull]
         public string ProfilePicture { get; set; }
 
-        [MaxLength(255)]
-        public string Qualifications { get; set; }
+        public string? Qualifications { get; set; }
 
         // Navigation properties
         public ICollection<Subject> Subjects { get; set; } // Subjects taught
         public ICollection<Group> Groups { get; set; } // Groups managed
+
     }
 }

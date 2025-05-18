@@ -1,41 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Coursenix.Models.ViewModels
 {
     public class CreateCourseViewModel
     {
-        [Required(ErrorMessage = "Course Title is required")]
-        [MaxLength(255)]
+        public string? StatusMessage { get; set; }
+        public bool IsSuccess { get; set; } = false;
+
+        [Required(ErrorMessage = "Course title is required.")]
+        [Display(Name = "Course Title")]
+        [StringLength(255, ErrorMessage = "Course title cannot exceed 255 characters.")]
         public string CourseTitle { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
+        [Required(ErrorMessage = "Price is required.")]
+        [Display(Name = "Price ($)")]
+        [Range(0.00, double.MaxValue, ErrorMessage = "Price must be a non-negative value.")]
         [DataType(DataType.Currency)]
-        [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
-        public decimal CoursePrice { get; set; }
+        public int CoursePrice { get; set; }
 
-        [MaxLength(1000)]
+        [Display(Name = "Course Thumbnail")]
+        public IFormFile? ThumbnailFile { get; set; }// wiil make the images by defult in the system 
+
+        [Required(ErrorMessage = "Course description is required.")]
+        [Display(Name = "Course Description")]
+        [StringLength(2000, ErrorMessage = "Course description cannot exceed 2000 characters.")]
         public string CourseDescription { get; set; }
 
-        // HTML input is text, but Subject model expects int.
-        // Using string here to match HTML, will need parsing/validation in controller.
-        // A better HTML design would be a number input or dropdown for GradeLevel.
-        [Required(ErrorMessage = "Grade Levels are required")]
-        public string GradeLevels { get; set; }
+        [Required(ErrorMessage = "Grade level is required.")]
+        [Display(Name = "Grade Level")]
+        [Range(7, 12, ErrorMessage = "Grade level must be between 7 and 12.")]
+        public int CourseGradeLevel { get; set; }
 
-        [MaxLength(255)]
+        [Required(ErrorMessage = "Location is required.")]
+        [Display(Name = "Location")]
+        [StringLength(255, ErrorMessage = "Location cannot exceed 255 characters.")]
         public string Location { get; set; }
 
-        // This field from HTML doesn't map directly to Subject or Group in a simple way.
-        // It implies group *creation* logic based on this number, which is more complex.
-        // We'll include it in the DTO but note its ambiguity relative to current models.
+        [Required(ErrorMessage = "Students per group is required.")]
+        [Display(Name = "Students/Group")]
+        [Range(1, int.MaxValue, ErrorMessage = "Minimum 1 student per group.")]
         public int StudentsPerGroup { get; set; }
 
-        // For file upload
-        public IFormFile ThumbnailFile { get; set; }
-
-        // TeacherId is needed for the Subject model but not in the form.
-        // This will need to be obtained from the authenticated user in the controller.
-        // It's not a property of the ViewModel receiving form data.
+        public List<AddGroupsViewModel>? Groups { get; set; }
     }
+
 }

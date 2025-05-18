@@ -42,6 +42,7 @@ namespace Coursenix.Models
         [MaxLength(11, ErrorMessage = "Enter a valid phone number")]
         [RegularExpression(@"(010|011|012|015)\d{8}", ErrorMessage = "Enter a valid phone number")]
         public string ParentNumber { get; set; } // Added Parent Number property
+        public int GradeLevel {  get; set; }
 
         // Navigation properties
         public ICollection<Booking>? Bookings { get; set; } // Bookings made by this student

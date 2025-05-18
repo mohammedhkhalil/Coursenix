@@ -73,7 +73,7 @@ namespace Coursenix.Controllers
                 _context.Teachers.Add(teacher);
                 await _context.SaveChangesAsync(); // حفظ كيان Teacher في قاعدة البيانات
 
-                return RedirectToAction("SignUpConfirmation", "Teacher"); 
+                return RedirectToAction("Create", "Courses"); 
             }
 
             return View(model);

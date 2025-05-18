@@ -1,14 +1,14 @@
 ﻿// Models/ViewModels/CourseDetailsViewModel.cs
-using Coursenix.Models; // لاستخدام نماذج Subject, Teacher, Group
-using System.Collections.Generic; // لاستخدام List
-using System.ComponentModel.DataAnnotations; // لاستخدام Validation Attributes if needed
+using Coursenix.Models; 
+using System.Collections.Generic; 
+using System.ComponentModel.DataAnnotations;
 
 namespace Coursenix.Models.ViewModels
 {
     public class CourseDetailsViewModel
     {
         public Subject Subject { get; set; }
-
+        public List<Subject> Subjects { get; set; }
         public List<Group> Groups { get; set; }
 
         [Display(Name = "Selected Group")]
