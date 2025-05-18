@@ -164,7 +164,7 @@ namespace Coursenix.Models
                     Name = "Alice",
                     Email = "alice.smith@example.com",
                     PhoneNumber = "555-9876",
-                    GradeLevel = 8,
+                    //Grade = 8,
                     ParentNumber = "555-1111",// Provided ParentNumber
                     Password = "asdfsadfasdf"
 
@@ -175,7 +175,7 @@ namespace Coursenix.Models
                     Name = "Bob",
                     Email = "bob.j@example.com",
                     PhoneNumber = "555-4321",
-                    GradeLevel = 7,
+                    //Grade = 7,
                     ParentNumber = "555-2222",// Provided ParentNumber
                     Password = "sdfasdf"
                 }

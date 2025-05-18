@@ -1,4 +1,5 @@
-﻿// Program.cs
+﻿
+// Program.cs
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +10,9 @@ using Coursenix.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// Add session services
+builder.Services.AddSession();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -39,6 +43,9 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Use session middleware before authorization
+app.UseSession();
 
 
 app.UseAuthorization();

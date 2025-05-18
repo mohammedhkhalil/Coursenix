@@ -6,7 +6,11 @@ namespace Coursenix.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly Context context = new Context();
+        private readonly Context context ;
+        public LoginController(Context _context)
+        {
+            context = _context;
+        }
         [HttpGet]
         public IActionResult Login()
         {
@@ -28,7 +32,7 @@ namespace Coursenix.Controllers
             }
             else if (model.Role == "Teacher")
             {
-                var teacher = context.Students
+                var teacher = context.Teachers
                     .FirstOrDefault(s => s.Email == model.Email && s.Password == model.Password);
                 if (teacher != null)
                     return RedirectToAction("Create", "Courses");
