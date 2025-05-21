@@ -80,7 +80,7 @@ namespace Coursenix.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Data Source=HISHAMSAYED;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
 
