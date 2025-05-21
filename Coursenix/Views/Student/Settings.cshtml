@@ -1,87 +1,89 @@
-﻿<!--
-@model Coursenix.ViewModels.StudentSettingsVM
+﻿@model StudentSettingsVM
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coursenix</title>
+    <link rel="stylesheet" href="/CSS/student-settings.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<div class="main-content">
+    <div class="settings-container">
+        <h2>Account Settings</h2>
 
-<div class="settings-container">
-    <h2>Account Settings</h2>
-    <form asp-action="SaveSettings" method="post" id="settingsForm">
-        <div class="form-group">
-            <label for="Name">Full Name</label>
-            <input type="text" id="fullName" name="Name" value="@Model.FullName" placeholder="Enter your Full name">
-        </div>
+        <form id="settingsForm" asp-action="Settings" asp-controller="Student" method="post">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" asp-for="Name" placeholder="Enter your Full name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label for="Email">Email Address</label>
-            <input type="email" id="email" name="Email" value="@Model.Email" readonly class="readonly-field">
-        </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" asp-for="PhoneNumber" placeholder="Enter phone number" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label for="PhoneNumber">Phone Number</label>
-            <input type="tel" id="phone" name="PhoneNumber" value="@Model.Phone" placeholder="Enter phone number">
-        </div>
+            <div class="form-group">
+                <label for="parentPhone">Parent's Phone Number</label>
+                <input type="tel" id="parentPhone" asp-for="ParentPhoneNumber" placeholder="Enter phone number" class="form-control" />
+                <span asp-validation-for="ParentPhoneNumber" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label for="ParentNumber">Parent's Phone Number</label>
-            <input type="tel" id="parentPhone" name="ParentNumber" value="@Model.ParentPhone" placeholder="Enter phone number">
-        </div>
+            <div class="form-group">
+                <label for="gradeLevel">Grade Level</label>
+                <select asp-for="Grade" id="gradeLevel" class="form-select">
+                    <option value="">-- Select Grade --</option>
+                    <option value="6">Grade 6</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
+                </select>
+                <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label for="Grade">Grade Level</label>
-            @* Disable tag helpers around this select only عشان كان بيطلعلي ايرورو*@
-            @removeTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+            <div class="divider"></div>
 
-            <select id="gradeLevel" name="Grade" class="form-select">
-                @* <option value="7" @(Model.Grade == GradeLevel.Grade7 ? "selected" : "")>Grade 7</option> *@
-                @* <option value="8" @(Model.Grade == GradeLevel.Grade8 ? "selected" : "")>Grade 8</option> *@
-                @* <option value="9" @(Model.Grade == GradeLevel.Grade9 ? "selected" : "")>Grade 9</option> *@
-                @* <option value="10" @(Model.Grade == GradeLevel.Grade10 ? "selected" : "")>Grade 10</option> *@
-                @* <option value="11" @(Model.Grade == GradeLevel.Grade11 ? "selected" : "")>Grade 11</option> *@
-                @* <option value="12" @(Model.Grade == GradeLevel.Grade12 ? "selected" : "")>Grade 12</option> *@
-            </select>
+            <h2>Change Password</h2>
 
-        </div>
+            <div class="form-group password-group">
+                <input type="password"
+                       id="current-password"
+                       asp-for="CurrPassword"
+                       placeholder="Current password"
+                       class="form-control"
+                       minlength="8" />
+                <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
+                <span asp-validation-for="CurrPassword" class="text-danger"></span>
+            </div>
 
-        <div class="divider"></div>
+            <div class="form-group password-group">
+                <input type="password"
+                       id="password"
+                       asp-for="NewPassword"
+                       placeholder="Create a password"
+                       class="form-control"
+                       minlength="8" />
+                <i class="far fa-eye-slash toggle-password" data-target="password"></i>
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+            </div>
 
-        <h2>Change Password</h2>
-        <div class="form-group password-group">
-            <input
-                type="password"
-                id="current-password"
-                name="CurrentPassword"
-                placeholder="Current password"
-                minlength="8"
-                required
-            />
-            <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
-            <span class="error-message" id="password-error"></span> 
-        </div>
+            <div class="form-group password-group">
+                <input type="password"
+                       id="confirm-password"
+                       asp-for="ConfirmPassword"
+                       placeholder="Repeat a password"
+                       class="form-control" />
+                <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
 
-        <div class="form-group password-group">
-            <input
-                type="password"
-                id="password"
-                name="NewPassword"
-                placeholder="Create a password"
-                minlength="8"
-            />
-            <i class="far fa-eye-slash toggle-password" data-target="password"></i>
-            <span class="error-message" id="password-error"></span>@* راجع نفسك *@
-        </div>
-
-        <div class="form-group password-group">
-            <input
-                type="password"
-                id="confirm-password"
-                name="ConfirmPassword"
-                placeholder="Repeat a password"
-            />
-            <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
-            <span class="error-message" id="confirm-password-error"></span>
-        </div>
-
-        <button type="submit" class="save-btn">Save Changes</button>
-        <div style="clear: both;"></div>
-    </form>
+            <button type="submit" class="save-btn">Save Changes</button>
+            <div style="clear: both;"></div>
+        </form>
+    </div>
 </div>
-
--->

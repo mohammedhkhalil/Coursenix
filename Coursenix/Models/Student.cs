@@ -22,14 +22,14 @@ namespace Coursenix.Models
 
         [ForeignKey("AppUserId")]
         public AppUser AppUser { get; set; } // Navigation property
-        
-        public string Name;
         [Required]
-        public string Email;
+        public string Name { get; set; }
+        [Required]
+        public string Email { get; set; }
 
         public GradeLevel Grade { get; set; }
         public string PhoneNumber { get; set; }
-        public string ParentNumber { get; set; }
+        public string ParentPhoneNumber { get; set; }
 
         // Navigation properties
         public ICollection<Booking>? Bookings { get; set; }

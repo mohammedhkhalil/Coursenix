@@ -1,46 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Coursenix.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Coursenix.ViewModels
 {
     public class StudentSettingsVM
     {
-        public int StudentId { get; set; }
+        // --- Account Info ---
+        [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
+        public string? Name { get; set; }
 
-        [Required]
-        [Display(Name = "Full Name")]
-        public string FullName { get; set; }
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Phone number must be an 11-digit number.")]
+        public string? PhoneNumber { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email Address")]
-        public string Email { get; set; }
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Parent number must be an 11-digit number.")]
+        public string? ParentPhoneNumber { get; set; }
 
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string Phone { get; set; }
-
-        [Phone]
-        [Display(Name = "Parent's Phone Number")]
-        public string ParentPhone { get; set; }
-
-        [Required]
-        [Display(Name = "Grade Level")]
-        public int Grade { get; set; }
+        public GradeLevel? Grade { get; set; }
 
         // --- Password section ---
         [DataType(DataType.Password)]
-        [Display(Name = "Current Password")]
-        public string CurrentPassword { get; set; }
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
+        public string? CurrPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "New Password")]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
-        public string NewPassword { get; set; }
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
+        public string? NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Repeat Password")]
-        [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
-        public string ConfirmPassword { get; set; }
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string? ConfirmPassword { get; set; }
     }
-
 }

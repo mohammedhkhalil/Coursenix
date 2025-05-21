@@ -88,7 +88,7 @@ namespace Coursenix.Controllers
                             Email = newUserVM.Email,
                             Grade = newUserVM.Grade.Value,
                             PhoneNumber = newUserVM.PhoneNumber,
-                            ParentNumber = newUserVM.ParentNumber
+                            ParentPhoneNumber = newUserVM.ParentNumber
                         };
                         context.Students.Add(student);
                     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250521204432_init")]
-    partial class init
+    [Migration("20250521231333_wafaa")]
+    partial class wafaa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -263,10 +263,18 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<string>("ParentNumber")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ParentPhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
