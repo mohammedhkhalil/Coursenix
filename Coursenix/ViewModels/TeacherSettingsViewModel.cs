@@ -1,9 +1,8 @@
 ﻿// Models/ViewModels/TeacherSettingsViewModel.cs
-using Coursenix.Models; // Reference Teacher model
 using System.ComponentModel.DataAnnotations; // For validation attributes
-using Microsoft.AspNetCore.Http; // For IFormFile (file upload)
+using Microsoft.AspNetCore.Http;
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class TeacherSettingsViewModel
     {

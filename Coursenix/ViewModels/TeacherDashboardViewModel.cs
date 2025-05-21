@@ -1,8 +1,8 @@
 ﻿// Models/ViewModels/TeacherDashboardViewModel.cs
-using Coursenix.Models; 
+using Coursenix.Models;
 using System.Collections.Generic;
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class TeacherDashboardViewModel
     {
@@ -11,7 +11,7 @@ namespace Coursenix.Models.ViewModels
         // Dashboard Statistics
         public int TotalStudents { get; set; }
         public int TotalCourses { get; set; }
-        public int TotalGroups { get; set; } 
+        public int TotalGroups { get; set; }
 
         public List<Subject> CoursesTaught { get; set; }
 

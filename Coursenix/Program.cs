@@ -1,36 +1,35 @@
-﻿
-// Program.cs
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Coursenix.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add MVC support
 builder.Services.AddControllersWithViews();
 
-// Add session services
+// Add session support
 builder.Services.AddSession();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-//if (string.IsNullOrEmpty(connectionString))
-//{
-//    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-//}
-
+// Register the DbContext with SQL Server
 builder.Services.AddDbContext<Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register Identity services using AppUser instead of IdentityUser
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<Context>()
+    .AddDefaultTokenProviders();
+
+// Configure application cookies (for login, logout, access denied redirects)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
+
 var app = builder.Build();
 
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -40,18 +39,38 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-// Use session middleware before authorization
+// Use session before authentication/authorization
 app.UseSession();
 
-
+// Enable authentication and authorization
+app.UseAuthentication(); // This must come before UseAuthorization
 app.UseAuthorization();
 
+// Define the default route
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Home}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Seed roles (e.g., Student, Teacher)
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "Student", "Teacher" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
 
 app.Run();

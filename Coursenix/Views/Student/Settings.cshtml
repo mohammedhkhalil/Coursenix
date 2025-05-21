@@ -1,11 +1,12 @@
-﻿@model Coursenix.Models.ViewModels.StudentSettingsViewModel
+﻿<!--
+@model Coursenix.ViewModels.StudentSettingsVM
 
 <div class="settings-container">
     <h2>Account Settings</h2>
     <form asp-action="SaveSettings" method="post" id="settingsForm">
         <div class="form-group">
             <label for="Name">Full Name</label>
-            <input type="text" id="fullName" name="Name" value="@Model.Name" placeholder="Enter your Full name">
+            <input type="text" id="fullName" name="Name" value="@Model.FullName" placeholder="Enter your Full name">
         </div>
 
         <div class="form-group">
@@ -15,12 +16,12 @@
 
         <div class="form-group">
             <label for="PhoneNumber">Phone Number</label>
-            <input type="tel" id="phone" name="PhoneNumber" value="@Model.PhoneNumber" placeholder="Enter phone number">
+            <input type="tel" id="phone" name="PhoneNumber" value="@Model.Phone" placeholder="Enter phone number">
         </div>
 
         <div class="form-group">
             <label for="ParentNumber">Parent's Phone Number</label>
-            <input type="tel" id="parentPhone" name="ParentNumber" value="@Model.ParentNumber" placeholder="Enter phone number">
+            <input type="tel" id="parentPhone" name="ParentNumber" value="@Model.ParentPhone" placeholder="Enter phone number">
         </div>
 
         <div class="form-group">
@@ -29,14 +30,13 @@
             @removeTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
             <select id="gradeLevel" name="Grade" class="form-select">
-                <option value="7" @(Model.Grade == GradeLevel.Grade7 ? "selected" : "")>Grade 7</option>
-                <option value="8" @(Model.Grade == GradeLevel.Grade8 ? "selected" : "")>Grade 8</option>
-                <option value="9" @(Model.Grade == GradeLevel.Grade9 ? "selected" : "")>Grade 9</option>
-                <option value="10" @(Model.Grade == GradeLevel.Grade10 ? "selected" : "")>Grade 10</option>
-                <option value="11" @(Model.Grade == GradeLevel.Grade11 ? "selected" : "")>Grade 11</option>
-                <option value="12" @(Model.Grade == GradeLevel.Grade12 ? "selected" : "")>Grade 12</option>
+                @* <option value="7" @(Model.Grade == GradeLevel.Grade7 ? "selected" : "")>Grade 7</option> *@
+                @* <option value="8" @(Model.Grade == GradeLevel.Grade8 ? "selected" : "")>Grade 8</option> *@
+                @* <option value="9" @(Model.Grade == GradeLevel.Grade9 ? "selected" : "")>Grade 9</option> *@
+                @* <option value="10" @(Model.Grade == GradeLevel.Grade10 ? "selected" : "")>Grade 10</option> *@
+                @* <option value="11" @(Model.Grade == GradeLevel.Grade11 ? "selected" : "")>Grade 11</option> *@
+                @* <option value="12" @(Model.Grade == GradeLevel.Grade12 ? "selected" : "")>Grade 12</option> *@
             </select>
-
 
         </div>
 
@@ -83,3 +83,5 @@
         <div style="clear: both;"></div>
     </form>
 </div>
+
+-->

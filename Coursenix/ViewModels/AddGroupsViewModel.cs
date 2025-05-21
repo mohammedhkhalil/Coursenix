@@ -3,10 +3,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Coursenix.Models; // Ensure this using directive is present
-using Coursenix.Models.ViewModels; // Ensure this using directive is present
 using Microsoft.AspNetCore.Mvc.ModelBinding; // Required for [BindNever]
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class AddGroupsViewModel
     {

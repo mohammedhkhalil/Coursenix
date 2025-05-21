@@ -1,7 +1,7 @@
 ﻿// Models/ViewModels/ResetPasswordViewModel.cs
 using System.ComponentModel.DataAnnotations;
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class ResetPasswordViewModel
     {

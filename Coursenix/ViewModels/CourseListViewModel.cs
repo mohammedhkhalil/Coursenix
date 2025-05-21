@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Coursenix.Models;
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class CourseListViewModel
     {

@@ -13,6 +13,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Globalization;
+using Coursenix.ViewModels;
 
 namespace Coursenix.Controllers
 {

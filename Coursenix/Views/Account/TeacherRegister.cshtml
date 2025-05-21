@@ -1,117 +1,101 @@
-﻿<!DOCTYPE html>
+﻿@model RegisterUserViewModel 
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coursenix</title>
-    <link rel="stylesheet" type="text/css" href="~/css/home.css" />
+    <link rel="stylesheet" href="/css/sign-up.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
     <!-- Header Section -->
     <header class="header">
         <div class="container">
             <div class="logo-container">
-                <a href="#" class="logo">
-                    <img src="~/assets/logo.svg" alt="Coursenix Logo" />
+                <a href="@Url.Action("Index", "Home")" class="logo">
+                    <img src="/assets/logo.svg" alt="Coursenix Logo" />
                     <span>Coursenix</span>
                 </a>
             </div>
-            <nav class="navigation">
-                <ul>
-                    <li><a href="@Url.Action("Home", "Home")" class="active">Home</a></li>
-                    <li><a href="@Url.Action("Index","Courses")">Courses</a></li>
-                    <li><a href="#Footer">Contact</a></li>
-                    <li><a href="#Footer">About</a></li>
-                </ul>
-            </nav>
+            <nav class="navigation"></nav>
             <div class="sign-in-container">
-                <a href="@Url.Action("Login", "Home")" class="btn sign-in-btn">Sign in</a>
+                <a href="@Url.Action("Login", "Account")" class="btn sign-in-btn">Sign in</a>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Your Journey to Excellence Starts Here!</h1>
-                <h2 class="highlight">Join Coursenix Now</h2>
-                <p>
-                    Find, book, and manage your courses online with our easy-to-use
-                    platform. Join thousands of students and teachers who are already
-                    enjoying the benefits of Coursenix.
+    <!-- form -->
+    <main>
+        <div class="form-container">
+            <h1>Start your journey</h1>
+            <p class="subtitle">Create your teacher account</p>
+
+            <form asp-controller="Account" asp-action="Register" method="post" novalidate>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="RoleType" value="Teacher" />
+                <div class="form-group">
+                    <input asp-for="FullName" class="form-control" placeholder="Full name" minlength="3" />
+                    <span asp-validation-for="FullName" class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Email" class="form-control" placeholder="Email address" />
+                    <span asp-validation-for="Email" class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
+                    <span asp-validation-for="PhoneNumber" class="error-message"></span>
+                </div>
+
+                <div class="form-group password-group">
+                    <input asp-for="Password" class="form-control" placeholder="Create a password" />
+                    <i class="far fa-eye-slash toggle-password" data-target="Password"></i>
+                    <span asp-validation-for="Password" class="error-message"></span>
+                </div>
+
+                <div class="form-group password-group">
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat a password" />
+                    <i class="far fa-eye-slash toggle-password" data-target="ConfirmPassword"></i>
+                    <span asp-validation-for="ConfirmPassword" class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Biography" class="bio-label"></label>
+                    <textarea asp-for="Biography"
+                              class="form-control"
+                              placeholder="Tell students a bit about yourself and your teaching approach (max 200 words)"
+                              maxlength="1000"
+                              required></textarea>
+                    <div class="word-counter">
+                        <span id="bio-word-count">0</span>/200 words
+                    </div>
+                    <span asp-validation-for="Biography" class="error-message"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input asp-for="Terms" />
+                    <label asp-for="Terms">
+                        I agree to Dresley's <a href="#">Terms of Service</a> and
+                        <a href="#">Privacy Policy</a>
+                    </label>
+                    <span asp-validation-for="Terms" class="error-message"></span>
+                </div>
+
+                <button type="submit" class="btn-primary">Sign up</button>
+
+                <p class="login-link">
+                    Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
                 </p>
-                <a href="#path" class="btn cta-btn">Join now →</a>
-            </div>
-            <div class="hero-image">
-                <div class="hero-background">
-                    <img src="~/assets/circular-background2.svg"
-                         alt=""
-                         class="hero-bg-img" />
-                </div>
-                <div class="image-stack">
-                    <!-- <div class="arc"></div> -->
-                    <div class="student student-left">
-                        <img src="~/assets/student-left.svg"
-                             alt="Student with books"
-                             class="pill pill-1" />
-                    </div>
-                    <div class="student student-middle">
-                        <img src="~/assets/student-middle.svg"
-                             alt="Student with headphones"
-                             class="pill pill-2" />
-                    </div>
-                    <div class="student student-right">
-                        <img src="~/assets/student-right.svg"
-                             alt="Student with notebooks"
-                             class="pill pill-3" />
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
-        <img src="assets/decoration1.svg"
-             alt=""
-             class="decoration decoration-1" />
-    </section>
-    <!-- Choose Your Path Section -->
-    <section class="path-selection" id="path">
-        <img src="~/assets/Arrow1.svg" alt="" class="decoration decoration-1" />
-        <div class="container">
-            <h2 class="section-title">Choose Your Path</h2>
-            <p class="section-description">
-                Whether you're looking to learn or teach, we've got you covered
-            </p>
+    </main>
 
-            <div class="paths">
-                <div class="path-card">
-                    <div class="path-icon">
-                        <img src="~/assets/student.svg" alt="Student icon" />
-                    </div>
-                    <h3>Student</h3>
-                    <p>
-                        Find courses, access study materials, and manage your learning
-                        schedule all in one place
-                    </p>
-                    <a href="@Url.Action("SignUp", "Student")" class="btn path-btn">Get started</a>
-                </div>
 
-                <div class="path-card">
-                    <div class="path-icon">
-                        <img src="~/assets/teacher.svg" alt="Teacher icon" />
-                    </div>
-                    <h3>Teacher</h3>
-                    <p>
-                        Offer your courses, manage class schedules, and track attendance
-                        with our intuitive tools
-                    </p>
-                    <a href="@Url.Action("SignUp", "Teacher")" class="btn path-btn">Get started</a>
-                </div>
-            </div>
-        </div>
-        <img src="~/assets/lamp.svg" alt="" class="decoration decoration-2" />
-    </section>
-
-    <!-- Footer -->
+    <!-- footer section -->
     <footer class="footer" id="Footer">
         <div class="container">
             <div class="footer-columns">
@@ -167,5 +151,6 @@
             </div>
         </div>
     </footer>
+    <script src="/js/teaher-sign-up.js"></script>
 </body>
 </html>

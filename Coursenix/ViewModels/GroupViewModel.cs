@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Coursenix.Models.ViewModels
+namespace Coursenix.ViewModels
 {
     public class GroupViewModel
     {

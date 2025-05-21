@@ -13,15 +13,12 @@ namespace Coursenix.Controllers
         //    _logger = logger;
         //}
 
-        public IActionResult Home()
+        public IActionResult Index()
         {
-            return View("Home");
+            return View("Index");
         }
 
-        public IActionResult Sign_In()
-        {
-            return View("Sign_In");
-        }
+     
 
         //public IActionResult Privacy()
         //{

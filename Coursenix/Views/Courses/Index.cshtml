@@ -1,5 +1,5 @@
 ﻿@* Views/Courses/Index.cshtml *@
-@model Coursenix.Models.ViewModels.CourseListViewModel
+@model Coursenix.ViewModels.CourseListViewModel
 
 @{
     ViewData["Title"] = "Courses"; 
@@ -27,16 +27,16 @@
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="@Url.Action("Home", "Home")" class="nav-link">Home</a>
+                    <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
                     <a href="@Url.Action("Index", "Courses")" class="nav-link active">Courses</a>
                 </li>
                 <li class="nav-item">
-                    <a href="@Url.Action("Home", "Home")"  class="nav-link" >Contact</a>
+                    <a href="@Url.Action("Index", "Home")" class="nav-link">Contact</a>
                 </li>
                 <li class="nav-item">
-                    <a href="@Url.Action("Home", "Home")" class="nav-link">About</a>
+                    <a href="@Url.Action("Index", "Home")" class="nav-link">About</a>
                 </li>
             </ul>
         </div>

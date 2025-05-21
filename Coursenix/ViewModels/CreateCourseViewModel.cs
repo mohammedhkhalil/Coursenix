@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Coursenix.ViewModels;
 
 namespace Coursenix.Models.ViewModels
 {
@@ -19,7 +20,7 @@ namespace Coursenix.Models.ViewModels
         public int CoursePrice { get; set; }
 
         [Display(Name = "Course Thumbnail")]
-        public IFormFile? ThumbnailFile { get; set; }// wiil make the images by defult in the system 
+        public IFormFile? ThumbnailFile { get; set; }// will make the images by defult in the system 
 
         [Required(ErrorMessage = "Course description is required.")]
         [Display(Name = "Course Description")]

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Coursenix.ViewModel
+namespace Coursenix.ViewModels
 {
     public class LoginViewModel
     {
 
-        [Required]
-        [MaxLength(255)]
-        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
 
         [Required]
@@ -17,6 +17,9 @@ namespace Coursenix.ViewModel
         public string Password { get; set; }
 
         [Required]
-        public string Role { get; set; } // "Student" or "Teacher"
+        public string Role { get; set; } // Student or Teacher or Admin
+
+        [Display(Name = "Remember Me")]
+        public bool RememberMe { get; set; }
     }
 }

@@ -1,80 +1,105 @@
-﻿@model Coursenix.Models.ViewModels.TeacherSignUpViewModel
+﻿@model RegisterUserViewModel 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coursenix</title>
-    <link rel="stylesheet" href="~/css/sign-up.css" />
+    <link rel="stylesheet" href= "/css/sign-up.css" />
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <!-- Header Section -->
     <header class="header">
         <div class="container">
             <div class="logo-container">
-                <a href="@Url.Action("Home", "Home")" class="logo">
-                    <img src="~/assets/logo.svg" alt="Coursenix Logo" />
+                <a href="@Url.Action("Index", "Home")" class="logo">
+                    <img src="/assets/logo.svg" alt="Coursenix Logo" />
                     <span>Coursenix</span>
                 </a>
             </div>
             <nav class="navigation"></nav>
             <div class="sign-in-container">
-                <a href="@Url.Action("Sign_In", "Home")" class="btn sign-in-btn">Sign in</a>
+                <a href="@Url.Action("Login", "Account")" class="btn sign-in-btn">Sign in</a>
             </div>
         </div>
     </header>
-    <!-- form -->
-
     <main>
         <div class="form-container">
             <h1>Start your journey</h1>
-            <p class="subtitle">Create your teacher account</p>
+            <p class="subtitle">
+                Create your student account and discover thousands of courses
+            </p>
 
-            <form asp-controller="Teacher" asp-action="SignUp" method="post" id="signup-form" novalidate>
-                <input type="hidden" asp-antiforgery="true" />
-
-                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+            <form asp-controller="Account" asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input type="hidden" asp-for="RoleType" value="Student" />
 
                 <div class="form-group">
-                    <input type="text" asp-for="FullName" placeholder="Full name" required minlength="3" />
+                    <input asp-for="FullName" class="form-control" placeholder="Full name" />
                     <span asp-validation-for="FullName" class="error-message"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="email" asp-for="Email" placeholder="Email address" required />
+                    <input asp-for="Email" class="form-control" placeholder="Email address" />
                     <span asp-validation-for="Email" class="error-message"></span>
                 </div>
 
                 <div class="form-group">
-                    <input type="tel" asp-for="PhoneNumber" placeholder="Phone number" required />
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
                     <span asp-validation-for="PhoneNumber" class="error-message"></span>
                 </div>
+
+                <div class="form-group">
+                    <input asp-for="ParentNumber" class="form-control" placeholder="Parent's phone number" />
+                    <span asp-validation-for="ParentNumber" class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="select-wrapper">
+                        <select asp-for="Grade" class="form-control"
+                                asp-items="@(new SelectList(new List<SelectListItem> {
+                                    new SelectListItem { Text = "Select your grade", Value = "", Disabled = true },
+                                    new SelectListItem { Text = "Grade 7", Value = "7" },
+                                    new SelectListItem { Text = "Grade 8", Value = "8" },
+                                    new SelectListItem { Text = "Grade 9", Value = "9" },
+                                    new SelectListItem { Text = "Grade 10", Value = "10" },
+                                    new SelectListItem { Text = "Grade 11", Value = "11" },
+                                    new SelectListItem { Text = "Grade 12", Value = "12" }
+                                }, "Value", "Text"))">
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <span asp-validation-for="Grade" class="error-message"></span>
+                </div>
+
                 <div class="form-group password-group">
-                    <input type="password" asp-for="Password" placeholder="Create a password" required minlength="8" />
+                    <input asp-for="Password" class="form-control" placeholder="Create a password" />
                     <i class="far fa-eye-slash toggle-password" data-target="Password"></i>
                     <span asp-validation-for="Password" class="error-message"></span>
                 </div>
 
                 <div class="form-group password-group">
-                    <input type="password" asp-for="ConfirmPassword" placeholder="Repeat a password" required />
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat a password" />
                     <i class="far fa-eye-slash toggle-password" data-target="ConfirmPassword"></i>
                     <span asp-validation-for="ConfirmPassword" class="error-message"></span>
                 </div>
 
-
                 <div class="form-group checkbox-group">
-                    <input type="checkbox" asp-for="TermsAccepted" />
-                    <label asp-for="TermsAccepted">I agree to Dresley's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
-                    <span asp-validation-for="TermsAccepted" class="text-danger error-message"></span>
+                    <input asp-for="Terms" />
+                    <label asp-for="Terms">
+                        I agree to Dresley's <a href="#">Terms of Service</a> and
+                        <a href="#">Privacy Policy</a>
+                    </label>
+                    <span asp-validation-for="Terms" class="error-message"></span>
                 </div>
 
-
-            <button type="submit" class="btn-primary">Sign up</button>
+                <button type="submit" class="btn-primary">Sign up</button>
 
                 <p class="login-link">
-                    Already have an account? <a href="@Url.Action("Sign_In", "Teacher")">Sign in</a>
+                    Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
                 </p>
             </form>
         </div>
@@ -136,6 +161,6 @@
             </div>
         </div>
     </footer>
-    <script src="~/js/teaher-sign-up.js"></script>
+    <script src="/js/student-sign-up.js"></script>
 </body>
 </html>
