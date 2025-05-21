@@ -109,7 +109,7 @@ namespace Coursenix.Controllers
 
                     // Redirect based on role
                     if (await userManager.IsInRoleAsync(userModel, "Student"))
-                        return RedirectToAction("Courses", "Courses");
+                        return RedirectToAction("Index", "Courses");
 
                     if (await userManager.IsInRoleAsync(userModel, "Teacher"))
                         return RedirectToAction("Create", "Courses");
