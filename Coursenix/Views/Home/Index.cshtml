@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coursenix</title>
     <link rel="stylesheet" type="text/css" href="~/css/home.css" />
+    <link rel="stylesheet" href="/css/student-dashboard.css">
 </head>
 <body>
     <!-- Header Section -->
@@ -24,9 +25,24 @@
                     <li><a href="#Footer">About</a></li>
                 </ul>
             </nav>
-            <div class="sign-in-container">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="user-profile" id="userProfile">
+                    <div class="user-icon">@(User.Identity.Name?.FirstOrDefault() ?? 'U')</div>
+                    <span class="username"> @User.Identity.Name </span>
+                    <div></div>
+                    <div></div>
+                    <div class="sign_out">
+                        <a href="@Url.Action("Logout", "Account")" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            }
+            else 
+            {
+                <div class="sign-in-container">
                 <a href="@Url.Action("Login", "Account")" class="btn sign-in-btn">Sign in</a>
-            </div>
+                </div>
+            }
         </div>
     </header>
 

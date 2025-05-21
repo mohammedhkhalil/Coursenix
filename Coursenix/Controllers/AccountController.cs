@@ -61,7 +61,7 @@ namespace Coursenix.Controllers
                 // Create account
                 AppUser userModel = new AppUser
                 {
-                    UserName = newUserVM.Email,
+                    UserName = newUserVM.FullName,
                     Email = newUserVM.Email,
                     PasswordHash = newUserVM.Password, // Password is handled by IdentityUser
                     RoleType = newUserVM.RoleType

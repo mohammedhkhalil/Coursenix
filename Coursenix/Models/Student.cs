@@ -12,7 +12,6 @@ namespace Coursenix.Models
         Grade11 = 11,
         Grade12 = 12
     }
-
     public class Student
     {
         [Key]
