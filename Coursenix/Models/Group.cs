@@ -8,25 +8,18 @@ namespace Coursenix.Models
 {
     public class Group
     {
-        [Key] // Designates GroupId as the primary key
+        [Key]
         public int GroupId { get; set; }
 
-        // Foreign key relating this group to a Subject
-        [ForeignKey("Subject")] // Specifies the navigation property name
-        public int SubjectId { get; set; }
 
-        // Navigation property to the parent Subject entity
+        [ForeignKey("Subject")]
+        public int SubjectId { get; set; }
         public Subject Subject { get; set; }
 
-        // --- REMOVED: Direct link to Teacher (TeacherId and Teacher navigation property) ---
-        // Removing these properties removes the FK_Groups_Teachers_TeacherId constraint.
-        // This should resolve the "multiple cascade paths" error.
-        // The Group is still indirectly linked to a Teacher via the Subject.Teacher relationship.
-        // --- End REMOVED ---
 
 
         [Required]
-        [Range(1, 12, ErrorMessage = "Grade must be between 1 and 12.")]
+        [Range(7, 12, ErrorMessage = "Grade must be between 7 and 12.")]
         public int Grade { get; set; }
 
         [StringLength(100, ErrorMessage = "Group name cannot exceed 100 characters.")]
@@ -56,5 +49,7 @@ namespace Coursenix.Models
 
         [StringLength(200, ErrorMessage = "Location cannot exceed 200 characters.")]
         public string Location { get; set; }
+
+        public ICollection<GroupDay> GroupDays { get; set; } = new List<GroupDay>(); // days related with group
     }
 }

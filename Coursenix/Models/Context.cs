@@ -32,11 +32,11 @@ namespace Coursenix.Models
               .HasForeignKey(b => b.StudentId)
               .OnDelete(DeleteBehavior.Restrict);
 
-           modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Group)
-                .WithMany()
-                .HasForeignKey(b => b.GroupId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Booking>()
+                 .HasOne(b => b.Group)
+                 .WithMany()
+                 .HasForeignKey(b => b.GroupId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Attendance>()
                .HasOne(a => a.Student)
@@ -74,13 +74,25 @@ namespace Coursenix.Models
                 .Property(s => s.Price)
                 .HasColumnType("decimal(18, 2)");
 
+            // Define the one-to-many relationship: One Group → Many GroupDays
+            modelBuilder.Entity<GroupDay>()
+                .HasOne(gd => gd.Group)
+                .WithMany(g => g.GroupDays)
+                .HasForeignKey(gd => gd.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Store the enum (WeekDay) as an integer in the database – explicitly stated for clarity
+            modelBuilder.Entity<GroupDay>()
+                .Property(gd => gd.Day)
+                .HasConversion<int>();
+
             // SeedData(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Data Source=LAPTOP-0RH6BA2F\SQLEXPRESS;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
 

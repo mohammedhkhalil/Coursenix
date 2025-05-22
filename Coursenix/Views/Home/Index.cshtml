@@ -27,9 +27,17 @@
             </nav>
             @if (User.Identity.IsAuthenticated)
             {
+                var fullName = User.FindFirst("FullName")?.Value ?? "User";
+
                 <div class="user-profile" id="userProfile">
-                    <div class="user-icon">@(User.Identity.Name?.FirstOrDefault() ?? 'U')</div>
-                    <span class="username"> @User.Identity.Name </span>
+                    <div class="user-icon">
+                        @((fullName.Substring(0, 1).ToUpper()))
+                    </div>
+
+                    <span class="username">
+                        @fullName
+                    </span>
+
                     <div></div>
                     <div></div>
                     <div class="sign_out">

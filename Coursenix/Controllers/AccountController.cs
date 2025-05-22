@@ -3,6 +3,7 @@ using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks; 
 
 namespace Coursenix.Controllers
@@ -61,7 +62,8 @@ namespace Coursenix.Controllers
                 // Create account
                 AppUser userModel = new AppUser
                 {
-                    UserName = newUserVM.FullName,
+                    UserName = newUserVM.Email,
+                    Name = newUserVM.FullName,
                     Email = newUserVM.Email,
                     PasswordHash = newUserVM.Password, // Password is handled by IdentityUser
                     RoleType = newUserVM.RoleType
@@ -74,6 +76,13 @@ namespace Coursenix.Controllers
                 {
                     // Assign role to user.
                     await userManager.AddToRoleAsync(userModel, newUserVM.RoleType);
+
+                    //add cliams 
+                    await userManager.AddClaimsAsync(userModel, new List<Claim>
+                    {
+                        new Claim("FullName", userModel.Name),
+                        new Claim("Email", userModel.Email)
+                    });
 
                     // create a cookie for the user
                     await signInManager.SignInAsync(userModel, isPersistent: false);
@@ -184,8 +193,17 @@ namespace Coursenix.Controllers
 
             //await userManager.AddToRoleAsync(userModel, userVM.RoleType);  // add role 
 
-            // 5) Sign the user in (creates the authentication cookie).
-            await signInManager.SignInAsync(userModel, authProps);
+            // 5) Sign the user in (creates the authentication cookie & cliams).
+            await signInManager.SignInWithClaimsAsync(
+                 userModel,
+                 authProps,
+                 new List<Claim>
+                 {
+                    new Claim("FullName", userModel.Name),
+                    new Claim("Email", userModel.Email)
+                 }
+            );
+
 
             // 6) Redirect according to the user’s role.
             if (await userManager.IsInRoleAsync(userModel, "Student"))
@@ -205,7 +223,7 @@ namespace Coursenix.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); // Redirect to the home page or login page
+            return RedirectToAction("Index", "Home"); 
         }
 
     }

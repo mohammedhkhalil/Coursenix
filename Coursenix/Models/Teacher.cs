@@ -15,9 +15,9 @@ namespace Coursenix.Models
         [ForeignKey("AppUserId")]
         public AppUser AppUser { get; set; } // Navigation property
 
-        public string Name;
+        public string Name { get; set; }
         [Required]
-        public string Email;
+        public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
 
