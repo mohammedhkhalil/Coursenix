@@ -24,7 +24,7 @@ namespace Coursenix.Models
 
         public int Price { get; set; }
 
-        [MaxLength(255)] // أو طول مناسب لمسار الملف that added by Abdalrhman
+        [MaxLength(255)] 
         public string ThumbnailFileName { get; set; }
 
         public int StudentsPerGroup { get; set; }
@@ -35,6 +35,5 @@ namespace Coursenix.Models
         // Navigation properties
         public Teacher Teacher { get; set; } // Teacher teaching this subject
         public ICollection<Group> Groups { get; set; } // Groups for this subject
-        public ICollection<Booking> Bookings { get; set; } // Bookings for this subject
     }
 }

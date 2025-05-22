@@ -6,6 +6,9 @@ using Coursenix.Models.ViewModels;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Coursenix.Enums;
 
 namespace Coursenix.Controllers
 {
@@ -29,6 +32,8 @@ namespace Coursenix.Controllers
                 .Include(g => g.Sessions)
                     .ThenInclude(s => s.Attendances)
                 .FirstOrDefaultAsync(g => g.Id == groupId);
+
+
 
             if (group == null)
                 return NotFound();

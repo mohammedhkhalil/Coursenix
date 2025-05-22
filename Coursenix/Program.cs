@@ -57,10 +57,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Seed roles (e.g., Student, Teacher)
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<Context>();
+
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
     string[] roles = { "Student", "Teacher" };
 
@@ -72,5 +75,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 
 app.Run();
