@@ -15,7 +15,7 @@ namespace Coursenix.Models
     public class Student
     {
         [Key]
-        public int StudentId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string AppUserId { get; set; } // Foreign key to AppUser

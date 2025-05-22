@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250521231333_wafaa")]
+    [Migration("20250522164533_wafaa")]
     partial class wafaa
     {
         /// <inheritdoc />
@@ -67,6 +67,10 @@ namespace Coursenix.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -112,11 +116,11 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Attendance", b =>
                 {
-                    b.Property<int>("AttendanceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttendanceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
@@ -130,7 +134,7 @@ namespace Coursenix.Migrations
                     b.Property<int?>("StudentId1")
                         .HasColumnType("int");
 
-                    b.HasKey("AttendanceId");
+                    b.HasKey("Id");
 
                     b.HasIndex("SessionId");
 
@@ -143,16 +147,19 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Booking", b =>
                 {
-                    b.Property<int>("BookingId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GroupId1")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -164,9 +171,11 @@ namespace Coursenix.Migrations
                     b.Property<int?>("SubjectId")
                         .HasColumnType("int");
 
-                    b.HasKey("BookingId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("GroupId1");
 
                     b.HasIndex("StudentId");
 
@@ -179,11 +188,11 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Group", b =>
                 {
-                    b.Property<int>("GroupId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
@@ -199,15 +208,15 @@ namespace Coursenix.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -221,7 +230,7 @@ namespace Coursenix.Migrations
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
 
-                    b.HasKey("GroupId");
+                    b.HasKey("Id");
 
                     b.HasIndex("SubjectId");
 
@@ -230,13 +239,34 @@ namespace Coursenix.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Coursenix.Models.Session", b =>
+            modelBuilder.Entity("Coursenix.Models.GroupDay", b =>
                 {
-                    b.Property<int>("SessionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SessionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupDays");
+                });
+
+            modelBuilder.Entity("Coursenix.Models.Session", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -244,7 +274,7 @@ namespace Coursenix.Migrations
                     b.Property<DateTime>("SessionDateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("SessionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
@@ -253,11 +283,11 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Student", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
@@ -282,7 +312,7 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AppUserId")
                         .IsUnique();
@@ -292,11 +322,11 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Subject", b =>
                 {
-                    b.Property<int>("SubjectId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubjectId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -330,7 +360,7 @@ namespace Coursenix.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("SubjectId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TeacherId");
 
@@ -339,11 +369,11 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
                 {
-                    b.Property<int>("TeacherId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeacherId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
@@ -354,6 +384,14 @@ namespace Coursenix.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -363,7 +401,7 @@ namespace Coursenix.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("TeacherId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AppUserId")
                         .IsUnique();
@@ -535,6 +573,10 @@ namespace Coursenix.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Coursenix.Models.Group", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("GroupId1");
+
                     b.HasOne("Coursenix.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
@@ -569,10 +611,21 @@ namespace Coursenix.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("Coursenix.Models.GroupDay", b =>
+                {
+                    b.HasOne("Coursenix.Models.Group", "Group")
+                        .WithMany("GroupDays")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("Coursenix.Models.Session", b =>
                 {
                     b.HasOne("Coursenix.Models.Group", "Group")
-                        .WithMany()
+                        .WithMany("Sessions")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -662,6 +715,15 @@ namespace Coursenix.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Coursenix.Models.Group", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("GroupDays");
+
+                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Session", b =>

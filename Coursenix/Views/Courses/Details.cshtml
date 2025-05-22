@@ -121,7 +121,7 @@
                     <p class="mb-4">Select one of the available groups for Grade @Model.Subject.GradeLevel below to enroll in this course.</p>
 
                     <form asp-controller="Courses" asp-action="Enroll" method="post">
-                        <input type="hidden" name="subjectId" value="@Model.Subject.SubjectId" />
+                        <input type="hidden" name="subjectId" value="@Model.Subject.Id" />
                         <input type="hidden" id="selectedGroupId" name="selectedGroupId" value="@Model.SelectedGroupId" />
 
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
@@ -130,8 +130,8 @@
                         {
                             @foreach (var group in Model.Groups)
                             {
-                                <div class="group-card @(Model.SelectedGroupId == group.GroupId ? "selected" : "")" data-group-id="@group.GroupId" id="group-card-@group.GroupId">
-                                    <h5 class="group-title">Group @group.GroupId</h5>
+                                <div class="group-card @(Model.SelectedGroupId == group.Id ? "selected" : "")" data-group-id="@group.Id" id="group-card-@group.Id">
+                                    <h5 class="group-title">Group @group.Id</h5>
                                     <ul class="group-details">
                                         <li>@group.DayOfWeek</li>
                                         <li>@($"{group.StartTime:h:mm tt}") - @($"{group.EndTime:h:mm tt}")</li>
@@ -169,7 +169,7 @@
                                         }
                                     </span>
 
-                                    <div class="radio-button @(Model.SelectedGroupId == group.GroupId ? "selected" : "")"></div>
+                                    <div class="radio-button @(Model.SelectedGroupId == group.Id ? "selected" : "")"></div>
                                 </div>
                             }
                         }

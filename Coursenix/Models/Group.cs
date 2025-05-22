@@ -9,7 +9,7 @@ namespace Coursenix.Models
     public class Group
     {
         [Key]
-        public int GroupId { get; set; }
+        public int Id { get; set; }
 
 
         [ForeignKey("Subject")]
@@ -23,7 +23,7 @@ namespace Coursenix.Models
         public int Grade { get; set; }
 
         [StringLength(100, ErrorMessage = "Group name cannot exceed 100 characters.")]
-        public string GroupName { get; set; } // Group name can be optional if not [Required]
+        public string Name { get; set; } // Group name can be optional if not [Required]
 
         [Required(ErrorMessage = "Days of the week are required.")]
         [StringLength(50, ErrorMessage = "Days string cannot exceed 50 characters.")]
@@ -42,14 +42,14 @@ namespace Coursenix.Models
         [Range(1, int.MaxValue, ErrorMessage = "Total seats must be at least 1.")]
         public int TotalSeats { get; set; }
 
-        // Current count of enrolled students in this group
-        [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "Enrolled students count cannot be negative.")]
-        public int EnrolledStudentsCount { get; set; }
+
+        public int EnrolledStudentsCount { get; set; } 
 
         [StringLength(200, ErrorMessage = "Location cannot exceed 200 characters.")]
         public string Location { get; set; }
 
         public ICollection<GroupDay> GroupDays { get; set; } = new List<GroupDay>(); // days related with group
+        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Session> Sessions { get; set; }
     }
 }

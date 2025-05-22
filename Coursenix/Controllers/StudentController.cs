@@ -104,7 +104,7 @@ namespace Coursenix.Controllers
 
             // All bookings for this student (=> groups)
             var bookings = await _context.Bookings
-                .Where(b => b.StudentId == student.StudentId)
+                .Where(b => b.StudentId == student.Id)
                 .Include(b => b.Group)
                     .ThenInclude(g => g.Subject)
                         .ThenInclude(su => su.Teacher)
@@ -120,8 +120,8 @@ namespace Coursenix.Controllers
 
                 // a) All sessions in this group
                 var sessionIds = await _context.Sessions
-                    .Where(se => se.GroupId == group.GroupId)
-                    .Select(se => se.SessionId)
+                    .Where(se => se.GroupId == group.Id)
+                    .Select(se => se.Id)
                     .ToListAsync();
 
                 var totalSessions = sessionIds.Count;
@@ -129,18 +129,18 @@ namespace Coursenix.Controllers
                 // b) How many the student attended
                 var sessionsAttended = await _context.Attendances
                     .CountAsync(a =>
-                        a.StudentId == student.StudentId &&
+                        a.StudentId == student.Id &&
                         a.IsPresent &&
                         sessionIds.Contains(a.SessionId));
 
                 // c) One dashboard card
                 viewModel.Add(new StudentGroupViewModel
                 {
-                    StudentId = student.StudentId,
+                    StudentId = student.Id,
                     StudentName = student.Name,
 
-                    GroupId = group.GroupId,
-                    GroupName = group.GroupName,
+                    GroupId = group.Id,
+                    GroupName = group.Name,
                     SubjectName = group.Subject.SubjectName,
                     TeacherName = group.Subject.Teacher.Name,
 

@@ -87,7 +87,7 @@ namespace Coursenix.Controllers
             var subject = await _context.Subjects
                 .Include(s => s.Teacher)
                 .Include(s => s.Groups)
-                .FirstOrDefaultAsync(m => m.SubjectId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (subject == null)
             {
@@ -142,9 +142,9 @@ namespace Coursenix.Controllers
 
             var group = await _context.Groups
                                   .Include(g => g.Subject)
-                                  .FirstOrDefaultAsync(g => g.GroupId == selectedGroupId);
+                                  .FirstOrDefaultAsync(g => g.Id == selectedGroupId);
 
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentId == studentId);
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (group == null || student == null || group.SubjectId != subjectId)
             {
@@ -279,7 +279,7 @@ namespace Coursenix.Controllers
                     _context.Subjects.Add(subject);
                     await _context.SaveChangesAsync();
                     // Redirect to the AddGroups action on success, passing the new SubjectId
-                    return RedirectToAction("AddGroups", new { subjectId = subject.SubjectId });
+                    return RedirectToAction("AddGroups", new { subjectId = subject.Id });
                 }
                 catch (Exception ex) // Catching the database save exception
                 {
@@ -338,7 +338,7 @@ namespace Coursenix.Controllers
 
             var subject = await _context.Subjects
                                         .Include(s => s.Groups)
-                                        .FirstOrDefaultAsync(s => s.SubjectId == idToUse); // Use idToUse
+                                        .FirstOrDefaultAsync(s => s.Id == idToUse); // Use idToUse
 
             if (subject == null)
             {
@@ -349,13 +349,13 @@ namespace Coursenix.Controllers
 
             var viewModel = new AddGroupsViewModel 
             {
-                SubjectId = subject.SubjectId, 
+                SubjectId = subject.Id, 
                 Subject = subject,             
                 Groups = subject.Groups?       
                                 .Select(g => new GroupViewModel 
                                 {
                                     Grade = g.Grade,          
-                                    GroupName = g.GroupName,   
+                                    GroupName = g.Name,   
                                     Days = g.DayOfWeek,       
                                     StartTime = g.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture), 
                                     EndTime = g.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture)   
@@ -378,7 +378,7 @@ namespace Coursenix.Controllers
         //[Authorize(Roles = "Teacher")] 
         public async Task<IActionResult> AddGroups(AddGroupsViewModel model) 
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectId == model.SubjectId); 
+            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == model.SubjectId); 
 
             if (subject == null)
             {
@@ -514,9 +514,9 @@ namespace Coursenix.Controllers
 
                         var group = new Group 
                         {
-                            SubjectId = subject.SubjectId, 
+                            SubjectId = subject.Id, 
                             Grade = groupModel.Grade, 
-                            GroupName = groupModel.GroupName, 
+                            Name = groupModel.GroupName, 
                             DayOfWeek = groupModel.Days, 
                             StartTime = startTime, 
                             EndTime = endTime,     
@@ -533,11 +533,11 @@ namespace Coursenix.Controllers
 
                     TempData["StatusMessage"] = "Groups added successfully and course is complete!"; 
                     TempData["IsSuccess"] = true;
-                    return RedirectToAction("Details", new { id = subject.SubjectId }); 
+                    return RedirectToAction("Details", new { id = subject.Id }); 
                 }
                 catch (Exception ex)
                 {
-                    model.Subject = await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectId == model.SubjectId);
+                    model.Subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == model.SubjectId);
 
                     ModelState.AddModelError("", "An error occurred while saving the groups.");
                     model.StatusMessage = "An error occurred while saving the groups."; 
@@ -548,7 +548,7 @@ namespace Coursenix.Controllers
             }
             else
             {
-                model.Subject = await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectId == model.SubjectId);
+                model.Subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id == model.SubjectId);
 
                 model.StatusMessage = model.StatusMessage ?? "Please fix the errors in the form."; 
                 model.IsSuccess = false; 

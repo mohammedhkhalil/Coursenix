@@ -8,7 +8,7 @@ namespace Coursenix.Models
     public class GroupDay
     {
         [Key]
-        public int GroupDayId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public WeekDay Day { get; set; }    

@@ -8,7 +8,7 @@ namespace Coursenix.Models
     public class Subject
     {
         [Key]
-        public int SubjectId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(255)]

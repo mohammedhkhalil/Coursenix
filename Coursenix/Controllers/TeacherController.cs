@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Coursenix.Models;
 using Coursenix.Models.ViewModels;
+using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,6 @@ namespace Coursenix.Controllers
         {
             _context = context;
         }
-  
 
     }
 }

@@ -7,7 +7,7 @@ namespace Coursenix.Models
     public class Session
     {
         [Key]
-        public int SessionId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public DateTime SessionDateTime { get; set; }

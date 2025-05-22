@@ -1,0 +1,71 @@
+﻿@model Coursenix.ViewModels.GroupAttendanceViewModel
+
+<main>
+    <div class="attendance-container">
+        <h2>Students Attendance</h2>
+
+        <div class="group-info">
+            <div class="course-details">
+                <div class="grade-level">
+                    <span class="grade-label">Grade:</span>
+                    <span class="grade-value">@Model.GradeLevel</span>
+                </div>
+                <div class="group">
+                    <span class="group-label">Group:</span>
+                    <span class="group-value">@Model.GroupName</span>
+                </div>
+            </div>
+            <div class="schedule">
+                @*<div class="day">
+                    <span class="calendar-icon">📅</span>
+                    <span>@Model.Days</span>
+                </div>*@
+                <div class="time">
+                    <span class="time-icon">🕔</span>
+                    <span>
+                        @Model.StartTime.ToString("h:mm tt") - @Model.EndTime.ToString("h:mm tt")
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="SaveAttendance" asp-controller="Groups" method="post">
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Phone Number</th>
+                        <th>Parent's Phone</th>
+                        <th>Absence %</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var student in Model.Students)
+                    {
+                        <tr>
+                            <td>@student.Name</td>
+                            <td>@student.PhoneNumber</td>
+                            <td>@student.ParentPhoneNumber</td>
+                            <td>
+                                <span class="absence @(student.AbsencePercentage >= 50 ? "high" : student.AbsencePercentage >= 25 ? "medium" : "low")">
+                                    @student.AbsencePercentage%
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="DeleteStudent" asp-controller="Groups" asp-route-id="@student.Id" class="delete-btn">
+                                    &#10060;
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="button-group">
+                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</main>

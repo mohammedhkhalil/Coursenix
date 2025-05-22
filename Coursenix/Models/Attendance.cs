@@ -7,7 +7,7 @@ namespace Coursenix.Models
     public class Attendance
     {
         [Key]
-        public int AttendanceId { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Student")]
         public int StudentId { get; set; }
