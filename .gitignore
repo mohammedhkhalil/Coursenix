@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Coursenix/Controllers/SessionAttendanceController.cs
+/Coursenix/Models/ViewModels/SessionAttendanceViewModel.cs
+/Coursenix/Views/Teacher/SessionAttendance.cshtml
+/README.md
+/.gitignore
+/README.md
