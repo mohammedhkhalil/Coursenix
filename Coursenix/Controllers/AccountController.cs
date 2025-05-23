@@ -1,10 +1,11 @@
 ﻿using Coursenix.Models;
+using Coursenix.Repository;
 using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace Coursenix.Controllers
 {
@@ -19,18 +20,22 @@ namespace Coursenix.Controllers
         private readonly Context context;
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
+        private readonly EmailService emailService;
+
 
         // injection
         public AccountController
         (
             UserManager<AppUser> _UserManager,
             SignInManager<AppUser> _signInManager,
-            Context _context
+            Context _context, 
+            EmailService _emailService
         )
         {
             userManager = _UserManager;
             signInManager = _signInManager;
             context = _context;
+            emailService = _emailService;
         }
 
         /************************* Register *****************************/
@@ -86,7 +91,7 @@ namespace Coursenix.Controllers
 
                     // create a cookie for the user
                     await signInManager.SignInAsync(userModel, isPersistent: false);
-                   
+
                     // Add user to the appropriate table based on role
                     if (newUserVM.RoleType == "Student")
                     {
@@ -223,7 +228,64 @@ namespace Coursenix.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        /************************* Forgot Pass *****************************/
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return View("ForgotPasswordConfirmation");
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Account",
+                new { token, email = user.Email }, Request.Scheme);
+
+            await emailService.SendEmailAsync(user.Email, "Reset Your Password",
+                $"Click <a href='{resetLink}'>here</a> to reset your password.");
+
+            return View("ForgotPasswordConfirmation");
+        }
+
+        /************************* Reset Pass *****************************/
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            var model = new ResetPasswordViewModel { Token = token, Email = email };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return RedirectToAction("ResetPasswordConfirmation");
+
+            var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+                return View("ResetPasswordConfirmation");
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
+
+            return View(model);
         }
 
     }
