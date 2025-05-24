@@ -247,7 +247,7 @@ namespace Coursenix.Controllers
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return View("ForgotPasswordConfirmation");
+                return View();
             }
 
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -257,7 +257,7 @@ namespace Coursenix.Controllers
             await emailService.SendEmailAsync(user.Email, "Reset Your Password",
                 $"Click <a href='{resetLink}'>here</a> to reset your password.");
 
-            return View("ForgotPasswordConfirmation");
+            return View();
         }
 
         /************************* Reset Pass *****************************/
@@ -276,11 +276,11 @@ namespace Coursenix.Controllers
 
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return RedirectToAction("ResetPasswordConfirmation");
+                return RedirectToAction();
 
             var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
             if (result.Succeeded)
-                return View("ResetPasswordConfirmation");
+                return View();
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250522164533_wafaa")]
-    partial class wafaa
+    [Migration("20250523184249_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,9 +168,6 @@ namespace Coursenix.Migrations
                     b.Property<int?>("StudentId1")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
@@ -180,8 +177,6 @@ namespace Coursenix.Migrations
                     b.HasIndex("StudentId");
 
                     b.HasIndex("StudentId1");
-
-                    b.HasIndex("SubjectId");
 
                     b.ToTable("Bookings");
                 });
@@ -587,10 +582,6 @@ namespace Coursenix.Migrations
                         .WithMany("Bookings")
                         .HasForeignKey("StudentId1");
 
-                    b.HasOne("Coursenix.Models.Subject", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("SubjectId");
-
                     b.Navigation("Group");
 
                     b.Navigation("Student");
@@ -740,8 +731,6 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Subject", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Groups");
                 });
 

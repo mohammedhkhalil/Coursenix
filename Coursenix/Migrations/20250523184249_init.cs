@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Coursenix.Migrations
 {
     /// <inheritdoc />
-    public partial class wafaa : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -288,8 +288,7 @@ namespace Coursenix.Migrations
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GroupId1 = table.Column<int>(type: "int", nullable: true),
-                    StudentId1 = table.Column<int>(type: "int", nullable: true),
-                    SubjectId = table.Column<int>(type: "int", nullable: true)
+                    StudentId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -315,11 +314,6 @@ namespace Coursenix.Migrations
                         name: "FK_Bookings_Students_StudentId1",
                         column: x => x.StudentId1,
                         principalTable: "Students",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
                         principalColumn: "Id");
                 });
 
@@ -469,11 +463,6 @@ namespace Coursenix.Migrations
                 name: "IX_Bookings_StudentId1",
                 table: "Bookings",
                 column: "StudentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_SubjectId",
-                table: "Bookings",
-                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupDays_GroupId",
