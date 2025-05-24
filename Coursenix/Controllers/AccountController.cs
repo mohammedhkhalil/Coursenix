@@ -28,7 +28,7 @@ namespace Coursenix.Controllers
         (
             UserManager<AppUser> _UserManager,
             SignInManager<AppUser> _signInManager,
-            Context _context, 
+            Context _context,
             EmailService _emailService
         )
         {

@@ -15,7 +15,9 @@ namespace Coursenix.Repository
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+
             {
+                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(
                     config["EmailSettings:Gmail:Email"],
                     config["EmailSettings:Gmail:Password"]

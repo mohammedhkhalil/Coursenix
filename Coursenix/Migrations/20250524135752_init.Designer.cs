@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250523184249_init")]
+    [Migration("20250524135752_init")]
     partial class init
     {
         /// <inheritdoc />
