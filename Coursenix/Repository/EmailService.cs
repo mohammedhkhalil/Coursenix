@@ -11,6 +11,7 @@ namespace Coursenix.Repository
         public EmailService(IConfiguration configuration)
         {
             config = configuration;
+
         }
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
@@ -22,15 +23,15 @@ namespace Coursenix.Repository
             {
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(
-                    config["EmailSettings:Gmail:Email"],
-                    config["EmailSettings:Gmail:Password"]
+                    config["EmailSettings:Email"],
+                    config["EmailSettings:Password"]
                 ),
                 EnableSsl = true
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(config["EmailSettings:Gmail:Email"]),
+                From = new MailAddress(config["EmailSettings:Email"]),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
