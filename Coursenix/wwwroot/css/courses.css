@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --primary-color: #26a69a;
     --primary-dark: #2E9B96;
     --light-gray: #f8f9fa;
@@ -18,7 +18,7 @@ body {
 }
 
 
-.logo {
+.logo{
     width: 40px;
     height: 40px;
     border-radius: 6px;
@@ -26,17 +26,16 @@ body {
     justify-content: center;
     margin-right: 8px;
 }
-
-.word {
+.word{
     font-weight: bold;
     font-size: 25px;
-    color: var(--primary-color);
+     color: var(--primary-color);
 }
 
 .nav-item a {
     font-weight: 500;
     font-size: 17px;
-    margin: 0 5px;
+    margin: 0 5px; 
     transition: color 0.3s ease;
 }
 
@@ -53,10 +52,10 @@ body {
     text-align: center;
 }
 
-    .hero-section h1 {
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
+.hero-section h1 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
 
 /* Filter Section */
 .filter-section {
@@ -69,13 +68,13 @@ body {
     margin-top: 28px;
 }
 
-    .search-box i {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6c757d;
-    }
+.search-box i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
 
 .search-input {
     padding-left: 35px;
@@ -89,14 +88,12 @@ body {
     height: 100%;
     border: 1px solid #e0e0e0;
 }
-
-.p-one {
+.p-one{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
-
 .course-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -136,18 +133,18 @@ body {
     margin-right: 10px;
 }
 
-    .teacher-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.teacher-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .teacher-name {
     font-size: 0.85rem;
     font-weight: 500;
 }
 
-.enroll-btn {
+.enroll-btn{
     color: var(--primary-color);
     border: var(--primary-color);
     border-radius: 8px;
@@ -157,24 +154,22 @@ body {
     background-color: white;
     transition: background-color 0.3s ease;
 }
-
-a {
+a{
     text-decoration: none;
     color: var(--primary-color);
 }
-
-.enroll-btn:hover a {
+.enroll-btn:hover a{
     color: white;
 }
-
-.enroll-btn:hover {
+.enroll-btn:hover{
     background-color: var(--primary-dark);
     color: white;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,.form-select:focus{
     box-shadow: 0 0 0 1px var(--primary-color);
     border-color: var(--primary-color);
+
 }
 
 /* Pagination */
@@ -195,16 +190,16 @@ a {
     justify-content: center;
 }
 
-    .page-link.active {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-    }
+.page-link.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
 
-    .page-link:hover {
-        background-color: #e0f2f1;
-        color: var(--primary-dark);
-    }
+.page-link:hover {
+    background-color: #e0f2f1;
+    color: var(--primary-dark);
+}
 
 /* Footer */
 footer {
@@ -231,8 +226,7 @@ footer {
     opacity: 0.8;
     transition: opacity 0.3s ease;
 }
-
-.media {
+.media{
     text-align: center;
 }
 
