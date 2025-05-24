@@ -277,10 +277,10 @@ namespace Coursenix.Controllers
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return RedirectToAction();
-
+            // unhandled 
             var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
             if (result.Succeeded)
-                return View();
+                return View("PasswordResetedSuccefully");
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
