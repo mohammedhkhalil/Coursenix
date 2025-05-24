@@ -1,0 +1,520 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.logo-text {
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+}
+
+.logo span {
+    display: block;
+    font-size: 10px;
+    color: #666;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.menu-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    position: relative;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    left: 0;
+}
+
+.menu-icon::before {
+    top: -6px;
+}
+
+.menu-icon::after {
+    bottom: -6px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+}
+
+.nav-menu li {
+    margin: 0 15px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: #2baa9a;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.username {
+    margin-right: 10px;
+}
+
+.user-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #2baa9a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+/* User Dropdown Menu Styles */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+    margin-top: 10px;
+    display: none;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu ul {
+    list-style: none;
+}
+
+.dropdown-menu li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f5f5f5;
+    color: #2baa9a;
+}
+
+.dropdown-menu li a i {
+    margin-right: 10px;
+    width: 16px;
+    color: #666;
+}
+
+.dropdown-menu li.divider-menu {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+    border: none;
+}
+
+.dropdown-menu .logout-link {
+    color: #f44336;
+}
+
+.dropdown-menu .logout-link:hover {
+    background-color: #ffebee;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+/* Subheader - Secondary Nav */
+.subheader {
+    background-color: #f8f8f8;
+    padding: 15px 40px;
+    border-bottom: 1px solid #eee;
+}
+
+.sub-nav {
+    display: flex;
+    list-style: none;
+}
+
+.sub-nav li {
+    margin-right: 20px;
+}
+
+.sub-nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+.sub-nav a:hover,
+.sub-nav a.active {
+    color: #2baa9a;
+}
+
+/* Main Content */
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Courses Grid Styles */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.course-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.course-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #2baa9a;
+}
+
+.course-header {
+    padding: 20px 20px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.course-header h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 600;
+    display: block;
+}
+
+.teacher {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.teacher-avatar {
+    width: 24px;
+    height: 24px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23aaa' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'%3E%3C/path%3E%3C/svg%3E");
+    background-size: 16px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.teacher-name {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.course-header p {
+    color: #666;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.course-content {
+    padding: 15px 20px;
+}
+
+.course-info {
+    margin-bottom: 0;
+}
+
+.course-info-item {
+    display: flex;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.8;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.group-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%232baa9a' viewBox='0 0 24 24'%3E%3Cpath d='M12 12.75c1.63 0 3.07.39 4.24.9 1.08.48 1.76 1.56 1.76 2.73V18H6v-1.62c0-1.17.68-2.25 1.76-2.73 1.17-.51 2.61-.9 4.24-.9zM4 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm1.13 1.1c-.37-.06-.74-.1-1.13-.1-.99 0-1.93.21-2.78.58C.48 14.9 0 15.62 0 16.43V18h4.5v-1.61c0-.83.23-1.61.63-2.29zM20 13c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4 3.43c0-.81-.48-1.53-1.22-1.85-.85-.37-1.79-.58-2.78-.58-.39 0-.76.04-1.13.1.4.68.63 1.46.63 2.29V18H24v-1.57zM12 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.location-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%232baa9a' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.days-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%232baa9a' viewBox='0 0 24 24'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.time-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%232baa9a' viewBox='0 0 24 24'%3E%3Cpath d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'%3E%3C/path%3E%3Cpath d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.absence-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%232baa9a' viewBox='0 0 24 24'%3E%3Cpath d='M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.course-info-label {
+    font-weight: 600;
+    color: #555;
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.course-info-value {
+    flex: 1;
+    color: #333;
+    font-size: 14px;
+}
+
+.absence-ratio {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.absence-ratio.low {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.absence-ratio.medium {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.absence-ratio.high {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Remove the label pseudo elements since we're using actual icons now */
+.course-info-label::before {
+    content: none;
+}
+
+.course-info-item:nth-child(1) .course-info-label::before,
+.course-info-item:nth-child(2) .course-info-label::before,
+.course-info-item:nth-child(3) .course-info-label::before,
+.course-info-item:nth-child(4) .course-info-label::before,
+.course-info-item:nth-child(5) .course-info-label::before {
+    background-image: none;
+}
+
+/* Footer */
+.footer {
+    background-color: #2baa9a;
+    color: white;
+    padding: 50px 40px 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.footer-column {
+    flex: 1;
+    margin-right: 20px;
+    min-width: 200px;
+}
+
+.footer-column:last-child {
+    margin-right: 0;
+}
+
+.footer-column h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #444;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.social-link:hover {
+    background-color: #2baa9a;
+}
+
+.copyright {
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-columns {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .footer-column {
+        margin-right: 0;
+    }
+    
+    .nav-menu {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        padding: 10px 20px;
+        flex-wrap: wrap;
+    }
+    
+    .user-profile {
+        margin-left: auto;
+    }
+} 
