@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --primary-color: #2ba9a9;
     --light-gray: #f5f5f5;
     --border-color: #e0e0e0;
@@ -27,27 +27,27 @@ body {
     position: relative;
 }
 
-    .nav-link.active {
-        color: var(--primary-color);
-    }
+.nav-link.active {
+    color: var(--primary-color);
+}
 
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+}
 
 .user-info {
     display: flex;
     align-items: center;
     gap: 10px; /* مسافة بين الدايرة والاسم */
-}
-
-.user-avatar {
+  }
+  
+  .user-avatar {
     background-color: #2ba9a9;
     color: white;
     width: 40px;
@@ -59,13 +59,13 @@ body {
     font-weight: bold;
     font-size: 18px;
     text-transform: uppercase;
-}
-
-.user-name {
+  }
+  
+  .user-name {
     color: #333;
     font-weight: 500;
-}
-
+  }
+  
 
 
 /* Header Styles */
@@ -76,49 +76,49 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-}
-
-    .header .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-.logo-container {
+  }
+  
+  .header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo-container {
     display: flex;
     align-items: center;
-}
-
-.logo {
+  }
+  
+  .logo {
     display: flex;
     align-items: center;
     font-weight: 700;
     font-size: 1.5rem;
     color: var(--primary-color);
-}
-
-    .logo img {
-        height: 32px;
-        margin-right: 8px;
-    }
-
-.navigation ul {
+  }
+  
+  .logo img {
+    height: 32px;
+    margin-right: 8px;
+  }
+  
+  .navigation ul {
     display: flex;
     gap: 30px;
-}
-
-.navigation a {
+  }
+  
+  .navigation a {
     color: var(--text-color);
     font-weight: 500;
     transition: color 0.3s ease;
-}
-
-    .navigation a:hover,
-    .navigation a.active {
-        color: var(--primary-color);
-    }
-
-.course-card-wrapper {
+  }
+  
+  .navigation a:hover,
+  .navigation a.active {
+    color: var(--primary-color);
+  }
+  
+  .course-card-wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -126,21 +126,21 @@ body {
     margin-top: 10px; /* ✅ المسافة بين النافبار والخلفية */
     position: relative;
     z-index: 1;
-}
-
-
-    .course-card-wrapper::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 180px;
-        width: 100%;
-        background-color: #2ba9a9;
-        z-index: -1;
-    }
-
-.course-card {
+  }
+  
+  
+  .course-card-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 180px;
+    width: 100%;
+    background-color: #2ba9a9;
+    z-index: -1;
+  }
+  
+  .course-card {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.1);
@@ -149,7 +149,7 @@ body {
     padding: 30px;
     position: relative;
     z-index: 2;
-}
+  }
 
 .course-price {
     font-size: 1.8rem;
@@ -161,16 +161,16 @@ body {
     margin-bottom: 20px;
 }
 
-    .course-info span {
-        margin-right: 15px;
-        color: #666;
-        font-size: 0.9rem;
-    }
+.course-info span {
+    margin-right: 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
 
-    .course-info i {
-        color: var(--primary-color);
-        margin-right: 5px;
-    }
+.course-info i {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
 
 .teacher-info {
     display: flex;
@@ -186,11 +186,11 @@ body {
     margin-right: 15px;
 }
 
-    .teacher-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.teacher-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .teacher-name {
     font-weight: bold;
@@ -214,19 +214,19 @@ body {
     background-color: white;
 }
 
-    .grade-tab:first-child {
-        border-radius: 5px 0 0 5px;
-    }
+.grade-tab:first-child {
+    border-radius: 5px 0 0 5px;
+}
 
-    .grade-tab:last-child {
-        border-radius: 0 5px 5px 0;
-    }
+.grade-tab:last-child {
+    border-radius: 0 5px 5px 0;
+}
 
-    .grade-tab.active {
-        background-color: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-    }
+.grade-tab.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
 
 .group-card {
     border: 1px solid var(--border-color);
@@ -236,10 +236,10 @@ body {
     position: relative;
 }
 
-    .group-card.selected {
-        border-color: var(--primary-color);
-        background-color: #f6fdfd;
-    }
+.group-card.selected {
+    border-color: var(--primary-color);
+    background-color: #f6fdfd;
+}
 
 .group-title {
     font-weight: bold;
@@ -251,17 +251,17 @@ body {
     padding-left: 0;
 }
 
-    .group-details li {
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-    }
+.group-details li {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
 
-        .group-details li::before {
-            content: "•";
-            color: var(--primary-color);
-            margin-right: 10px;
-        }
+.group-details li::before {
+    content: "•";
+    color: var(--primary-color);
+    margin-right: 10px;
+}
 
 .seats-badge {
     display: inline-block;
@@ -280,10 +280,9 @@ body {
     border: 1px solid #ff6b6b;
     color: #ff6b6b;
 }
-
 .only_n_available {
-    border: 1px solid #ffc16b;
-    color: #ffc16b;
+  border: 1px solid #ffc16b;
+  color: #ffc16b;
 }
 
 .radio-button {
@@ -296,21 +295,21 @@ body {
     border: 2px solid #2ba9a9;
 }
 
-    .radio-button.selected {
-        border: 2px solid #2ba9a9;
-    }
+.radio-button.selected {
+    border: 2px solid #2ba9a9;
+}
 
-        .radio-button.selected::after {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #2ba9a9;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+.radio-button.selected::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #2ba9a9;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 .enroll-btn {
     background-color: #2ba9a9;
@@ -322,40 +321,40 @@ body {
     float: right;
 }
 
-    .enroll-btn:hover {
-        background-color: #299a9a;
-    }
+.enroll-btn:hover {
+  background-color: #299a9a;
+}
 
 /* Footer Section */
 .footer {
     background-color: #2ba9a9;
-    color: white;
+    color:white;
     padding: 50px 0 20px;
-}
-
-.footer-columns {
+  }
+  
+  .footer-columns {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
     margin-bottom: 30px;
-}
-
-.footer-column {
+  }
+  
+  .footer-column {
     flex: 1;
     min-width: 250px;
-}
-
-    .footer-column h3 {
-        font-size: 1.3rem;
-        margin-bottom: 20px;
-    }
-
-.social-links {
+  }
+  
+  .footer-column h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  
+  .social-links {
     display: flex;
     gap: 15px;
-}
-
-.social-link {
+  }
+  
+  .social-link {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -364,17 +363,18 @@ body {
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
-}
-
-    .social-link:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-    }
-
-.copyright {
+  }
+  
+  .social-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  .copyright {
     text-align: center;
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     font-size: 0.9rem;
     opacity: 0.8;
-}
+  }
+  

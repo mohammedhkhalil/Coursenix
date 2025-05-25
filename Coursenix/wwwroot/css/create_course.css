@@ -1,24 +1,23 @@
-﻿:root {
-    --primary-color: #2AB5A3;
-    --primary-hover: #229A8A;
-    --secondary-color: #E9ECEF;
-    --text-color: #495057;
-    --border-color: #DEE2E6;
-    --bg-light: #F8F9FA;
+:root {
+--primary-color: #2AB5A3;
+--primary-hover: #229A8A;
+--secondary-color: #E9ECEF;
+--text-color: #495057;
+--border-color: #DEE2E6;
+--bg-light: #F8F9FA;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--text-color);
-    background-color: var(--bg-light);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+color: var(--text-color);
+background-color: var(--bg-light);
 }
 
 /* Header Styles */
 .navbar-dark {
-    background-color: var(--primary-color) !important;
+background-color: var(--primary-color) !important;
 }
-
-.logo {
+.logo{
     width: 40px;
     height: 40px;
     border-radius: 6px;
@@ -26,39 +25,36 @@ body {
     justify-content: center;
     margin-right: 8px;
 }
-
-.word {
+.word{
     font-weight: bold;
     font-size: 25px;
     color: var(--primary-color);
 }
 
 .profile-btn {
-    background: none;
-    border: none;
-    padding: 0;
+background: none;
+border: none;
+padding: 0;
 }
 
 .profile-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border: 2px solid white;
+width: 50px;
+height: 50px;
+object-fit: cover;
+border: 2px solid white;
 }
 
-#img {
+#img{
     width: 200px;
     height: 150px;
 }
-
-input[type="file"] {
+input[type="file"]{
     display: none;
 }
-
-.file_up {
+.file_up{
     padding: 8px 12px;
     cursor: pointer;
-    background-color: white;
+    background-color:white;
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
     border-radius: 5px;
@@ -66,48 +62,46 @@ input[type="file"] {
     margin-top: 10px;
     transition: 0.3s;
 }
+.file_up:hover{
+    background-color:var(--primary-color);
+    color: white;
 
-    .file_up:hover {
-        background-color: var(--primary-color);
-        color: white;
-    }
-
-.form-control:focus {
+}
+.form-control:focus{
     outline: none;
-    box-shadow: 0 0 2px var(--secondary-color) !important;
+    box-shadow: 0 0  2px var(--secondary-color) !important ;
 }
 /* Section Styles */
 .section-title {
-    font-size: 25px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-    padding-bottom: 20px;
+font-size: 25px;
+font-weight: 600;
+color: #333;
+margin-bottom: 8px;
+padding-bottom: 20px;
 }
-
-.course-info {
+.course-info{
     margin-top: 10px;
 }
 /* Thumbnail Styles */
 .thumbnail-container {
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 15px;
-    margin-top: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+border: 1px dashed var(--border-color);
+border-radius: 8px;
+padding: 15px;
+margin-top: 5px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
 }
 
 .thumbnail-placeholder {
-    width: 120px;
-    height: 120px;
-    background-color: var(--secondary-color);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+width: 120px;
+height: 120px;
+background-color: var(--secondary-color);
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 @media (max-width: 770px) {
@@ -118,105 +112,102 @@ input[type="file"] {
 
 /* Grade Groups Styles */
 .grade-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
 .group-card {
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
-    background-color: white;
-    position: relative;
-    transition: all 0.3s ease;
+border: 1px solid var(--border-color);
+border-radius: 0.5rem;
+padding: 1.25rem;
+margin-bottom: 1.25rem;
+background-color: white;
+position: relative;
+transition: all 0.3s ease;
 }
 
-    .group-card:hover {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
+.group-card:hover {
+box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
 
 .group-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1rem;
 }
 
 .delete-group {
-    color: #dc3545;
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+color: #dc3545;
+background: none;
+border: none;
+font-size: 1.2rem;
+cursor: pointer;
+transition: all 0.2s ease;
 }
 
-    .delete-group:hover {
-        color: #c82333;
-        transform: scale(1.1);
-    }
+.delete-group:hover {
+color: #c82333;
+transform: scale(1.1);
+}
 
 .time-input-container {
-    position: relative;
+position: relative;
 }
 
 /* Button Styles */
 .btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+background-color: var(--primary-color);
+border-color: var(--primary-color);
 }
 
-    .btn-primary:hover, .btn-primary:focus {
-        background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-    }
+.btn-primary:hover, .btn-primary:focus {
+background-color: var(--primary-hover);
+border-color: var(--primary-hover);
+}
 
 .btn-success {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+background-color: var(--primary-color);
+border-color: var(--primary-color);
 }
 
-    .btn-success:hover, .btn-success:focus {
-        background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-    }
+.btn-success:hover, .btn-success:focus {
+background-color: var(--primary-hover);
+border-color: var(--primary-hover);
+}
 
 /* Form Control Styles */
 .form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(42, 181, 163, 0.25);
+border-color: var(--primary-color);
+box-shadow: 0 0 0 0.25rem rgba(42, 181, 163, 0.25);
 }
 
 /* Animation */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-    animation: fadeIn 0.3s ease forwards;
+animation: fadeIn 0.3s ease forwards;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .thumbnail-container {
-        margin-top: 1.5rem;
-    }
-
-    .section-title {
-        font-size: 1.2rem;
-    }
-
-    .group-card {
-        padding: 1rem;
-    }
+.thumbnail-container {
+    margin-top: 1.5rem;
 }
+
+.section-title {
+    font-size: 1.2rem;
+}
+
+.group-card {
+    padding: 1rem;
+}
+}
+
+
+
+

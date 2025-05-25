@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
+<<<<<<<< HEAD:Coursenix/Migrations/20250523112221_wafaa.Designer.cs
     [Migration("20250523112221_wafaa")]
     partial class wafaa
+========
+    [Migration("20250524155941_init")]
+    partial class init
+>>>>>>>> master:Coursenix/Migrations/20250524155941_init.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

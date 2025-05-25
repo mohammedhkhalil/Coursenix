@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Coursenix.Models;
+using Coursenix.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC support
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<EmailService>();
 // Add session support
 builder.Services.AddSession();
 

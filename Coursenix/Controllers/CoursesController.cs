@@ -183,8 +183,6 @@ namespace Coursenix.Controllers
             return View();
         }
 
-
-
         [HttpGet]
         // GET: /Courses/Create
         public IActionResult Create()
