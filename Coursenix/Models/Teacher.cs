@@ -22,10 +22,10 @@ namespace Coursenix.Models
 
 
         [MaxLength(255)]
-        public string Biography { get; set; }
+        public string? Biography { get; set; }
 
         [MaxLength(255)]
-        public string ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
 
         // Navigation properties
         public ICollection<Subject> Subjects { get; set; }

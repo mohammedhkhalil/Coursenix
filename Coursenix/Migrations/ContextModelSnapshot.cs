@@ -165,9 +165,6 @@ namespace Coursenix.Migrations
                     b.Property<int?>("StudentId1")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
@@ -177,8 +174,6 @@ namespace Coursenix.Migrations
                     b.HasIndex("StudentId");
 
                     b.HasIndex("StudentId1");
-
-                    b.HasIndex("SubjectId");
 
                     b.ToTable("Bookings");
                 });
@@ -377,7 +372,6 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Biography")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -394,7 +388,6 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -584,10 +577,6 @@ namespace Coursenix.Migrations
                         .WithMany("Bookings")
                         .HasForeignKey("StudentId1");
 
-                    b.HasOne("Coursenix.Models.Subject", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("SubjectId");
-
                     b.Navigation("Group");
 
                     b.Navigation("Student");
@@ -737,8 +726,6 @@ namespace Coursenix.Migrations
 
             modelBuilder.Entity("Coursenix.Models.Subject", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("Groups");
                 });
 

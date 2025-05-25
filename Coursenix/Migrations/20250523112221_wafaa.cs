@@ -205,8 +205,8 @@ namespace Coursenix.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Biography = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ProfilePicture = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Biography = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ProfilePicture = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -288,8 +288,7 @@ namespace Coursenix.Migrations
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GroupId1 = table.Column<int>(type: "int", nullable: true),
-                    StudentId1 = table.Column<int>(type: "int", nullable: true),
-                    SubjectId = table.Column<int>(type: "int", nullable: true)
+                    StudentId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -315,11 +314,6 @@ namespace Coursenix.Migrations
                         name: "FK_Bookings_Students_StudentId1",
                         column: x => x.StudentId1,
                         principalTable: "Students",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
                         principalColumn: "Id");
                 });
 
@@ -469,11 +463,6 @@ namespace Coursenix.Migrations
                 name: "IX_Bookings_StudentId1",
                 table: "Bookings",
                 column: "StudentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_SubjectId",
-                table: "Bookings",
-                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupDays_GroupId",

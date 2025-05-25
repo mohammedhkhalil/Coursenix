@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coursenix.Controllers
 {
+    
     public class TeacherController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -21,7 +22,7 @@ namespace Coursenix.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AccountSettings()
+        public async Task<IActionResult> Settings()
         {
             var user = await _userManager.GetUserAsync(User);
             var teacher = _context.Teachers.FirstOrDefault(t => t.AppUserId == user.Id);
@@ -43,7 +44,7 @@ namespace Coursenix.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AccountSettings(TeacherSettingsViewModel model)
+        public async Task<IActionResult> Settings(TeacherSettingsViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             var teacher = _context.Teachers.FirstOrDefault(t => t.AppUserId == user.Id);
