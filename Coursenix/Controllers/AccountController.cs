@@ -4,6 +4,7 @@ using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -239,53 +240,118 @@ namespace Coursenix.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            var user = await userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
                 return View();
             }
 
-            var token = await userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = Url.Action("ResetPassword", "Account",
-                new { token, email = user.Email }, Request.Scheme);
+            var code = new Random().Next(100000, 999999).ToString();
 
-            await emailService.SendEmailAsync(user.Email, "Reset Your Password",
-                $"Click <a href='{resetLink}'>here</a> to reset your password.");
+            var passwordResetCode = new PasswordResetCode
+            {
+                Email = model.Email,
+                Code = code,
+                Expiry = DateTime.UtcNow.AddMinutes(10) 
+            };
 
+            context.PasswordResetCodes.Add(passwordResetCode);
+            await context.SaveChangesAsync();
+
+            await emailService.SendEmailAsync(model.Email, "Password Reset Code", $"Your code is: {code}");
+            // save mail in session to pass it for "CheckYourEmail"
+            HttpContext.Session.SetString("ResetPasswordEmail", model.Email);
+
+            return RedirectToAction("CheckYourEmail");
+        }
+
+        [HttpGet]
+        public IActionResult CheckYourEmail()
+        {
             return View();
         }
 
-        /************************* Reset Pass *****************************/
-        [HttpGet]
-        public IActionResult ResetPassword(string token, string email)
-        {
-            var model = new ResetPasswordViewModel { Token = token, Email = email };
-            return View(model);
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<IActionResult> CheckYourEmail(VerifyCodeViewModel model)
+        {
+            // get mail in the curr session
+            var email = HttpContext.Session.GetString("ResetPasswordEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var enteredCode = model.Digit1 + model.Digit2 + model.Digit3 + model.Digit4 + model.Digit5 + model.Digit6;
+
+            var resetCodeEntry = await context.PasswordResetCodes
+                .FirstOrDefaultAsync(c => c.Email == email && c.Code == enteredCode);
+
+            if (resetCodeEntry == null || resetCodeEntry.Expiry < DateTime.UtcNow)
+            {
+                ModelState.AddModelError("", "Invalid or expired code");
+                return View();
+            }
+
+            return RedirectToAction("CreateNewPassword");
+        }
+
+        [HttpGet]
+        public IActionResult CreateNewPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateNewPassword(CreateNewPasswordViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
+            // get mail in the curr session
+            var email = HttpContext.Session.GetString("ResetPasswordEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("ForgotPassword");
+            }
 
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(email);
             if (user == null)
-                return RedirectToAction();
-            // unhandled 
-            var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await userManager.ResetPasswordAsync(user, token, model.Password);
+
             if (result.Succeeded)
-                return View("PasswordResetedSuccefully");
+            {
+                var codesToRemove = context.PasswordResetCodes.Where(c => c.Email == email);
+                context.PasswordResetCodes.RemoveRange(codesToRemove);
+                await context.SaveChangesAsync();
+
+                // remove mail form session
+                HttpContext.Session.Remove("ResetPasswordEmail");
+
+                return RedirectToAction("PasswordResetSuccessful");
+            }
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult PasswordResetSuccessful()
+        {
+            return View();
         }
 
     }

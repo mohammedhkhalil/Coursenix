@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-<<<<<<<< HEAD:Coursenix/Migrations/20250523112221_wafaa.Designer.cs
-    [Migration("20250523112221_wafaa")]
+    [Migration("20250526001709_wafaa")]
     partial class wafaa
-========
-    [Migration("20250524155941_init")]
-    partial class init
->>>>>>>> master:Coursenix/Migrations/20250524155941_init.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -260,6 +255,30 @@ namespace Coursenix.Migrations
                     b.ToTable("GroupDays");
                 });
 
+            modelBuilder.Entity("Coursenix.Models.PasswordResetCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PasswordResetCodes");
+                });
+
             modelBuilder.Entity("Coursenix.Models.Session", b =>
                 {
                     b.Property<int>("Id")
@@ -297,7 +316,7 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Grade")
+                    b.Property<int?>("Grade")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -305,7 +324,6 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ParentPhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")

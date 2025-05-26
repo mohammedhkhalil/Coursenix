@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Coursenix.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class wafaa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,6 +63,21 @@ namespace Coursenix.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PasswordResetCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expiry = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PasswordResetCodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,9 +195,9 @@ namespace Coursenix.Migrations
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Grade = table.Column<int>(type: "int", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ParentPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ParentPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -531,6 +546,9 @@ namespace Coursenix.Migrations
 
             migrationBuilder.DropTable(
                 name: "GroupDays");
+
+            migrationBuilder.DropTable(
+                name: "PasswordResetCodes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -21,6 +21,7 @@ namespace Coursenix.Models
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -92,7 +93,7 @@ namespace Coursenix.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=LAPTOP-0RH6BA2F\SQLEXPRESS;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -252,6 +252,30 @@ namespace Coursenix.Migrations
                     b.ToTable("GroupDays");
                 });
 
+            modelBuilder.Entity("Coursenix.Models.PasswordResetCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PasswordResetCodes");
+                });
+
             modelBuilder.Entity("Coursenix.Models.Session", b =>
                 {
                     b.Property<int>("Id")
@@ -289,7 +313,7 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Grade")
+                    b.Property<int?>("Grade")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -297,7 +321,6 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ParentPhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
