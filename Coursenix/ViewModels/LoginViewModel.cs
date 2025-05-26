@@ -13,7 +13,7 @@ namespace Coursenix.ViewModels
         [Required]
         [DataType(DataType.Password)]
         [MaxLength(255)]
-        [MinLength(8, ErrorMessage = "Use 8 characters or more for your password\r\n")]
+        [MinLength(6, ErrorMessage = "Use 6 characters or more for your password\r\n")]
         public string Password { get; set; }
 
         [Required]
