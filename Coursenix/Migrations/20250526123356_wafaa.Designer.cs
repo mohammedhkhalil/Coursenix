@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250526001709_wafaa")]
+    [Migration("20250526123356_wafaa")]
     partial class wafaa
     {
         /// <inheritdoc />
@@ -255,7 +255,7 @@ namespace Coursenix.Migrations
                     b.ToTable("GroupDays");
                 });
 
-            modelBuilder.Entity("Coursenix.Models.PasswordResetCode", b =>
+            modelBuilder.Entity("Coursenix.Models.ResetCode", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,9 +274,13 @@ namespace Coursenix.Migrations
                     b.Property<DateTime>("Expiry")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("PasswordResetCodes");
+                    b.ToTable("ResetCodes");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Session", b =>

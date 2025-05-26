@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace Coursenix.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] // VIP: to protect against CSRF attacks --> to not take data from outside domain
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> Register(RegisterUserViewModel newUserVM) // Make this async
         {
             if (ModelState.IsValid)
@@ -65,84 +66,26 @@ namespace Coursenix.Controllers
                     return View(newUserVM.RoleType == "Student" ? "StudentRegister" : "TeacherRegister", newUserVM);
                 }
 
-                // Create account
-                AppUser userModel = new AppUser
+                var code = new Random().Next(100000, 999999).ToString();
+
+                var ResetCode = new ResetCode
                 {
-                    UserName = newUserVM.Email,
-                    Name = newUserVM.FullName,
                     Email = newUserVM.Email,
-                    PasswordHash = newUserVM.Password, // Password is handled by IdentityUser
-                    RoleType = newUserVM.RoleType
+                    Code = code,
+                    Expiry = DateTime.UtcNow.AddMinutes(10),
+                    Purpose = "Register" 
                 };
 
-                // var result = await userManager.CreateAsync(userModel);  not hash password
-                var result = await userManager.CreateAsync(userModel, newUserVM.Password); // hash password
+                context.ResetCodes.Add(ResetCode);
+                await context.SaveChangesAsync();
 
-                if (result.Succeeded)
-                {
-                    // Assign role to user.
-                    await userManager.AddToRoleAsync(userModel, newUserVM.RoleType);
-
-                    //add cliams 
-                    await userManager.AddClaimsAsync(userModel, new List<Claim>
-                    {
-                        new Claim("FullName", userModel.Name),
-                        new Claim("Email", userModel.Email)
-                    });
-
-                    // create a cookie for the user
-                    await signInManager.SignInAsync(userModel, isPersistent: false);
-
-                    // Add user to the appropriate table based on role
-                    if (newUserVM.RoleType == "Student")
-                    {
-                        var student = new Student
-                        {
-                            AppUserId = userModel.Id,
-                            Name = newUserVM.FullName,
-                            Email = newUserVM.Email,
-                            Grade = newUserVM.Grade.Value,
-                            PhoneNumber = newUserVM.PhoneNumber,
-                            ParentPhoneNumber = newUserVM.ParentNumber
-                        };
-                        context.Students.Add(student);
-                    }
-                    else if (newUserVM.RoleType == "Teacher")
-                    {
-                        var teacher = new Teacher
-                        {
-                            AppUserId = userModel.Id,
-                            Name = newUserVM.FullName,
-                            Email = newUserVM.Email,
-                            PhoneNumber = newUserVM.PhoneNumber,
-                            Biography = newUserVM.Biography,
-                        };
-                        context.Teachers.Add(teacher);
-                    }
-                    await context.SaveChangesAsync();
-
-
-                    // Redirect based on role
-                    if (await userManager.IsInRoleAsync(userModel, "Student"))
-                        return RedirectToAction("Index", "Courses");
-
-                    if (await userManager.IsInRoleAsync(userModel, "Teacher"))
-                        return RedirectToAction("Create", "Courses");
-
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    // Add errors to ModelState
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                    return View(newUserVM.RoleType == "Student" ? "StudentRegister" : "TeacherRegister", newUserVM);
-                }
+                await emailService.SendEmailAsync(newUserVM.Email, "Email Confirmation", $"Your code is: {code}");
+                // save mail in session to pass it for "CheckYourEmail"
+                HttpContext.Session.SetString("VerifyEmail", newUserVM.Email);
+                // save new user to complete register 
+                HttpContext.Session.SetString("RegisterUserData", JsonConvert.SerializeObject(newUserVM));
+                return RedirectToAction("CheckYourEmail" ,new { Purpose = "Register" });
             }
-
-
             var errors = ModelState.Values.SelectMany(v => v.Errors);
             foreach (var error in errors)
             {
@@ -151,7 +94,93 @@ namespace Coursenix.Controllers
             return View(newUserVM.RoleType == "Student" ? "StudentRegister" : "TeacherRegister", newUserVM);
         }
 
+        public async Task<IActionResult> CompleteRegistration()
+        {
+            var temp = HttpContext.Session.GetString("RegisterUserData");
+            if (string.IsNullOrEmpty(temp)) 
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var newUserVM = JsonConvert.DeserializeObject<RegisterUserViewModel>(temp); 
+            // Create account
+            AppUser userModel = new AppUser
+            {
+                UserName = newUserVM.Email,
+                Name = newUserVM.FullName,
+                Email = newUserVM.Email,
+                PasswordHash = newUserVM.Password, // Password is handled by IdentityUser
+                RoleType = newUserVM.RoleType
+            };
 
+            // var result = await userManager.CreateAsync(userModel);  not hash password
+            var result = await userManager.CreateAsync(userModel, newUserVM.Password); // hash password
+
+            if (result.Succeeded)
+            {
+                // Assign role to user.
+                await userManager.AddToRoleAsync(userModel, newUserVM.RoleType);
+
+                //add cliams 
+                await userManager.AddClaimsAsync(userModel, new List<Claim>
+                    {
+                        new Claim("FullName", userModel.Name),
+                        new Claim("Email", userModel.Email)
+                    });
+
+                // create a cookie for the user
+                await signInManager.SignInAsync(userModel, isPersistent: false);
+
+                // Add user to the appropriate table based on role
+                if (newUserVM.RoleType == "Student")
+                {
+                    var student = new Student
+                    {
+                        AppUserId = userModel.Id,
+                        Name = newUserVM.FullName,
+                        Email = newUserVM.Email,
+                        Grade = newUserVM.Grade.Value,
+                        PhoneNumber = newUserVM.PhoneNumber,
+                        ParentPhoneNumber = newUserVM.ParentNumber
+                    };
+                    context.Students.Add(student);
+                }
+                else if (newUserVM.RoleType == "Teacher")
+                {
+                    var teacher = new Teacher
+                    {
+                        AppUserId = userModel.Id,
+                        Name = newUserVM.FullName,
+                        Email = newUserVM.Email,
+                        PhoneNumber = newUserVM.PhoneNumber,
+                        Biography = newUserVM.Biography,
+                    };
+                    context.Teachers.Add(teacher);
+                }
+                await context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("VerifyEmail");
+                HttpContext.Session.Remove("RegisterUserData");
+
+
+                // Redirect based on role
+                if (await userManager.IsInRoleAsync(userModel, "Student"))
+                    return RedirectToAction("Index", "Courses");
+
+                if (await userManager.IsInRoleAsync(userModel, "Teacher"))
+                    return RedirectToAction("Create", "Courses");
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                // Add errors to ModelState
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(newUserVM.RoleType == "Student" ? "StudentRegister" : "TeacherRegister", newUserVM);
+            }
+        }
 
         /************************* Log IN *****************************/
         [HttpGet]
@@ -253,53 +282,72 @@ namespace Coursenix.Controllers
 
             var code = new Random().Next(100000, 999999).ToString();
 
-            var passwordResetCode = new PasswordResetCode
+            var ResetCode = new ResetCode
             {
                 Email = model.Email,
                 Code = code,
-                Expiry = DateTime.UtcNow.AddMinutes(10) 
+                Expiry = DateTime.UtcNow.AddMinutes(10) ,
+                Purpose = "ResetPassword"
             };
 
-            context.PasswordResetCodes.Add(passwordResetCode);
+            context.ResetCodes.Add(ResetCode);
             await context.SaveChangesAsync();
 
             await emailService.SendEmailAsync(model.Email, "Password Reset Code", $"Your code is: {code}");
             // save mail in session to pass it for "CheckYourEmail"
-            HttpContext.Session.SetString("ResetPasswordEmail", model.Email);
+            HttpContext.Session.SetString("VerifyEmail", model.Email);
 
-            return RedirectToAction("CheckYourEmail");
+            return RedirectToAction("CheckYourEmail", new { Purpose = "ResetPassword" });
         }
 
         [HttpGet]
-        public IActionResult CheckYourEmail()
+        public IActionResult CheckYourEmail(string Purpose)
         {
-            return View();
+            VerifyCodeViewModel model = new VerifyCodeViewModel() { Purpose = Purpose } ;
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckYourEmail(VerifyCodeViewModel model)
         {
-            // get mail in the curr session
-            var email = HttpContext.Session.GetString("ResetPasswordEmail");
+            var email = HttpContext.Session.GetString("VerifyEmail");
+            var Purpose = model.Purpose;
             if (string.IsNullOrEmpty(email))
             {
-                return RedirectToAction("ForgotPassword");
+                if (Purpose == "ResetPassword")
+                    return RedirectToAction("ForgotPassword");
+                else
+                    return RedirectToAction("Index","Home"); 
             }
 
             var enteredCode = model.Digit1 + model.Digit2 + model.Digit3 + model.Digit4 + model.Digit5 + model.Digit6;
 
-            var resetCodeEntry = await context.PasswordResetCodes
-                .FirstOrDefaultAsync(c => c.Email == email && c.Code == enteredCode);
+            var codeEntry = await context.ResetCodes
+                .FirstOrDefaultAsync(c => c.Email == email && c.Code == enteredCode && c.Purpose == Purpose);
 
-            if (resetCodeEntry == null || resetCodeEntry.Expiry < DateTime.UtcNow)
+            if (codeEntry == null || codeEntry.Expiry < DateTime.UtcNow)
             {
                 ModelState.AddModelError("", "Invalid or expired code");
-                return View();
+                return View(model);
             }
 
-            return RedirectToAction("CreateNewPassword");
+            context.ResetCodes.Remove(codeEntry);
+            await context.SaveChangesAsync();
+
+            
+            if (Purpose == "ResetPassword")
+            {
+                return RedirectToAction("CreateNewPassword");
+            }
+            else if (Purpose == "Register")
+            {
+                return RedirectToAction("CompleteRegistration"); 
+            }
+
+            return View(model); 
         }
+
 
         [HttpGet]
         public IActionResult CreateNewPassword()
@@ -314,7 +362,7 @@ namespace Coursenix.Controllers
             if (!ModelState.IsValid)
                 return View(model);
             // get mail in the curr session
-            var email = HttpContext.Session.GetString("ResetPasswordEmail");
+            var email = HttpContext.Session.GetString("VerifyEmail");
             if (string.IsNullOrEmpty(email))
             {
                 return RedirectToAction("ForgotPassword");
@@ -332,12 +380,12 @@ namespace Coursenix.Controllers
 
             if (result.Succeeded)
             {
-                var codesToRemove = context.PasswordResetCodes.Where(c => c.Email == email);
-                context.PasswordResetCodes.RemoveRange(codesToRemove);
+                var codesToRemove = context.ResetCodes.Where(c => c.Email == email);
+                context.ResetCodes.RemoveRange(codesToRemove);
                 await context.SaveChangesAsync();
 
                 // remove mail form session
-                HttpContext.Session.Remove("ResetPasswordEmail");
+                HttpContext.Session.Remove("VerifyEmail");
 
                 return RedirectToAction("PasswordResetSuccessful");
             }

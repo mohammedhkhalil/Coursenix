@@ -21,7 +21,7 @@ namespace Coursenix.Models
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+        public DbSet<ResetCode> ResetCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

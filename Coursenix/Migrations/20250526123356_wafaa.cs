@@ -66,18 +66,19 @@ namespace Coursenix.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PasswordResetCodes",
+                name: "ResetCodes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Expiry = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Expiry = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Purpose = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PasswordResetCodes", x => x.Id);
+                    table.PrimaryKey("PK_ResetCodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -548,7 +549,7 @@ namespace Coursenix.Migrations
                 name: "GroupDays");
 
             migrationBuilder.DropTable(
-                name: "PasswordResetCodes");
+                name: "ResetCodes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

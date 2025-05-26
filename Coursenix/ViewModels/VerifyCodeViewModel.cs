@@ -27,5 +27,7 @@ namespace Coursenix.ViewModels
         [Required]
         [StringLength(1)]
         public string Digit6 { get; set; }
+
+        public string Purpose { get; set; } // "ResetPassword" or "Register"
     }
 }
