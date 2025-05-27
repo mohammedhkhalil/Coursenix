@@ -1,0 +1,44 @@
+﻿<div class="content">
+    <h1>Check Your Email</h1>
+    <p>We've sent a verification code to your email address. Please enter the code below to continue.</p>
+
+    <div class="code-inputs">
+        <input type="text" class="code-input" maxlength="1">
+        <input type="text" class="code-input" maxlength="1">
+        <input type="text" class="code-input" maxlength="1">
+        <input type="text" class="code-input" maxlength="1">
+        <input type="text" class="code-input" maxlength="1">
+        <input type="text" class="code-input" maxlength="1">
+    </div>
+
+    <button class="verify-btn">Verify code</button>
+
+    <div>
+        Didn't receive a code? <span class="resend-link">Resend Code</span>
+    </div>
+
+    <a href="#" class="back-link">Back</a>
+</div>
+
+<script>
+    // Add functionality to automatically move to next input box
+    document.querySelectorAll('.code-input').forEach((input, index) => {
+        input.addEventListener('input', function() {
+            if (this.value.length === 1) {
+                const nextInput = document.querySelectorAll('.code-input')[index + 1];
+                if (nextInput) {
+                    nextInput.focus();
+                }
+            }
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value.length === 0) {
+                const prevInput = document.querySelectorAll('.code-input')[index - 1];
+                if (prevInput) {
+                    prevInput.focus();
+                }
+            }
+        });
+    });
+</script>
