@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.DependencyResolver;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -124,7 +125,7 @@ namespace Coursenix.Controllers
                 await userManager.AddClaimsAsync(userModel, new List<Claim>
                     {
                         new Claim("FullName", userModel.Name),
-                        new Claim("Email", userModel.Email)
+                        new Claim("Email", userModel.Email),
                     });
 
                 // create a cookie for the user
@@ -138,7 +139,6 @@ namespace Coursenix.Controllers
                         AppUserId = userModel.Id,
                         Name = newUserVM.FullName,
                         Email = newUserVM.Email,
-                        Grade = newUserVM.Grade.Value,
                         PhoneNumber = newUserVM.PhoneNumber,
                         ParentPhoneNumber = newUserVM.ParentNumber
                     };
@@ -155,6 +155,12 @@ namespace Coursenix.Controllers
                         Biography = newUserVM.Biography,
                     };
                     context.Teachers.Add(teacher);
+                    await userManager.AddClaimsAsync(userModel, new List<Claim>
+                    {
+                        new Claim("FullName", userModel.Name),
+                        new Claim("Email", userModel.Email),
+                        new Claim("TeachID", teacher.Id.ToString())
+                    });
                 }
                 await context.SaveChangesAsync();
 
