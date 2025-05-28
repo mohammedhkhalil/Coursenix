@@ -6,23 +6,92 @@ using Coursenix.Models;
 using Coursenix.ViewModels;
 using Coursenix.Repository;
 using System.Security.Claims;
+using Coursenix.Models.ViewModels;
+using System.Drawing.Printing;
+using Nest;
 
 namespace Coursenix.Controllers
 {
-    [Authorize(Roles = "Teacher")] // Only teachers can create courses
     public class CourseController : Controller
     {
-        private readonly Context _context;
+        private readonly Coursenix.Models.Context _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        public const int PageSize = 9;
 
-        public CourseController(Context context, UserManager<AppUser> userManager, IWebHostEnvironment webHostEnvironment)
+        public CourseController(Coursenix.Models.Context context, UserManager<AppUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
 
+
+
+        public async Task<IActionResult> Index(string selectedSubject = "", int selectedGrade = 0, string searchQuery = "", int page = 1)
+        {
+            // Get all courses with related data
+            var coursesQuery = _context.Courses
+                .Include(c => c.Teacher)
+                .Include(c => c.GradeLevels)
+                .AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(selectedSubject) && selectedSubject != "All subjects")
+            {
+                coursesQuery = coursesQuery.Where(c => c.Name.Contains(selectedSubject));
+            }
+
+            if (selectedGrade > 0)
+            {
+                coursesQuery = coursesQuery.Where(c => c.GradeLevels.Any(gl => gl.NumberOfGrade == selectedGrade));
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                coursesQuery = coursesQuery.Where(c => c.Teacher.Name.Contains(searchQuery));
+            }
+
+            // Get total count for pagination
+            var totalCourses = await coursesQuery.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalCourses / PageSize);
+
+            // Apply pagination
+            var courses = await coursesQuery
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            // Get filter options
+            var availableSubjects = await _context.Courses
+                .Select(c => c.Name)
+                .Distinct()
+                .OrderBy(s => s)
+                .ToListAsync();
+
+            var availableGrades = await _context.GradeLevels
+                .Select(gl => gl.NumberOfGrade)
+                .Distinct()
+                .OrderBy(g => g)
+                .ToListAsync();
+
+            var viewModel = new CourseListViewModel
+            {
+                Courses = courses,
+                AvailableSubjects = availableSubjects,
+                AvailableGrades = availableGrades,
+                SelectedSubject = selectedSubject,
+                SelectedGrade = selectedGrade,
+                SearchQuery = searchQuery,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                TotalCourses = totalCourses
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = "Teacher")] // Only teachers can create courses
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -37,6 +106,7 @@ namespace Coursenix.Controllers
             return View("Create", model);
         }
 
+        [Authorize(Roles = "Teacher")] // Only teachers can create courses
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCourseVM model)
