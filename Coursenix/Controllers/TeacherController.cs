@@ -101,7 +101,7 @@ namespace Coursenix.Controllers
             var VM = new TeacherDashboardVM
             {
                 TeacherName = teacher.Name,
-                PP = string.IsNullOrEmpty(teacher.ProfilePicture) ? "/assets/OIP1.svg" : teacher.ProfilePicture,
+                PP = string.IsNullOrEmpty(teacher.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{teacher.ProfilePicture}",
                 Biography = teacher.Biography,
                 TotalCourses = teacher.Courses.Count,
                 TotalStudents = teacher.Courses
@@ -119,7 +119,7 @@ namespace Coursenix.Controllers
                     Id = course.Id,
                     Name = course.Name,
                     Description = course.Description,
-                    ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName) ? "/assets/course7.svg" : course.ThumbnailFileName,
+                    ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName) ? "/assets/course7.svg" : $"/uploads/thumbnails/{course.ThumbnailFileName}",
                     GradeRange =  $"Grades {course.GradeLevels.Min(g => g.NumberOfGrade)}–{course.GradeLevels.Max(g => g.NumberOfGrade)}"
                 }).ToList()
             };
