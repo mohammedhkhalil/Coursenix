@@ -213,5 +213,17 @@ namespace Coursenix.Controllers
 
             return View("ViewCourse", course);
         }
+
+        public IActionResult GetGradeByCourse(int CourseId)
+        {
+            var grades = _context.GradeLevels
+                .Where(g => g.CourseId == CourseId)
+                .Select(g => new
+                {
+                    g.Id,
+                    number = g.NumberOfGrade,
+                }).ToList();
+            return Json(grades);
+        }
     }
 }
