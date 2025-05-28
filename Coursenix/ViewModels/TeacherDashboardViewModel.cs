@@ -13,7 +13,7 @@ namespace Coursenix.ViewModels
         public int TotalCourses { get; set; }
         public int TotalGroups { get; set; }
 
-        public List<Subject> CoursesTaught { get; set; }
+        public List<Course> CoursesTaught { get; set; }
 
     }
 }

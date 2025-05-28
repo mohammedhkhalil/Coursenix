@@ -6,29 +6,20 @@ namespace Coursenix.Models
     [Table("Teachers")]
     public class Teacher
     {
-        [Key]
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
 
-        [Required]
+        // Identity linking 
         public string AppUserId { get; set; } // Foreign key to AppUser
-
-        [ForeignKey("AppUserId")]
         public AppUser AppUser { get; set; } // Navigation property
 
-        public string Name { get; set; }
-        [Required]
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        // Profile 
+        [Required, MaxLength(255)] public string Name { get; set; }
+        [Required] public string Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        [MaxLength(255)] public string? Biography { get; set; }
+        [MaxLength(255)] public string? ProfilePicture { get; set; }
 
-
-        [MaxLength(255)]
-        public string? Biography { get; set; }
-
-        [MaxLength(255)]
-        public string? ProfilePicture { get; set; }
-
-        // Navigation properties
-        public ICollection<Subject> Subjects { get; set; }
-        public ICollection<Group> Groups { get; set; }
+        // Navigation 
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
     }
 }

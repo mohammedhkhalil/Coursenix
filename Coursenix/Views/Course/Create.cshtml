@@ -1,0 +1,103 @@
+﻿@model CreateCourseVM
+@{
+    Layout = "_Layout"; 
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/create_course.css" />
+}
+
+    <main class="container py-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                @* Use asp-controller, asp-action, and method="post" for the form *@
+                <form id="courseForm" asp-controller="Course" asp-action="Create" method="post" enctype="multipart/form-data">
+                    <section class="mb-4">
+                        <div class="row mb-3">
+                            <div class="col-md-8 course-info">
+                                <h2 class="section-title">Course Basic Information</h2>
+                                <div class="mb-3">
+                                    <label asp-for="CourseTitle" class="form-label"></label>
+                                    <input asp-for="CourseTitle" class="form-control" placeholder="Enter course title" />
+                                    <span asp-validation-for="CourseTitle" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 thum">
+                                <div class="thumbnail-container text-center">
+                                    <p class="mb-1 fw-bold">Course Thumbnail</p>
+                                    <div>
+                                        <img src="" id="img" alt="Course Thumbnail" style="max-width: 100%; max-height: 150px;" />
+                                    </div>
+                                    <label for="input" class="file_up">
+                                        <i class="bi bi-upload me-1"></i>upload file
+                                    </label>
+                                    <input type="file" id="input" name="ThumbnailFile" style="display: none;" /> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CourseDescription" class="form-label"></label>
+                        <textarea
+                            asp-for="CourseDescription"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Tell what students will learn from in this course"
+                        ></textarea>
+                        <span asp-validation-for="CourseDescription" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <section class="mb-4">
+                    <h2 class="section-title">Course Details</h2>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="gradeLevels" class="form-label">Grade Levels</label>
+                            <div class="grade-dropdown">
+                                <button
+                                    class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                                    type="button"
+                                    id="gradeDropdownButton"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-auto-close="outside"
+                                    data-bs-offset="0,10"
+                                    aria-expanded="false"
+                                >
+                                    Select Grades
+                                </button>
+                                <ul class="dropdown-menu w-100" id="gradeDropdown">
+                                    </ul>
+                            </div>
+                            @* No direct asp-validation-for for dynamically created checkboxes. Validation needs to be handled in JS or server-side. *@
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Location" class="form-label"></label>
+                                    <input asp-for="Location" class="form-control" placeholder="Enter Course Location" />
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="StudentsPerGroup" class="form-label"></label>
+                                <input asp-for="StudentsPerGroup"
+                                       class="form-control"
+                                       placeholder="Enter maximum number of students in each group"
+                                       min="1" />
+                                <span asp-validation-for="StudentsPerGroup" class="text-danger"></span>
+                            </div>
+                    </section>
+
+                    <section id="groupsSection" class="mb-4 d-none">
+                        <h2 class="section-title">Groups/Grade</h2>
+                        <div id="gradesContainer"></div>
+                    </section>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success px-4 py-2">Create Course</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+@section Scripts {
+    <script src="/js/create_course.js"></script>
+}
