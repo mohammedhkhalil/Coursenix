@@ -16,26 +16,26 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" asp-for="Name" placeholder="Enter your Full name" class="form-control" />
+                <label for="Name">Full Name</label>
+                <input type="text" id="Name" asp-for="Name" placeholder="Enter your Full name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" asp-for="PhoneNumber" placeholder="Enter phone number" class="form-control" />
+                <label for="PhoneNumber">Phone Number</label>
+                <input type="tel" id="PhoneNumber" asp-for="PhoneNumber" placeholder="Enter phone number" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label for="parentPhone">Parent's Phone Number</label>
-                <input type="tel" id="parentPhone" asp-for="ParentPhoneNumber" placeholder="Enter phone number" class="form-control" />
+                <label for="ParentPhoneNumber">Parent's Phone Number</label>
+                <input type="tel" id="ParentPhoneNumber" asp-for="ParentPhoneNumber" placeholder="Enter phone number" class="form-control" />
                 <span asp-validation-for="ParentPhoneNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label for="gradeLevel">Grade Level</label>
-                <select asp-for="Grade" id="gradeLevel" class="form-select">
+                <select asp-for="gradeLevel" id="gradeLevel" class="form-select">
                     <option value="">-- Select Grade --</option>
                     <option value="6">Grade 6</option>
                     <option value="7">Grade 7</option>
@@ -45,7 +45,7 @@
                     <option value="11">Grade 11</option>
                     <option value="12">Grade 12</option>
                 </select>
-                <span asp-validation-for="Grade" class="text-danger"></span>
+                <span asp-validation-for="gradeLevel" class="text-danger"></span>
             </div>
 
             <div class="divider"></div>
@@ -54,33 +54,33 @@
 
             <div class="form-group password-group">
                 <input type="password"
-                       id="current-password"
+                       id="CurrPassword"
                        asp-for="CurrPassword"
                        placeholder="Current password"
                        class="form-control"
                        minlength="8" />
-                <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
+                <i class="far fa-eye-slash toggle-password" data-target="CurrPassword"></i>
                 <span asp-validation-for="CurrPassword" class="text-danger"></span>
             </div>
 
             <div class="form-group password-group">
                 <input type="password"
-                       id="password"
+                       id="NewPassword"
                        asp-for="NewPassword"
                        placeholder="Create a password"
                        class="form-control"
                        minlength="8" />
-                <i class="far fa-eye-slash toggle-password" data-target="password"></i>
+                <i class="far fa-eye-slash toggle-password" data-target="NewPassword"></i>
                 <span asp-validation-for="NewPassword" class="text-danger"></span>
             </div>
 
             <div class="form-group password-group">
                 <input type="password"
-                       id="confirm-password"
+                       id="ConfirmPassword"
                        asp-for="ConfirmPassword"
                        placeholder="Repeat a password"
                        class="form-control" />
-                <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
+                <i class="far fa-eye-slash toggle-password" data-target="ConfirmPassword"></i>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 

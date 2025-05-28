@@ -17,7 +17,7 @@ namespace Coursenix.Models
         [Required]
         public string Email { get; set; }
 
-        public GradeLevel? Grade { get; set; }
+        public int Grade { get; set; }
         public string PhoneNumber { get; set; }
         public string? ParentPhoneNumber { get; set; }
 

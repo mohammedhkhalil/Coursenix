@@ -38,7 +38,7 @@ namespace Coursenix.Controllers
                 Name = student.Name,
                 PhoneNumber = student.PhoneNumber,
                 ParentPhoneNumber = student.ParentPhoneNumber,
-                Grade = student.Grade
+                gradeLevel = student.Grade
             };
 
             return View(vm);
@@ -64,8 +64,8 @@ namespace Coursenix.Controllers
             if (!string.IsNullOrWhiteSpace(model.ParentPhoneNumber))
                 student.ParentPhoneNumber = model.ParentPhoneNumber;
 
-            //if (model.Grade.HasValue)
-            //    student.Grade = model.Grade.Value;
+            if (model.gradeLevel.HasValue)
+                student.Grade = model.gradeLevel.Value ;
 
             await _userManager.UpdateAsync(student.AppUser);
             _context.Update(student);
@@ -86,7 +86,6 @@ namespace Coursenix.Controllers
                 await _signInManager.RefreshSignInAsync(student.AppUser);
             }
 
-            TempData["SuccessMessage"] = "Settings updated successfully.";
             return RedirectToAction("Index", "Courses");
         }
 
