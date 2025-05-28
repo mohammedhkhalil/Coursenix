@@ -116,6 +116,7 @@ namespace Coursenix.Controllers
                 .Count(),
                 Courses = teacher.Courses.Select(course => new CourseInfo
                 {
+                    Id = course.Id,
                     Name = course.Name,
                     Description = course.Description,
                     ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName) ? "/assets/course7.svg" : course.ThumbnailFileName,

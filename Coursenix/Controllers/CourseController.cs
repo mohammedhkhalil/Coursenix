@@ -190,5 +190,28 @@ namespace Coursenix.Controllers
                 System.IO.File.Delete(filePath);
             }
         }
+
+        // GET: Course/ViewCourse/5
+        [HttpGet]
+        public async Task<IActionResult> ViewCourse(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = await _context.Courses
+                .Include(c => c.Teacher)
+                .Include(c => c.GradeLevels)
+                    .ThenInclude(gl => gl.Groups)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return View("ViewCourse", course);
+        }
     }
 }

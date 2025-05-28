@@ -170,10 +170,10 @@ namespace Coursenix.Controllers
 
                 // Redirect based on role
                 if (await userManager.IsInRoleAsync(userModel, "Student"))
-                    return RedirectToAction("Index", "Courses");
+                    return RedirectToAction("Index", "Home");
 
                 if (await userManager.IsInRoleAsync(userModel, "Teacher"))
-                    return RedirectToAction("Create", "Courses");
+                    return RedirectToAction("Index", "Course");
 
                 return RedirectToAction("Index", "Home");
             }
@@ -223,7 +223,15 @@ namespace Coursenix.Controllers
                 return View(userVM);
             }
 
-            // 4) Build cookie settings — lifetime depends on “Remember Me”.
+            // 4) check Role 
+            var userRoles = await userManager.GetRolesAsync(userModel);
+            if (!userRoles.Contains(userVM.Role))
+            {
+                ModelState.AddModelError(string.Empty, $"You are not registered as a {userVM.Role}.");
+                return View(userVM);
+            }
+
+            // 5) Build cookie settings — lifetime depends on “Remember Me”.
             var authProps = new AuthenticationProperties
             {
                 IsPersistent = userVM.RememberMe,                    // keep the cookie after closing the browser?
@@ -234,7 +242,7 @@ namespace Coursenix.Controllers
 
             //await userManager.AddToRoleAsync(userModel, userVM.RoleType);  // add role 
 
-            // 5) Sign the user in (creates the authentication cookie & cliams).
+            // 6) Sign the user in (creates the authentication cookie & cliams).
             await signInManager.SignInWithClaimsAsync(
                  userModel,
                  authProps,
@@ -246,14 +254,14 @@ namespace Coursenix.Controllers
             );
 
 
-            // 6) Redirect according to the user’s role.
+            // 7) Redirect according to the user’s role.
             if (await userManager.IsInRoleAsync(userModel, "Student"))
                 return RedirectToAction("Index", "Courses");
 
             if (await userManager.IsInRoleAsync(userModel, "Teacher"))
                 return RedirectToAction("Index", "Teacher");
 
-            // 7) If the user has no recognized role, sign out and show error.
+            // 8) If the user has no recognized role, sign out and show error.
             await signInManager.SignOutAsync();
             ModelState.AddModelError(string.Empty, "Unknown role.");
             return View("Login");
