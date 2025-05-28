@@ -7,124 +7,114 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
 }
 
-   <div class="main-content">
-        <div class="section-title">Dashboard</div>
+<div class="main-content">
+    <div class="section-title">Dashboard</div>
 
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon student-icon">
-                    <i class="material-icons">person</i>
-                </div>
-                <div class="stat-info">
-                    <div class="stat-number">@Model.TotalStudents</div>
-                    <div class="stat-label">Students</div>
-                </div>
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon student-icon">
+                <i class="material-icons">person</i>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon course-icon">
-                    <i class="material-icons">book</i>
-                </div>
-                <div class="stat-info">
-                    <div class="stat-number">@Model.TotalCourses</div>
-                    <div class="stat-label">Courses</div>
-                </div>
+            <div class="stat-info">
+                <div class="stat-number">@Model.TotalStudents</div>
+                <div class="stat-label">Students</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon group-icon">
-                    <i class="material-icons">group</i>
-                </div>
-                <div class="stat-info">
-                    <div class="stat-number">
-                        @Model.TotalGroups
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon course-icon">
+                <i class="material-icons">book</i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-number">@Model.TotalCourses</div>
+                <div class="stat-label">Courses</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon group-icon">
+                <i class="material-icons">group</i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-number">@Model.TotalGroups</div>
+                <div class="stat-label">Groups</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <div class="profile-img">
+            <img src="@Model.PP" alt="profile" />
+        </div>
+        <div class="profile-info">
+            <h2>@Model.TeacherName</h2>
+            <p>@Model.Biography</p>
+        </div>
+    </div>
+
+    <div class="courses-container">
+        <h1>My Courses</h1>
+
+        <div class="courses-grid">
+
+            @foreach (var i in Model.Courses)
+            {
+                <a asp-controller="Course" asp-action="ViewCourse" asp-route-id="@i.Id" class="course-card">
+                    <div class="course-image">
+                        <img src="@i.ThumbnailFileName" alt="@i.Name" />
                     </div>
-                    <div class="stat-label">Groups</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <div class="profile-img">
-                <img src=@Model.PP alt="profile">
-            </div>
-            <div class="profile-info">
-                <h2>@Model.TeacherName</h2>
-                <p>@Model.Biography</p>
-            </div>
-        </div>
-
-        <div class="courses-container">
-            <h1>My Courses</h1>
-
-            <div class="courses-grid">
-
-                @foreach(var i in Model.Courses)
-                {
-                    <!-- كارد الرياضيات -->
-                    <div class="course-card">
-                        <div class="course-image">
-                            <img src=@i.ThumbnailFileName alt="@i.Name">
+                    <div class="course-content">
+                        <h3 class="course-title">@i.Name</h3>
+                        <div class="course-meta">
+                            <span class="course-grade">@i.GradeRange</span>
                         </div>
-                        <div class="course-content">
-                            <h3 class="course-title">@i.Name</h3>
-                            <div class="course-meta">
-                                <span class="course-grade">@i.GradeRange</span>
-                            </div>
-                            <p class="course-description">
-                                @i.Description
-                            </p>
-                        </div>
+                        <p class="course-description">
+                            @i.Description
+                        </p>
                     </div>
-                }
-                <!-- كارد إضافة كورس جديد -->
-                <div class="course-card add-course-card">
-                    <a asp-action="Create" asp-controller="Course">
-                        <div class="add-course-content">
-                            <div class="add-icon">+</div>
-                            <div class="add-text">Add New Course</div>
-                        </div>
-                    </a>
-                </div>
+                </a>
+            }
+            <!-- كارد إضافة كورس جديد -->
+            <div class="course-card add-course-card">
+                <a asp-action="Create" asp-controller="Course">
+                    <div class="add-course-content">
+                        <div class="add-icon">+</div>
+                        <div class="add-text">Add New Course</div>
+                    </div>
+                </a>
             </div>
         </div>
-   </div>
+    </div>
+</div>
 
-
-@section Scripts {
-    @* <script src="/js/"></script> *@
-
-    @* --------Js contentttt----  ?????????*@
+@section Script {
     <script>
-                        // فتح/إغلاق القائمة
-                document.querySelector('.profile-btn').addEventListener('click', function(e) {
-                  e.stopPropagation();
-                  document.querySelector('.dropdown-content').classList.toggle('show');
-                });
+        // فتح/إغلاق القائمة
+        document.querySelector('.profile-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.dropdown-content').classList.toggle('show');
+        });
 
-                // إغلاق القائمة عند النقر خارجها
-                window.addEventListener('click', function() {
-                  document.querySelector('.dropdown-content').classList.remove('show');
-                });
+        // إغلاق القائمة عند النقر خارجها
+        window.addEventListener('click', function() {
+            document.querySelector('.dropdown-content').classList.remove('show');
+        });
 
-                // منع إغلاق القائمة عند النقر داخلها
-                document.querySelector('.dropdown-content').addEventListener('click', function(e) {
-                  e.stopPropagation();
-                });
+        // منع إغلاق القائمة عند النقر داخلها
+        document.querySelector('.dropdown-content').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
 
-                        // Course card hover animation
-                        const courseCards = document.querySelectorAll('.course-card');
-                        courseCards.forEach(card => {
-                            card.addEventListener('click', () => {
-                                // Navigate to course details page in a real application
-                                console.log('Course clicked');
-                            });
-                        });
+        // Course card hover animation
+        const courseCards = document.querySelectorAll('.course-card');
+        courseCards.forEach(card => {
+            card.addEventListener('click', () => {
+                console.log('Course clicked');
+            });
+        });
 
-                        // Add new course functionality
-                        const addCourseCard = document.querySelector('.add-course-card');
-                        addCourseCard.addEventListener('click', () => {
-                            // Navigate to course creation page in a real application
-                            console.log('Add new course clicked');
-                        });
-            </script>
-    @* --------Js contentttt----  ?????????*@
+        // Add new course functionality
+        const addCourseCard = document.querySelector('.add-course-card');
+        addCourseCard.addEventListener('click', () => {
+            console.log('Add new course clicked');
+        });
+    </script>
 }
