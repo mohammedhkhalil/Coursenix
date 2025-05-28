@@ -168,12 +168,12 @@ namespace Coursenix.Controllers
                 HttpContext.Session.Remove("RegisterUserData");
 
 
+                // Redirect based on role
                 if (await userManager.IsInRoleAsync(userModel, "Student"))
                     return RedirectToAction("Index", "Home");
 
                 if (await userManager.IsInRoleAsync(userModel, "Teacher"))
-                    return RedirectToAction("Index", "Course");
-
+                    return RedirectToAction("Index", "Home");
 
                 return RedirectToAction("Index", "Home");
             }
