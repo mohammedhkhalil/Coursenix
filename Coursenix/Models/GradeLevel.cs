@@ -10,7 +10,7 @@ namespace Coursenix.Models
         [ForeignKey(nameof(Course))] public int CourseId { get; set; }
 
         // Business fields 
-        [Required] public  int NumberOfGrade { get; set; } // 7 : 12 
+        [Required] public int NumberOfGrade { get; set; } // 7 : 12 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 

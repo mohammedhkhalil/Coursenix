@@ -2,6 +2,7 @@
 using Coursenix.Models;
 using Coursenix.Models.ViewModels;
 using Coursenix.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coursenix.Controllers
 {
-    
+    [Authorize]
     public class TeacherController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -88,5 +89,43 @@ namespace Coursenix.Controllers
             return View(model);
         }
 
+        // ---------- DashBoard ---------
+        public async Task<IActionResult> Index() {
+            var user = await _userManager.GetUserAsync(User);
+            var teacher = await _context.Teachers
+                 .Include(t => t.Courses)
+                 .ThenInclude(g => g.GradeLevels)
+                 .ThenInclude(gl => gl.Groups)
+                 .FirstOrDefaultAsync(t => t.AppUserId == user.Id);
+
+            var VM = new TeacherDashboardVM
+            {
+                TeacherName = teacher.Name,
+                PP = string.IsNullOrEmpty(teacher.ProfilePicture) ? "/assets/OIP1.svg" : teacher.ProfilePicture,
+                Biography = teacher.Biography,
+                TotalCourses = teacher.Courses.Count,
+                TotalStudents = teacher.Courses
+                .SelectMany(c => c.GradeLevels)
+                .SelectMany(gl => gl.Groups)
+                 .Sum(g => g.EnrolledStudentsCount),
+                TotalGroups = teacher.Courses
+                .SelectMany(c => c.GradeLevels)
+                .SelectMany(gl => gl.Groups)
+                .Select(g => g.Id)
+                .Distinct()
+                .Count(),
+                Courses = teacher.Courses.Select(course => new CourseInfo
+                {
+                    Name = course.Name,
+                    Description = course.Description,
+                    ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName) ? "/assets/course7.svg" : course.ThumbnailFileName,
+                    GradeRange =  $"Grades {course.GradeLevels.Min(g => g.NumberOfGrade)}–{course.GradeLevels.Max(g => g.NumberOfGrade)}"
+                }).ToList()
+            };
+
+
+
+            return View(VM); 
+        }
     }
 }

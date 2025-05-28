@@ -140,7 +140,7 @@ namespace Coursenix.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Course created successfully!";
-            return RedirectToAction("Index", "Course");
+            return RedirectToAction("Index", "Teacher");
         }
 
         // Helper method to save thumbnail

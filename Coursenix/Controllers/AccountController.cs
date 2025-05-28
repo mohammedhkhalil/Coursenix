@@ -251,7 +251,7 @@ namespace Coursenix.Controllers
                 return RedirectToAction("Index", "Courses");
 
             if (await userManager.IsInRoleAsync(userModel, "Teacher"))
-                return RedirectToAction("Create", "Courses");
+                return RedirectToAction("Index", "Teacher");
 
             // 7) If the user has no recognized role, sign out and show error.
             await signInManager.SignOutAsync();
