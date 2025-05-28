@@ -18,12 +18,20 @@ namespace Coursenix.ViewModels
         public string? Location { get; set; }
 
         [Required(ErrorMessage = "Students per group is required")]
-        [Range(1, 50, ErrorMessage = "Students per group must be between 1 and 50")]
+        [Range(1, 1000, ErrorMessage = "Students per group must be between 1 and 1000")]
         [Display(Name = "Students Per Group")]
         public int StudentsPerGroup { get; set; }
 
         [Display(Name = "Course Thumbnail")]
         public IFormFile? ThumbnailFile { get; set; }
+
+        [Required(ErrorMessage = "Start time is required")]
+        [Display(Name = "Start Time")]
+        public TimeSpan StartTime { get; set; }
+
+        [Required(ErrorMessage = "End time is required")]
+        [Display(Name = "End Time")]
+        public TimeSpan EndTime { get; set; }
 
         // Dictionary to hold grade numbers as keys and their groups as values
         // Key: Grade number (7-12), Value: List of groups for that grade
