@@ -120,7 +120,7 @@
                 {
                     <div class="col-lg-4 col-md-6">
                         <div class="course-card">
-                            <img src="~/assets/@(course.ThumbnailFileName ?? "default-course.svg")"
+                            <img src="~/uploads/thumbnails/@course.ThumbnailFileName"
                                  alt="@course.Name course" class="course-img">
                             <div class="course-content">
                                 <div class="p-one">
@@ -142,7 +142,7 @@
                                 <div class="p-one">
                                     <div class="teacher-info">
                                         <div class="teacher-avatar">
-                                            <img src="~/assets/@(course.Teacher.ProfilePicture ?? "default-teacher.svg")"
+                                            <img src="~/uploads/thumbnails/@course.Teacher.ProfilePicture"
                                                  alt="@course.Teacher.Name">
                                         </div>
                                         <div>
