@@ -1,0 +1,220 @@
+﻿@model EditCourseVM
+@{
+    Layout = "_Layout";
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/create_course.css" />
+}
+
+<main class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form id="courseForm"
+                  asp-controller="Course"
+                  asp-action="EditCourse"
+                  method="post"
+                  enctype="multipart/form-data">
+                <input asp-for="Id" type="hidden" />
+                <input asp-for="TeacherId" type="hidden" />
+                <asp-validation-summary class="text-danger" validation-summary="All"></asp-validation-summary>
+
+                <!-- ── Course Basic Information ─────────────────────────── -->
+                <section class="mb-4">
+                    <div class="row mb-3">
+                        <div class="col-md-8 course-info">
+                            <h2 class="section-title">Edit Course Information</h2>
+                            <p class="text-muted">Update your course details below</p>
+
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label"></label>
+                                <input asp-for="Name"
+                                       class="form-control"
+                                       placeholder="Enter course name" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail upload -->
+                        <div class="col-md-4 thum">
+                            <div class="thumbnail-container text-center">
+                                <p class="mb-1 fw-bold">Course Thumbnail</p>
+                                <img src="@(Model.CurrentThumbnailUrl ?? "")" id="img" alt="Course Thumbnail"
+                                     style="max-width: 100%; max-height: 150px; @(string.IsNullOrEmpty(Model.CurrentThumbnailUrl) ? "display: none;" : "")" />
+                                <label for="input" class="file_up">
+                                    <i class="bi bi-upload me-1"></i>@(string.IsNullOrEmpty(Model.CurrentThumbnailUrl) ? "upload file" : "change file")
+                                </label>
+                                <input type="file" id="input"
+                                       name="ThumbnailFile"
+                                       accept="image/*"
+                                       style="display: none;" />
+                                @if (!string.IsNullOrEmpty(Model.CurrentThumbnailUrl))
+                                {
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" id="removeThumbnail">
+                                            <i class="bi bi-trash me-1"></i>Remove
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Tell what students will learn from this course"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <!-- ── Course Details ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Course Details</h2>
+
+                    <div class="row mb-3">
+                        <!-- Course location -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location" class="form-control" placeholder="Enter Course Location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <!-- Students per group -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StudentsPerGroup" class="form-label"></label>
+                            <input asp-for="StudentsPerGroup"
+                                   class="form-control"
+                                   type="number"
+                                   placeholder="Enter maximum number of students in each group"
+                                   min="1" />
+                            <span asp-validation-for="StudentsPerGroup" class="text-danger"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Course Statistics ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Course Statistics</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-primary">@Model.TotalGroups</h5>
+                                    <p class="card-text small">Total Groups</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-success">@Model.TotalEnrollments</h5>
+                                    <p class="card-text small">Total Enrollments</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-info">@Model.TeacherName</h5>
+                                    <p class="card-text small">Teacher</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-warning">@Model.CreatedDate.ToString("MMM yyyy")</h5>
+                                    <p class="card-text small">Created</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="text-end">
+                    <a href="@Url.Action("ViewCourse", "Course", new { id = Model.Id })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4 py-2">
+                        <i class="bi bi-check-circle me-1"></i>Update Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // File upload preview functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('input');
+            const img = document.getElementById('img');
+            const removeThumbnailBtn = document.getElementById('removeThumbnail');
+            const fileLabel = document.querySelector('.file_up');
+
+            // File input change handler
+            if (input) {
+                input.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+
+                        // Validate file type
+                        if (!file.type.startsWith('image/')) {
+                            alert('Please select a valid image file.');
+                            this.value = '';
+                            return;
+                        }
+
+                        // Validate file size (5MB max)
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert('File size must be less than 5MB.');
+                            this.value = '';
+                            return;
+                        }
+
+                        // Preview the image
+                        img.src = URL.createObjectURL(file);
+                        img.style.display = 'block';
+                        fileLabel.innerHTML = '<i class="bi bi-upload me-1"></i>change file';
+
+                        // Add remove button if it doesn't exist
+                        if (!removeThumbnailBtn) {
+                            const removeBtn = document.createElement('button');
+                            removeBtn.type = 'button';
+                            removeBtn.className = 'btn btn-sm btn-outline-danger mt-2';
+                            removeBtn.id = 'removeThumbnail';
+                            removeBtn.innerHTML = '<i class="bi bi-trash me-1"></i>Remove';
+                            fileLabel.parentElement.appendChild(removeBtn);
+
+                            removeBtn.addEventListener('click', removeThumbnailHandler);
+                        }
+                    }
+                });
+            }
+
+            // Remove thumbnail functionality
+            function removeThumbnailHandler() {
+                img.src = '';
+                img.style.display = 'none';
+                input.value = '';
+                fileLabel.innerHTML = '<i class="bi bi-upload me-1"></i>upload file';
+
+                // Add hidden input to indicate thumbnail removal
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'RemoveThumbnail';
+                hiddenInput.value = 'true';
+                document.getElementById('courseForm').appendChild(hiddenInput);
+
+                // Remove the button
+                this.remove();
+            }
+
+            if (removeThumbnailBtn) {
+                removeThumbnailBtn.addEventListener('click', removeThumbnailHandler);
+            }
+        });
+    </script>
+}

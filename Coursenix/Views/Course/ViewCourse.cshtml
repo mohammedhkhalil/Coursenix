@@ -5,6 +5,12 @@
     Layout = "_Layout";
 }
 
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduvera Dashboard</title>
 @section css {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
@@ -12,7 +18,8 @@
     <link href="~/CSS/viewCourse.css" rel="stylesheet">
 }
 
-
+</head>
+<body>
 <!--nav-->
 <nav class="navbar">
     <a href="#" class="logo">
@@ -81,15 +88,25 @@
         <div class="price-actions">
             <div class="course-actions">
                 <button class="edit-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#888" />
-                    </svg>
+                        <a href="@Url.Action("EditCourse", "Course", new { id = Model.Id })" class="edit-button" title="Edit Course">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#888" />
+                            </svg>
+                        </a>
                 </button>
-                <button class="delete-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#888" />
-                    </svg>
-                </button>
+                
+                    <form asp-controller="Course" asp-action="DeleteCourse" method="post" onsubmit="return confirmDelete()">
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="delete-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" title="Delete Course">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#888" />
+                            </svg>
+                        </button>
+                    </form>
+
             </div>
         </div>
     </div>
@@ -125,7 +142,7 @@
                                 <div class="dropdown-menu">
                                     <div class="dropdown-item"><i class="fas fa-plus-circle"></i> Add Session Attendance</div>
                                     <div class="dropdown-item"><i class="fas fa-clipboard-check"></i> View Students Attendance</div>
-                                    <div class="dropdown-item"><i class="far fa-edit"></i> Edit</div>
+                                    <a href="@Url.Action("EditGroup", "Course", new { id = group.Id })"><div class="dropdown-item"><i class="far fa-edit"></i> Edit</div></a>
                                 </div>
                             </div>
                         </div>
@@ -183,5 +200,12 @@
                 });
             }
         });
+
+            function confirmDelete() {
+                                    return confirm("Are you sure you want to delete this course? This action cannot be undone.");
+                                }
     </script>
 }
+
+</body>
+</html>
