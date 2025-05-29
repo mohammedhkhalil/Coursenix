@@ -295,5 +295,438 @@ namespace Coursenix.Controllers
                 }).ToList();
             return Json(grades);
         }
+
+
+
+
+        // GET: Course/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> EditCourse(int id)
+        {
+            var course = await _context.Courses
+                .Include(c => c.Teacher)
+                .Include(c => c.GradeLevels)
+                    .ThenInclude(gl => gl.Groups)
+                        .ThenInclude(g => g.Bookings)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditCourseVM
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                Location = course.Location,
+                StudentsPerGroup = course.StudentsPerGroup,
+                CurrentThumbnailUrl = !string.IsNullOrEmpty(course.ThumbnailFileName)
+                    ? $"/uploads/thumbnails/{course.ThumbnailFileName}"
+                    : null,
+                TeacherId = course.TeacherId,
+                TeacherName = course.Teacher?.Name ?? "Unknown",
+                TotalGroups = course.GradeLevels.SelectMany(gl => gl.Groups).Count(),
+                TotalEnrollments = course.GradeLevels
+                    .SelectMany(gl => gl.Groups)
+                    .Sum(g => g.EnrolledStudentsCount)
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Course/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCourse(EditCourseVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var course = await _context.Courses.FindAsync(model.Id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            // Update course properties
+            course.Name = model.Name;
+            course.Description = model.Description;
+            course.Location = model.Location;
+            course.StudentsPerGroup = model.StudentsPerGroup;
+
+            // Handle thumbnail upload/removal
+            if (model.RemoveThumbnail)
+            {
+                // Remove existing thumbnail file
+                if (!string.IsNullOrEmpty(course.ThumbnailFileName))
+                {
+                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails", course.ThumbnailFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+                course.ThumbnailFileName = null;
+            }
+            else if (model.ThumbnailFile != null && model.ThumbnailFile.Length > 0)
+            {
+                // Validate file
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var fileExtension = Path.GetExtension(model.ThumbnailFile.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("ThumbnailFile", "Only image files are allowed (jpg, jpeg, png, gif)");
+                    return View(model);
+                }
+
+                if (model.ThumbnailFile.Length > 5 * 1024 * 1024) // 5MB limit
+                {
+                    ModelState.AddModelError("ThumbnailFile", "File size cannot exceed 5MB");
+                    return View(model);
+                }
+
+                // Remove old thumbnail if exists
+                if (!string.IsNullOrEmpty(course.ThumbnailFileName))
+                {
+                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails", course.ThumbnailFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // Save new thumbnail
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ThumbnailFile.CopyToAsync(fileStream);
+                }
+
+                course.ThumbnailFileName = uniqueFileName;
+            }
+
+            try
+            {
+                _context.Update(course);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Course updated successfully!";
+                return RedirectToAction("ViewCourse", new { id = course.Id });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CourseExists(course.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while updating the course. Please try again.");
+                return View(model);
+            }
+        }
+
+        private bool CourseExists(int id)
+        {
+            return _context.Courses.Any(e => e.Id == id);
+        }
+    
+        // GET: Group/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> EditGroup(int id)
+        {
+            var group = await _context.Groups
+                .Include(g => g.GradeLevel)
+                    .ThenInclude(gl => gl.Course)
+                        .ThenInclude(c => c.Teacher)
+                .Include(g => g.Bookings)
+                    .ThenInclude(b => b.Student)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditGroupVM
+            {
+                Id = group.Id,
+                GradeLevelId = group.GradeLevelId,
+                Name = group.Name,
+                SelectedDays = group.SelectedDays ?? new List<string>(),
+                StartTime = group.StartTime,
+                EndTime = group.EndTime,
+                TotalSeats = group.TotalSeats,
+                Location = group.Location,
+                CourseName = group.GradeLevel.Course.Name,
+                CourseId = group.GradeLevel.CourseId,
+                GradeNumber = group.GradeLevel.NumberOfGrade,
+                EnrolledStudentsCount = group.EnrolledStudentsCount,
+                EnrolledStudents = group.Bookings
+                    .Where(b => b.Student != null)
+                    .Select(b => new EnrolledStudent
+                    {
+                        Id = b.Student.Id,
+                        Name = b.Student.Name,
+                        Email = b.Student.Email,
+                        EnrollmentDate = b.BookingDate
+                    }).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Group/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditGroup(EditGroupVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Additional validation
+            if (model.SelectedDays == null || !model.SelectedDays.Any())
+            {
+                ModelState.AddModelError("SelectedDays", "Please select at least one day");
+                return View(model);
+            }
+
+            if (model.EndTime <= model.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "End time must be after start time");
+                return View(model);
+            }
+
+            var group = await _context.Groups.FindAsync(model.Id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            // Check if reducing total seats below current enrollments
+            if (model.TotalSeats < group.EnrolledStudentsCount)
+            {
+                ModelState.AddModelError("TotalSeats",
+                    $"Cannot reduce total seats below current enrollments ({group.EnrolledStudentsCount})");
+                return View(model);
+            }
+
+            // Update group properties
+            group.Name = model.Name;
+            group.SelectedDays = model.SelectedDays;
+            group.StartTime = model.StartTime;
+            group.EndTime = model.EndTime;
+            group.TotalSeats = model.TotalSeats;
+            group.Location = model.Location;
+
+            try
+            {
+                _context.Update(group);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Group updated successfully!";
+                return RedirectToAction("ViewCourse", "Course", new { id = model.CourseId });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GroupExists(group.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while updating the group. Please try again.");
+                return View(model);
+            }
+        }
+
+        // POST: Group/RemoveStudent
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveStudent(int groupId, int studentId)
+        {
+            var booking = await _context.Bookings
+                .FirstOrDefaultAsync(b => b.GroupId == groupId && b.StudentId == studentId);
+
+            if (booking == null)
+            {
+                TempData["ErrorMessage"] = "Student enrollment not found.";
+                return RedirectToAction("EditGroup", new { id = groupId });
+            }
+
+            var group = await _context.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.Bookings.Remove(booking);
+
+                // Update enrolled students count
+                group.EnrolledStudentsCount = Math.Max(0, group.EnrolledStudentsCount - 1);
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Student removed from group successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while removing the student. Please try again.";
+            }
+
+            return RedirectToAction("EditGroup", new { id = groupId });
+        }
+
+        private bool GroupExists(int id)
+        {
+            return _context.Groups.Any(e => e.Id == id);
+        }
+
+        // In your CourseController.cs
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Highly recommended for POST requests
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            var course = await _context.Courses.FindAsync(id);
+            if (course == null)
+            {
+                TempData["ErrorMessage"] = "Course not found.";
+                return RedirectToAction("Index","Teacher"); // Redirect to a suitable list page
+            }
+
+            try
+            {
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Course deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the course. Please try again.";
+                // Log the exception (ex) here for debugging
+            }
+
+            return RedirectToAction("Index","Teacher"); // Redirect after deletion
+        }
+
+        // --- GET: Course/CreateGroup
+        public async Task<IActionResult> CreateGroup(int courseId, int gradeId)
+        {
+            var gradeLevel = await _context.GradeLevels
+                                         .Include(gl => gl.Course)
+                                         .FirstOrDefaultAsync(gl => gl.Id == gradeId);
+
+            if (gradeLevel == null || gradeLevel.CourseId != courseId)
+            {
+                return NotFound(); // Or redirect to an error page
+            }
+
+            ViewBag.CourseId = courseId;
+            ViewBag.GradeId = gradeId;
+            ViewBag.CourseName = gradeLevel.Course.Name;
+            ViewBag.GradeNumber = gradeLevel.NumberOfGrade; // Assuming NumberOfGrade exists on GradeLevel
+            ViewBag.MaxStudentsPerGroup = 20; // Example: Set a default or fetch from configuration
+
+            var model = new CreateGroupVM
+            {
+                CourseId = courseId,
+                GradeId = gradeId,
+                SelectedDays = new List<string>() // Ensure it's not null on initial load
+            };
+
+            return View(model);
+        }
+
+        // --- POST: Course/CreateGroup
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Important for security
+        public async Task<IActionResult> CreateGroup(CreateGroupVM model)
+        {
+            // Re-populate ViewBag properties in case ModelState is invalid and we return the view
+            // This ensures context info like CourseName, GradeNumber is displayed again.
+            var gradeLevel = await _context.GradeLevels
+                                         .Include(gl => gl.Course)
+                                         .FirstOrDefaultAsync(gl => gl.Id == model.GradeId);
+
+            if (gradeLevel == null || gradeLevel.CourseId != model.CourseId)
+            {
+                return NotFound();
+            }
+
+            ViewBag.CourseId = model.CourseId;
+            ViewBag.GradeId = model.GradeId;
+            ViewBag.CourseName = gradeLevel.Course.Name;
+            ViewBag.GradeNumber = gradeLevel.NumberOfGrade;
+            ViewBag.MaxStudentsPerGroup = 100; // Keep consistent with GET action
+
+            // Server-side validation based on your ViewModel and Model
+            if (model.SelectedDays == null || !model.SelectedDays.Any())
+            {
+                ModelState.AddModelError("SelectedDays", "Please select at least one day for the group schedule.");
+            }
+
+            if (model.EndTime <= model.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "End time must be after start time.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return the view with the model to show errors
+                return View(model);
+            }
+
+            // Create a new Group entity from the ViewModel
+            var group = new Group
+            {
+                GradeLevelId = model.GradeId,
+                Name = model.GroupName,
+                SelectedDays = model.SelectedDays,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime,
+                TotalSeats = model.TotalSeats,
+                Location = model.Description, // Assuming Description in VM maps to Location in Group model
+                EnrolledStudentsCount = 0 // New groups start with 0 enrolled students
+            };
+
+            try
+            {
+                _context.Groups.Add(group);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Group created successfully!";
+                // Redirect to the Course details page, or wherever appropriate
+                return RedirectToAction("ViewCourse", "Course", new { id = model.CourseId });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex)
+                ModelState.AddModelError("", "An error occurred while creating the group. Please try again.");
+                return View(model);
+            }
+        }
+
+
     }
 }
