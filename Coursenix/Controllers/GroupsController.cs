@@ -93,7 +93,7 @@ namespace Coursenix.Controllers
                 .Include(b => b.Student)
                 .ToList();
 
-            var viewModel = new SessionAttendanceViewModel
+            var viewModel = new TakeAttendanceViewModel
             {
                 SessionId = session.Id,
                 SessionDateTime = session.SessionDateTime,
@@ -112,7 +112,7 @@ namespace Coursenix.Controllers
 
         // POST: Attendance/TakeAttendance
         [HttpPost]
-        public IActionResult TakeAttendance(SessionAttendanceViewModel model)
+        public IActionResult TakeAttendance(TakeAttendanceViewModel model)
         {
             if (!ModelState.IsValid)
             {

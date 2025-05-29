@@ -1,6 +1,6 @@
 ﻿namespace Coursenix.Models.ViewModels
 {
-    public class SessionAttendanceViewModel
+    public class TakeAttendanceViewModel
     {
         public int SessionId { get; set; }
         public DateTime SessionDateTime { get; set; }
