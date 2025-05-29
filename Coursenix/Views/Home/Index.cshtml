@@ -79,31 +79,43 @@
                  
                     <ul class="navbar-nav ms-auto">
 
-                       
-                        @if(User.Identity.IsAuthenticated)
-                        {
-                            var name = User.FindFirst("FullName")?.Value;
 
-                            <li class="user-profile" id="userProfile">
-                                <span class="username"> @name </span>
-                                <div class="user-icon"> @char.ToUpper(name[0]) </div>
-                                <!-- User Dropdown Menu -->
-                                <div class="dropdown-menu" id="userDropdown">
-                                    <ul>
-                                        <li><a href=@Url.Action("Dashboard", "Student")><i class="fas fa-book"></i> Dashboard</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var name = User.FindFirst("FullName")?.Value;
+
+                        <li class="user-profile" id="userProfile">
+                            <span class="username"> @name </span>
+                            <div class="user-icon"> @char.ToUpper(name[0]) </div>
+                            <div class="dropdown-menu" id="userDropdown">
+                                <ul>
+                                    @if (User.IsInRole("Teacher"))
+                                    {
+                                        <li><a href=@Url.Action("Index", "Teacher")><i class="fas fa-chalkboard-teacher"></i>Dashboard</a></li>
+                                        <li><a href=@Url.Action("Settings", "Teacher")><i class="fas fa-cog"></i> Settings</a></li>
+                                    }
+                                    else if (User.IsInRole("Student"))
+                                    {
+                                        <li><a href=@Url.Action("Dashboard", "Student")><i class="fas fa-book"></i>Dashboard</a></li>
                                         <li><a href=@Url.Action("Settings", "Student")><i class="fas fa-cog"></i> Settings</a></li>
-                                        <li class="divider-menu"></li>
-                                        <li><a href=@Url.Action("Logout", "Account") class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        }
-                        else 
-                        {
-                             <li class="sign-in-container">
-                                <a href=@Url.Action("Login", "Account") class="btn sign-in-btn">Sign in</a>
-                            </li>
-                        }
+                                    }
+                                    else
+                                    {
+                                        // Fallback for users without a specific role or other roles
+                                        <li><a href=@Url.Action("Index", "Home")><i class="fas fa-home"></i> Home</a></li>
+                                    }
+                                    <li class="divider-menu"></li>
+                                    <li><a href=@Url.Action("Logout", "Account") class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="sign-in-container">
+                            <a href=@Url.Action("Login", "Account") class="btn sign-in-btn">Sign in</a>
+                        </li>
+                    }
                         
                     </ul>
                 

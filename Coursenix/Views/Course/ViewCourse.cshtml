@@ -12,6 +12,47 @@
     <link href="~/CSS/viewCourse.css" rel="stylesheet">
 }
 
+
+<!--nav-->
+<nav class="navbar">
+    <a href="#" class="logo">
+        <div style="color: #26a69a;">
+            <i class="material-icons" style="font-size: 36px;">school</i>
+        </div>
+        <div class="logo-text">
+            Eduvera
+            <span>Learning Platform</span>
+        </div>
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+        <li><a href="@Url.Action("Index", "Course")">Courses</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+
+    <div class="profile-dropdown">
+        <button class="profile-btn">
+            <img src="~/assets/teacher1.svg" alt="Profile" class="profile-image">
+        </button>
+        <div class="dropdown-content">
+            <div class="dropdown-header">
+                <img src="~/assets/teacher1.svg" alt="Profile" class="profile-image large">
+                <div>
+                    <h4>@Model.Teacher?.Name</h4>
+                </div>
+            </div>
+            <hr>
+            <a href="@Url.Action("Index", "Teacher")"><i class="fas fa-user"></i> View Profile</a>
+            <a href="@Url.Action("Settings", "Teacher")"><i class="fas fa-cog"></i> Settings</a>
+            <hr>
+            <a href=@Url.Action("Logout", "Account") class="sign_out"><i class="fas fa-sign-out-alt"></i> Sign-out</a>
+        </div>
+    </div>
+</nav>
+
+
 <div class="course-details">
     <h2>Course Details</h2>
 
