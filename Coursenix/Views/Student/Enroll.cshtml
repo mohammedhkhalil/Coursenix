@@ -1,0 +1,122 @@
+﻿@model EnrollViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dresley - Course Enrollment</title>
+    <link href="https://c...content-available-to-author-only...r.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://c...content-available-to-author-only...e.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../CSS/courseDetailsG7.css">
+</head>
+<body>
+    <!-- Header Section with Teal Background -->
+    <!-- Header Section -->
+    <!-- Main Course Card -->
+
+    <div class="course-card-wrapper">
+        <div class="course-card">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-8">
+                    <h2>@Model.Name</h2>
+                    <div class="course-info">
+                        @* <span><i class="fas fa-graduation-cap"></i> Grades 7-9</span> *@
+                        @* <span><i class="fas fa-calendar"></i> 2 Classes/Week</span> *@
+                        <span><i class="fas fa-map-marker-alt"></i> @Model.Location</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-info">
+                @* <div class="teacher-image"> *@
+                @*     <img src=" ../assets/teacher1.svg" alt="Mr. Ahmed Hassan"> *@
+                @* </div> *@
+                <div>
+                    <h5 class="teacher-name">@Model.TeacherName</h5>
+                    <p class="teacher-title">
+                        @(string.IsNullOrEmpty(Model.Biography) ? "" : Model.Biography )</ p >
+                </div>
+            </div>
+
+            <hr>
+
+            <h4 class="mb-3">Choose your Grade</h4>
+
+            <div class="grades-tabs">
+                @foreach(var item in Model.grades)
+                {
+                    <button class="grade-btn" data-grade-id="@item.Id">@item.number</button>
+                }
+            </div>
+
+
+
+
+            @* <p class="mb-4">Select one of the available groups for Grade 7 below to enroll in this course.</p> *@
+
+            <div class="mt-4 text-end">
+                <button class="enroll-btn">Enroll</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://c...content-available-to-author-only...r.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+             document.querySelectorAll('.grade-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const gradeId = button.getAttribute('data-grade-id');
+
+            document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            fetch(`/Groups/GetGroupByGrade?GradeLevelId=${gradeId}`)
+              .then(response => response.json())
+              .then(groups => {
+                const container = document.getElementById('groupsContainer');
+                container.innerHTML = ''; 
+
+                if (groups.length === 0) {
+                  container.innerHTML = '<p>لا توجد مجموعات لهذه المرحلة.</p>';
+                  return;
+                }
+
+                groups.forEach((group, index) => {
+                  const groupHTML = `
+                    <div class="group-card">
+                      <h4>Group ${index + 1}</h4>
+                      <p><strong>Days:</strong> ${group.selectedDays}</p>
+                      <p><strong>Time:</strong> ${group.startTime} - ${group.endTime}</p>
+                      <p><strong>Total Seats:</strong> ${group.totalSeats}</p>
+                      <p><strong>Enrolled:</strong> ${group.enrolledStudentsCount}</p>
+                    </div>
+                  `;
+                  container.innerHTML += groupHTML;
+                });
+              })
+              .catch(err => {
+                console.error('خطأ أثناء جلب الجروبات:', err);
+                document.getElementById('groupsContainer').innerHTML = '<p>حدث خطأ، حاول لاحقًا.</p>';
+              });
+          });
+        });
+        // Group selection functionality
+        document.querySelectorAll('.group-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Skip if seats are full
+                if (this.querySelector('.seats-full')) return;
+
+                // Remove selected class from all cards
+                document.querySelectorAll('.group-card').forEach(c => {
+                    c.classList.remove('selected');
+                    c.querySelector('.radio-button').classList.remove('selected');
+                });
+
+                // Add selected class to clicked card
+                this.classList.add('selected');
+                this.querySelector('.radio-button').classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

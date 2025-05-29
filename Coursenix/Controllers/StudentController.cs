@@ -98,6 +98,31 @@ namespace Coursenix.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult Enroll(int CourseId)
+        {
+            EnrollViewModel Model = new EnrollViewModel() ;
+            var grades = _context.GradeLevels
+                .Where(g => g.CourseId == CourseId)
+                .Select(g => new EnrollViewModel.Grades
+                {
+                    Id = g.Id,
+                    number = g.NumberOfGrade,
+                }).ToList();
+
+            Model.grades = grades;
+
+            Course curcourse = _context.Courses.
+                Include(c => c.Teacher)
+                .FirstOrDefault(c => c.Id == CourseId);
+
+            Model.Location = curcourse.Location;
+            Model.TeacherName = curcourse.Teacher.Name ;
+            Model.Name = curcourse.Name;
+            Model.Biography = curcourse.Teacher.Biography;
+            return View(Model);
+        }
+
         //public async Task<IActionResult> Dashboard()
         //{
         //    var appUser = await _userManager.GetUserAsync(User);
