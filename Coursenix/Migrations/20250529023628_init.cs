@@ -195,6 +195,30 @@ namespace Coursenix.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Teachers",
                 columns: table => new
                 {
@@ -291,55 +315,6 @@ namespace Coursenix.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GradeId = table.Column<int>(type: "int", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ParentPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Students_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_GradeLevels_GradeId",
-                        column: x => x.GradeId,
-                        principalTable: "GradeLevels",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sessions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SessionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sessions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sessions_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
@@ -364,6 +339,26 @@ namespace Coursenix.Migrations
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sessions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SessionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -483,11 +478,6 @@ namespace Coursenix.Migrations
                 table: "Students",
                 column: "AppUserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_GradeId",
-                table: "Students",
-                column: "GradeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_AppUserId",

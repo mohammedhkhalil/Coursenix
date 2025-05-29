@@ -342,7 +342,7 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GradeId")
+                    b.Property<int>("Grade")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -360,8 +360,6 @@ namespace Coursenix.Migrations
 
                     b.HasIndex("AppUserId")
                         .IsUnique();
-
-                    b.HasIndex("GradeId");
 
                     b.ToTable("Students");
                 });
@@ -640,13 +638,7 @@ namespace Coursenix.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Coursenix.Models.GradeLevel", "Grade")
-                        .WithMany()
-                        .HasForeignKey("GradeId");
-
                     b.Navigation("AppUser");
-
-                    b.Navigation("Grade");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
