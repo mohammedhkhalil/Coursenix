@@ -104,7 +104,7 @@
                         <label asp-for="RememberMe" class="form-check-label"></label>
                     </div>
                     <div class="form-text">
-                        <a href="#">Forgot password?</a>
+                        <a asp-action="ForgotPassword" asp-controller="Account">Forgot password?</a>
                     </div>
                 </div>
 
@@ -116,24 +116,24 @@
             </form>
 
 
-            <div class="or-divider">
-                <span>or</span>
-            </div>
+            @* <div class="or-divider"> *@
+            @*     <span>or</span> *@
+            @* </div> *@
 
-            <div class="social-login">
-                <button class="btn btn-google">
-                    <img src="/assets/google-icon.jpg"
-                         alt="Google"
-                         class="social-icon" />
-                    sign in
-                </button>
-                <button class="btn btn-facebook">
-                    <img src="/assets/facebook-icon2.png"
-                         alt="Facebook"
-                         class="social-icon" />
-                    sign in
-                </button>
-            </div>
+            @* <div class="social-login"> *@
+            @*     <button class="btn btn-google"> *@
+            @*         <img src="/assets/google-icon.jpg" *@
+            @*              alt="Google" *@
+            @*              class="social-icon" /> *@
+            @*         sign in *@
+            @*     </button> *@
+            @*     <button class="btn btn-facebook"> *@
+            @*         <img src="/assets/facebook-icon2.png" *@
+            @*              alt="Facebook" *@
+            @*              class="social-icon" /> *@
+            @*         sign in *@
+            @*     </button> *@
+            @* </div> *@
         </div>
     </div>
 
