@@ -296,6 +296,12 @@ namespace Coursenix.Controllers
             return Json(grades);
         }
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         // GET: Course/Edit/5
         [HttpGet]
         public async Task<IActionResult> EditCourse(int id)
@@ -442,8 +448,12 @@ namespace Coursenix.Controllers
         {
             return _context.Courses.Any(e => e.Id == id);
         }
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         // GET: Group/Edit/5
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id)
@@ -601,6 +611,10 @@ namespace Coursenix.Controllers
             return _context.Groups.Any(e => e.Id == id);
         }
 
+<<<<<<< HEAD
+=======
+        // In your CourseController.cs
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         [HttpPost]
         [ValidateAntiForgeryToken] // Highly recommended for POST requests
         public async Task<IActionResult> DeleteCourse(int id)
@@ -626,5 +640,107 @@ namespace Coursenix.Controllers
 
             return RedirectToAction("Index","Teacher"); // Redirect after deletion
         }
+<<<<<<< HEAD
+=======
+
+        // --- GET: Course/CreateGroup
+        public async Task<IActionResult> CreateGroup(int courseId, int gradeId)
+        {
+            var gradeLevel = await _context.GradeLevels
+                                         .Include(gl => gl.Course)
+                                         .FirstOrDefaultAsync(gl => gl.Id == gradeId);
+
+            if (gradeLevel == null || gradeLevel.CourseId != courseId)
+            {
+                return NotFound(); // Or redirect to an error page
+            }
+
+            ViewBag.CourseId = courseId;
+            ViewBag.GradeId = gradeId;
+            ViewBag.CourseName = gradeLevel.Course.Name;
+            ViewBag.GradeNumber = gradeLevel.NumberOfGrade; // Assuming NumberOfGrade exists on GradeLevel
+            ViewBag.MaxStudentsPerGroup = 20; // Example: Set a default or fetch from configuration
+
+            var model = new CreateGroupVM
+            {
+                CourseId = courseId,
+                GradeId = gradeId,
+                SelectedDays = new List<string>() // Ensure it's not null on initial load
+            };
+
+            return View(model);
+        }
+
+        // --- POST: Course/CreateGroup
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Important for security
+        public async Task<IActionResult> CreateGroup(CreateGroupVM model)
+        {
+            // Re-populate ViewBag properties in case ModelState is invalid and we return the view
+            // This ensures context info like CourseName, GradeNumber is displayed again.
+            var gradeLevel = await _context.GradeLevels
+                                         .Include(gl => gl.Course)
+                                         .FirstOrDefaultAsync(gl => gl.Id == model.GradeId);
+
+            if (gradeLevel == null || gradeLevel.CourseId != model.CourseId)
+            {
+                return NotFound();
+            }
+
+            ViewBag.CourseId = model.CourseId;
+            ViewBag.GradeId = model.GradeId;
+            ViewBag.CourseName = gradeLevel.Course.Name;
+            ViewBag.GradeNumber = gradeLevel.NumberOfGrade;
+            ViewBag.MaxStudentsPerGroup = 100; // Keep consistent with GET action
+
+            // Server-side validation based on your ViewModel and Model
+            if (model.SelectedDays == null || !model.SelectedDays.Any())
+            {
+                ModelState.AddModelError("SelectedDays", "Please select at least one day for the group schedule.");
+            }
+
+            if (model.EndTime <= model.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "End time must be after start time.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return the view with the model to show errors
+                return View(model);
+            }
+
+            // Create a new Group entity from the ViewModel
+            var group = new Group
+            {
+                GradeLevelId = model.GradeId,
+                Name = model.GroupName,
+                SelectedDays = model.SelectedDays,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime,
+                TotalSeats = model.TotalSeats,
+                Location = model.Description, // Assuming Description in VM maps to Location in Group model
+                EnrolledStudentsCount = 0 // New groups start with 0 enrolled students
+            };
+
+            try
+            {
+                _context.Groups.Add(group);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Group created successfully!";
+                // Redirect to the Course details page, or wherever appropriate
+                return RedirectToAction("ViewCourse", "Course", new { id = model.CourseId });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex)
+                ModelState.AddModelError("", "An error occurred while creating the group. Please try again.");
+                return View(model);
+            }
+        }
+
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
     }
 }

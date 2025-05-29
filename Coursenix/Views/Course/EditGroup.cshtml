@@ -10,9 +10,17 @@
             margin-right: 15px;
             margin-bottom: 10px;
         }
+<<<<<<< HEAD
         .time-input-group {
             position: relative;
         }
+=======
+
+        .time-input-group {
+            position: relative;
+        }
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         .student-item {
             border: 1px solid #e0e0e0;
             border-radius: 8px;
@@ -20,6 +28,10 @@
             margin-bottom: 8px;
             background-color: #f8f9fa;
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         .context-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -38,7 +50,11 @@
                     <h5 class="mb-1">@Model.CourseName</h5>
                     <p class="mb-0 opacity-75">Grade @Model.GradeNumber Group</p>
                 </div>
+<<<<<<< HEAD
                 <a href="@Url.Action("Details", "Course", new { id = Model.CourseId })" class="btn btn-light btn-sm ms-auto">
+=======
+                <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-light btn-sm ms-auto">
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                     <i class="bi bi-arrow-left me-1"></i>Back to Course
                 </a>
             </div>
@@ -53,9 +69,15 @@
                   method="post">
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="GradeLevelId" type="hidden" />
+<<<<<<< HEAD
                 <input asp-for="Id" type="hidden" />
                 <asp-validation-summary class="text-danger" validation-summary="All"></asp-validation-summary>
                 
+=======
+                <input asp-for="CourseId" type="hidden" />
+                <asp-validation-summary class="text-danger" validation-summary="All"></asp-validation-summary>
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                 <!-- ── Group Basic Information ─────────────────────────── -->
                 <section class="mb-4">
                     <h2 class="section-title">Edit Group Information</h2>
@@ -82,7 +104,11 @@
                 <!-- ── Group Capacity ────────────────────────────────── -->
                 <section class="mb-4">
                     <h2 class="section-title">Group Capacity</h2>
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label asp-for="TotalSeats" class="form-label"></label>
@@ -107,7 +133,11 @@
                 <!-- ── Schedule Settings ────────────────────────────────── -->
                 <section class="mb-4">
                     <h2 class="section-title">Schedule Settings</h2>
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                     <!-- Days Selection -->
                     <div class="mb-3">
                         <label class="form-label">Select Days</label>
@@ -115,9 +145,15 @@
                             @for (int i = 0; i < Model.AvailableDays.Count; i++)
                             {
                                 <div class="form-check day-checkbox">
+<<<<<<< HEAD
                                     <input class="form-check-input" 
                                            type="checkbox" 
                                            name="SelectedDays" 
+=======
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="SelectedDays"
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                                            value="@Model.AvailableDays[i].Value"
                                            id="day_@Model.AvailableDays[i].Value"
                                            @(Model.SelectedDays.Contains(Model.AvailableDays[i].Value) ? "checked" : "") />
@@ -174,8 +210,13 @@
                                         <br>
                                         <small class="text-muted">Enrolled: @student.EnrollmentDate.ToString("MMM dd, yyyy")</small>
                                     </div>
+<<<<<<< HEAD
                                     <button type="button" 
                                             class="btn btn-sm btn-outline-danger" 
+=======
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                                             onclick="removeStudent(@student.Id, '@student.Name')">
                                         <i class="bi bi-person-dash me-1"></i>Remove
                                     </button>
@@ -186,7 +227,11 @@
                 }
 
                 <div class="text-end">
+<<<<<<< HEAD
                     <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+=======
+                    <a href="@Url.Action("Details", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                     <button type="submit" class="btn btn-success px-4 py-2">
                         <i class="bi bi-check-circle me-1"></i>Update Group
                     </button>
@@ -209,7 +254,11 @@
                 if (startTimeInput.value && endTimeInput.value) {
                     const startTime = new Date('1970-01-01T' + startTimeInput.value + ':00');
                     const endTime = new Date('1970-01-01T' + endTimeInput.value + ':00');
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                     if (endTime <= startTime) {
                         timeValidationMessage.style.display = 'block';
                         endTimeInput.setCustomValidity('End time must be after start time');
@@ -251,16 +300,25 @@
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '@Url.Action("RemoveStudent", "Group")';
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                 const groupIdInput = document.createElement('input');
                 groupIdInput.type = 'hidden';
                 groupIdInput.name = 'groupId';
                 groupIdInput.value = '@Model.Id';
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                 const studentIdInput = document.createElement('input');
                 studentIdInput.type = 'hidden';
                 studentIdInput.name = 'studentId';
                 studentIdInput.value = studentId;
+<<<<<<< HEAD
                 
                 const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
                 
@@ -268,6 +326,15 @@
                 form.appendChild(studentIdInput);
                 form.appendChild(tokenInput);
                 
+=======
+
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
+
+                form.appendChild(groupIdInput);
+                form.appendChild(studentIdInput);
+                form.appendChild(tokenInput);
+
+>>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
                 document.body.appendChild(form);
                 form.submit();
             }
