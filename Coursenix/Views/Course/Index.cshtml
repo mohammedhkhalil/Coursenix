@@ -101,9 +101,12 @@
                 <div class="col-md-4">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" class="form-control search-input" name="searchQuery"
-                               placeholder="    Search by teacher name" value="@Model.SearchQuery"
-                               onkeyup="delayedSubmit()">
+                        <input type="text"
+                               class="form-control search-input ps-5"
+                               name="searchQuery"
+                               placeholder="Search by teacher name"
+                               value="@Model.SearchQuery"
+                               oninput="delayedSubmit()">
                     </div>
                 </div>
             </div>
@@ -250,7 +253,7 @@
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(function() {
                 submitFilter();
-            }, 500); // Wait 500ms after user stops typing
+            }, 1000); // Wait 500ms after user stops typing
         }
 
         function goToPage(page) {

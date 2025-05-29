@@ -86,7 +86,7 @@ namespace Coursenix.Controllers
                 await _signInManager.RefreshSignInAsync(student.AppUser);
             }
 
-            return RedirectToAction("Index", "Courses");
+            return RedirectToAction("Index", "Course");
         }
 
         public async void DeleteStudent(int StudentId)
