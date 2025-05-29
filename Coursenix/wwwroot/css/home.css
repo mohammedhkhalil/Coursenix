@@ -20,7 +20,7 @@ body {
   font-family: "Inter", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
-  line-height: 1.6;
+  position:relative;
 }
 
 .container {
@@ -846,9 +846,12 @@ img {
 
 /* Footer Section */
 .footer {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 50px 0 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 50px 0 20px;
+/*    bottom: 0;
+    position: absolute;*/
+    width: 100%;
 }
 
 .footer-columns {
