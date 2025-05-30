@@ -123,14 +123,28 @@
                                         <span class="course-price">$@course.GradeLevels.First().Price</span>
                                     }
                                 </div>
-                                @if (course.GradeLevels.Any())
+                            @if (course.GradeLevels.Any())
+                            {
+                                var grades = course.GradeLevels.Select(gl => gl.NumberOfGrade).OrderBy(g => g).ToList();
+
+                                string gradeText;
+
+                                if (grades.Count == 0)
                                 {
-                                    var grades = course.GradeLevels.Select(gl => gl.NumberOfGrade).OrderBy(g => g).ToList();
-                                    var gradeText = grades.Count == 1 ? $"Grade {grades.First()}" :
-                                    grades.Count == 2 ? $"Grades {grades.First()}-{grades.Last()}" :
-                                    $"Grades {grades.First()}-{grades.Last()}";
-                                    <p class="course-grade mb-2">@gradeText</p>
+                                    gradeText = "No grades specified";
                                 }
+                                else if (grades.Count == 1)
+                                {
+                                    gradeText = $"Grade {grades.First()}";
+                                }
+                                else
+                                {
+                                    // For multiple grades, always list them out individually
+                                    gradeText = "Grades: " + string.Join(", ", grades.Select(g => g.ToString()));
+                                }
+
+                                <p class="course-grade mb-2">@gradeText</p>
+                            }
                                 <p class="card-text">@(course.Description ?? "Comprehensive course designed to enhance your learning experience.")</p>
                                 <div class="p-one">
                                     <div class="teacher-info">
