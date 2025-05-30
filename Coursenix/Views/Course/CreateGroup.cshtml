@@ -1,0 +1,296 @@
+﻿@model CreateGroupVM
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add New Group";
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/create_course.css" />
+    <style>
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-separator {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .days-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .day-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+            .day-checkbox:hover {
+                border-color: #26a69a;
+                background-color: #f0f8f7;
+            }
+
+            .day-checkbox input[type="checkbox"] {
+                margin: 0;
+            }
+
+                .day-checkbox input[type="checkbox"]:checked + label {
+                    color: #26a69a;
+                    font-weight: 500;
+                }
+
+                .day-checkbox input[type="checkbox"]:checked {
+                    accent-color: #26a69a;
+                }
+
+            .day-checkbox.selected {
+                border-color: #26a69a;
+                background-color: #f0f8f7;
+            }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #26a69a;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+            .back-link:hover {
+                color: #1e8e82;
+                text-decoration: none;
+            }
+
+            .back-link i {
+                margin-right: 8px;
+            }
+    </style>
+}
+
+<main class="container py-4">
+    <!-- Back to Course Link -->
+    <a href="@Url.Action("ViewCourse", "Course", new { id = ViewBag.CourseId })" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Course
+    </a>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form id="groupForm"
+                  asp-controller="Course"
+                  asp-action="CreateGroup"
+                  method="post">
+
+                <input type="hidden" asp-for="CourseId" value="@ViewBag.CourseId" />
+                <input type="hidden" asp-for="GradeId" value="@ViewBag.GradeId" />
+
+                <asp-validation-summary class="text-danger" validation-summary="All"></asp-validation-summary>
+
+                <!-- ── Group Basic Information ─────────────────────────── -->
+                <section class="mb-4">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h2 class="section-title">Add New Group</h2>
+                            <p class="text-muted mb-4">
+                                Course: <strong>@ViewBag.CourseName</strong> |
+                                Grade: <strong>@ViewBag.GradeNumber</strong>
+                            </p>
+
+                            <div class="mb-3">
+                                <label asp-for="GroupName" class="form-label">Group Name</label>
+                                <input asp-for="GroupName"
+                                       class="form-control"
+                                       placeholder="Enter group name (e.g., Group A, Morning Batch, etc.)" />
+                                <span asp-validation-for="GroupName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Schedule Information ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Schedule Information</h2>
+
+                    <!-- Days Selection -->
+                    <div class="mb-4">
+                        <label class="form-label">Select Days</label>
+                        <div class="days-selection">
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="sunday" name="SelectedDays" value="Sunday" />
+                                <label for="sunday">Sunday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="monday" name="SelectedDays" value="Monday" />
+                                <label for="monday">Monday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="tuesday" name="SelectedDays" value="Tuesday" />
+                                <label for="tuesday">Tuesday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="wednesday" name="SelectedDays" value="Wednesday" />
+                                <label for="wednesday">Wednesday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="thursday" name="SelectedDays" value="Thursday" />
+                                <label for="thursday">Thursday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="friday" name="SelectedDays" value="Friday" />
+                                <label for="friday">Friday</label>
+                            </div>
+                            <div class="day-checkbox">
+                                <input type="checkbox" id="saturday" name="SelectedDays" value="Saturday" />
+                                <label for="saturday">Saturday</label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="SelectedDays" class="text-danger"></span>
+                    </div>
+
+                    <!-- Time Selection -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="StartTime" class="form-label">Start Time</label>
+                            <input asp-for="StartTime"
+                                   type="time"
+                                   class="form-control" />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EndTime" class="form-label">End Time</label>
+                            <input asp-for="EndTime"
+                                   type="time"
+                                   class="form-control" />
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Group Capacity ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Group Capacity</h2>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="TotalSeats" class="form-label">Total Seats</label>
+                                <input asp-for="TotalSeats"
+                                       type="number"
+                                       class="form-control"
+                                       placeholder="Enter maximum number of students for this group"
+                                       min="1"
+                                       max="@ViewBag.MaxStudentsPerGroup" />
+                                <small class="form-text text-muted">
+                                    Maximum allowed: @ViewBag.MaxStudentsPerGroup students per group
+                                </small>
+                                <span asp-validation-for="TotalSeats" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Additional Information (Optional) ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Additional Information <small class="text-muted">(Optional)</small></h2>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Group Description</label>
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Add any additional notes about this group (e.g., special requirements, target students, etc.)"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </section>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="@Url.Action("ViewCourse", "Course", new { id = ViewBag.CourseId })"
+                       class="btn btn-outline-secondary px-4 py-2">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success px-4 py-2">
+                        <i class="fas fa-plus me-1"></i>
+                        Create Group
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle day checkbox selection styling
+            const dayCheckboxes = document.querySelectorAll('.day-checkbox input[type="checkbox"]');
+
+            dayCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const dayContainer = this.closest('.day-checkbox');
+                    if (this.checked) {
+                        dayContainer.classList.add('selected');
+                    } else {
+                        dayContainer.classList.remove('selected');
+                    }
+                });
+
+                // Set initial state
+                if (checkbox.checked) {
+                    checkbox.closest('.day-checkbox').classList.add('selected');
+                }
+            });
+
+            // Validate time selection
+            const startTimeInput = document.querySelector('input[name="StartTime"]');
+            const endTimeInput = document.querySelector('input[name="EndTime"]');
+
+            function validateTime() {
+                if (startTimeInput.value && endTimeInput.value) {
+                    const startTime = new Date('2000-01-01 ' + startTimeInput.value);
+                    const endTime = new Date('2000-01-01 ' + endTimeInput.value);
+
+                    if (startTime >= endTime) {
+                        endTimeInput.setCustomValidity('End time must be after start time');
+                    } else {
+                        endTimeInput.setCustomValidity('');
+                    }
+                }
+            }
+
+            startTimeInput.addEventListener('change', validateTime);
+            endTimeInput.addEventListener('change', validateTime);
+
+            // Form validation before submit
+            document.getElementById('groupForm').addEventListener('submit', function(e) {
+                const selectedDays = document.querySelectorAll('input[name="SelectedDays"]:checked');
+
+                if (selectedDays.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one day for the group schedule.');
+                    return false;
+                }
+
+                if (!startTimeInput.value || !endTimeInput.value) {
+                    e.preventDefault();
+                    alert('Please select both start and end times.');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

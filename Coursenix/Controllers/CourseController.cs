@@ -296,12 +296,6 @@ namespace Coursenix.Controllers
             return Json(grades);
         }
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         // GET: Course/Edit/5
         [HttpGet]
         public async Task<IActionResult> EditCourse(int id)
@@ -448,12 +442,7 @@ namespace Coursenix.Controllers
         {
             return _context.Courses.Any(e => e.Id == id);
         }
-<<<<<<< HEAD
 
-
-=======
-    
->>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
         // GET: Group/Edit/5
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id)
@@ -611,10 +600,7 @@ namespace Coursenix.Controllers
             return _context.Groups.Any(e => e.Id == id);
         }
 
-<<<<<<< HEAD
-=======
-        // In your CourseController.cs
->>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
+
         [HttpPost]
         [ValidateAntiForgeryToken] // Highly recommended for POST requests
         public async Task<IActionResult> DeleteCourse(int id)
@@ -640,8 +626,7 @@ namespace Coursenix.Controllers
 
             return RedirectToAction("Index","Teacher"); // Redirect after deletion
         }
-<<<<<<< HEAD
-=======
+
 
         // --- GET: Course/CreateGroup
         public async Task<IActionResult> CreateGroup(int courseId, int gradeId)
@@ -741,6 +726,5 @@ namespace Coursenix.Controllers
         }
 
 
->>>>>>> a552fb57fde00fa95e8c127be66a7e96508e41c4
     }
 }
