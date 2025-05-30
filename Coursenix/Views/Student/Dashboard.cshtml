@@ -114,7 +114,9 @@
                                     <i class="icon absence-icon"></i>
                                     <div class="course-info-label">Absence:</div>
                                     <div class="course-info-value">
-                                        <span class="absence-ratio @GetAbsenceClass(g.AbsencePercentage)">
+                                        @* <span class="absence-ratio @GetAbsenceClass(g.AbsencePercentage)"> *@
+                                        <span class="absence-ratio @g.AbsencePercentage">
+
                                             @g.AbsencePercentage&nbsp;%
                                         </span>
                                     </div>

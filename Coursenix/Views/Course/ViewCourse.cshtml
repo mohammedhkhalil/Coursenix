@@ -10,48 +10,50 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="~/css/viewCourse.css" rel="stylesheet">
+    <style>
+          .add-new-group .add-text {
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: inherit;
+                }
+
+            /* Enhanced dropdown menu styling */
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 100%;
+                background: white;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                min-width: 200px;
+                overflow: hidden;
+            }
+
+                .dropdown-menu.show-dropdown {
+                    display: block !important;
+                }
+
+            .dropdown-item {
+                padding: 12px 16px;
+                cursor: pointer;
+                border-bottom: 1px solid #f5f5f5;
+                display: flex;
+                align-items: center;
+                transition: background-color 0.2s ease;
+                color: #333;
+                text-decoration: none;
+            }
+
+                .dropdown-item:hover {
+                    background-color: #f8f9fa;
+                }
+    </style>
 }
 
-            .add-new-group .add-text {
-                font-size: 16px;
-                font-weight: 500;
-                color: inherit;
-            }
-
-        /* Enhanced dropdown menu styling */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            min-width: 200px;
-            overflow: hidden;
-        }
-
-            .dropdown-menu.show-dropdown {
-                display: block !important;
-            }
-
-        .dropdown-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid #f5f5f5;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.2s ease;
-            color: #333;
-            text-decoration: none;
-        }
-
-            .dropdown-item:hover {
-                background-color: #f8f9fa;
-            }
-
+          
 <div class="course-details">
     <h2>Course Details</h2>
 
@@ -140,7 +142,7 @@
                             {
                                 <li>No specific days</li>
                             }
-                            <li>@startDateTime.ToString("hh:mm tt") - @endDateTime.ToString("hh:mm tt")</li>
+                            <li>@group.StartTime.ToString("hh:mm tt") - @group.EndTime.ToString("hh:mm tt")</li>
                         </ul>
                         <div class="seat-status @seatStatusClass">@seatStatusText</div>
                     </div>
