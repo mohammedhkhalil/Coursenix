@@ -192,29 +192,28 @@ namespace Coursenix.Controllers
 
             return Redirect("Home");
         }
-        public IActionResult Dashboard()
-        {
-            // Get the logged-in user's ID from Identity
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToAction("Login", "Account");
-            }
+
+        //public IActionResult Dashboard()
+        //{
+        //    // Get the logged-in user's ID from Identity
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(userId))
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
 
         //public async Task<IActionResult> Dashboard()
         //{
         //    var appUser = await _userManager.GetUserAsync(User);
         //    if (appUser is null)
         //        return Challenge();   // force login
-=========
             // Find the student record
-            var student = _context.Students
-                .FirstOrDefault(s => s.AppUserId == userId);
-            if (student == null)
-            {
-                return NotFound("Student profile not found.");
-            }
->>>>>>>>> Temporary merge branch 2
+            //var student = _context.Students
+            //    .FirstOrDefault(s => s.AppUserId == userId);
+            //if (student == null)
+            //{
+            //    return NotFound("Student profile not found.");
+            //}
 
         //    var student = await _context.Students
         //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
