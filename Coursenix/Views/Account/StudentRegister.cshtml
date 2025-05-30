@@ -1,31 +1,14 @@
 ﻿@model RegisterUserViewModel 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coursenix</title>
+@{
+    Layout = "_Layout";
+}
+@section css{
     <link rel="stylesheet" href= "/css/sign-up.css" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
-<body>
-    <!-- Header Section -->
-    <header class="header">
-        <div class="container">
-            <div class="logo-container">
-                <a href="@Url.Action("Index", "Home")" class="logo">
-                    <img src="/assets/logo.svg" alt="Coursenix Logo" />
-                    <span>Coursenix</span>
-                </a>
-            </div>
-            <nav class="navigation"></nav>
-            <div class="sign-in-container">
-                <a href="@Url.Action("Login", "Account")" class="btn sign-in-btn">Sign in</a>
-            </div>
-        </div>
-    </header>
+}
+
     <main>
         <div class="form-container">
             <h1>Start your journey</h1>
@@ -98,6 +81,6 @@
     </main>
 
    
+@section Scripts{
     <script src="/js/student-sign-up.js"></script>
-</body>
-</html>
+}
