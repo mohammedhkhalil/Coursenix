@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet" />
     <link href="/css/home-logged-in.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/home.css" /> 
+    <link rel="stylesheet" href="~/css/home.css" />
     @RenderSection("css", required: false)
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -105,15 +106,13 @@
         </div>
     </nav>
 
-	
-
-        <div class="flex-grow-1">
-            @RenderBody()
-        </div>
+    <div class="flex-grow-1">
+        @RenderBody()
+    </div>
 
     @RenderSection("_StudentLoggedin", required: false)
     @RenderSection("_TeacherLoggedin", required: false)
-    
+
 
     <footer class="cn-footer" id="cnFooter">
         <div class="cn-container">
@@ -175,10 +174,9 @@
     <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-    <script src="/js/profile-drop-down.js"></script> 
-    @RenderSection("Scripts", required: false)    
+    <script src="/js/profile-drop-down.js"></script>
+    @RenderSection("Scripts", required: false)
     <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestId="cd0d27b3faa64536a5a340f5341c57cf" data-requestMappingFromServer="false" data-connectUrl="http://localhost:53650/911ccce0d3f84725836b41431d75a044/browserLink"></script>
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 </body>
 </html>
-

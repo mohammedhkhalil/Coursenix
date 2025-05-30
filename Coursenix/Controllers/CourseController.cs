@@ -196,7 +196,7 @@ namespace Coursenix.Controllers
                         GradeLevelId = gradeLevel.Id,
                         Name = groupModel.GroupName,
                         SelectedDays = groupModel.Days.ToList(),
-                        StartTime = groupModel.StartTime, 
+                        StartTime = groupModel.StartTime,
                         EndTime = groupModel.EndTime,
                         TotalSeats = model.StudentsPerGroup,
                         EnrolledStudentsCount = 0,
@@ -296,8 +296,8 @@ namespace Coursenix.Controllers
             return Json(grades);
         }
 
-       // GET: Course/Edit/5
-    [HttpGet]
+        // GET: Course/Edit/5
+        [HttpGet]
         public async Task<IActionResult> EditCourse(int id)
         {
             var course = await _context.Courses
@@ -671,7 +671,7 @@ namespace Coursenix.Controllers
             if (course == null)
             {
                 TempData["ErrorMessage"] = "Course not found.";
-                return RedirectToAction("Index","Teacher"); // Redirect to a suitable list page
+                return RedirectToAction("Index", "Teacher"); // Redirect to a suitable list page
             }
 
             try
@@ -686,7 +686,7 @@ namespace Coursenix.Controllers
                 // Log the exception (ex) here for debugging
             }
 
-            return RedirectToAction("Index","Teacher"); // Redirect after deletion
+            return RedirectToAction("Index", "Teacher"); // Redirect after deletion
         }
 
 

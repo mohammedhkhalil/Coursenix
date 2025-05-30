@@ -1,13 +1,13 @@
 ﻿
 
 <!-- Teacher Welcome Section -->
-<section id="teacherSection" class="welcome-section">
+<section id="teacherSection" class="cn-welcome-section">
     <div class="container">
-        <div class="welcome-content">
+        <div class="cn-welcome-content">
             <!-- Don't forget to change the name -->
             <h1>Welcome Back, Mr.@(User.FindFirst("FullName")?.Value)!</h1>
             <p>We're thrilled to have you back! Continue making a difference in students' lives by sharing your expertise. Create engaging courses, manage your classes, and connect with eager learners. Your dedication to education helps shape the future of learning.</p>
-            <a href="@Url.Action("Create", "Course")" class="btn courses-btn">Create New Course →</a>
+            <a href="@Url.Action("Create", "Course")" class="btn cn-courses-btn">Create New Course →</a>
         </div>
     </div>
 </section>
@@ -31,7 +31,7 @@
                 <p>
                     Design engaging courses, from foundational to advanced, and deliver expert instruction to guide student learning.
                 </p>
-                <a href="@Url.Action("Create", "Course")" class="create-course-btn">Create Course</a>
+                <a href="@Url.Action("Create", "Course")" class="cn-create-course-btn">Create Course</a>
             </div>
             <div class="cn-path-card">
                 <div class="cn-path-icon">
@@ -41,9 +41,12 @@
                 <p>
                     Organize and update courses, monitor student progress, and provide resources to enhance the teaching experience.
                 </p>
-                <a href="@Url.Action("ViewCourse", "Course")" class="btn courses-btn">Manage Courses</a>
+                <a href="@Url.Action("Index", "Teacher")" class="btn cn-courses-btn">Manage Courses</a>
             </div>
         </div>
     </div>
     <img src="~/assets/lamp.svg" alt="" class="cn-decoration cn-decoration-2" />
 </section>
+
+
+<script src="~/js/profile-drop-down.js"></script>
