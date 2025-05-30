@@ -243,8 +243,8 @@
 
                 @foreach (var group in ((IEnumerable<Coursenix.Models.Group>)gradeLevel.Groups).OrderBy(g => g.Name))
                 {
-                    var startDateTime = DateTime.Today.Add(group.StartTime);
-                    var endDateTime = DateTime.Today.Add(group.EndTime);
+                    var startDateTime = group.StartTime;
+                    var endDateTime = group.EndTime;
 
                     var seatsAvailable = group.TotalSeats - group.EnrolledStudentsCount;
                     var seatStatusClass = seatsAvailable > 0 ? "seats-available" : "seats-full";

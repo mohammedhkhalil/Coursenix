@@ -19,12 +19,12 @@ namespace Coursenix.ViewModels
         [Required(ErrorMessage = "Start time is required.")]
         [Display(Name = "Time From")]
         [DataType(DataType.Time)]
-        public string StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required.")]
         [Display(Name = "Time To")]
         [DataType(DataType.Time)]
-        public string EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         [Required(ErrorMessage = "Grade is required for the group.")]
         [Range(1, 12, ErrorMessage = "Grade must be between 1 and 12.")]

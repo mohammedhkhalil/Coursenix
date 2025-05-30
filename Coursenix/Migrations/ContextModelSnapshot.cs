@@ -254,8 +254,8 @@ namespace Coursenix.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EnrolledStudentsCount")
                         .HasColumnType("int");
@@ -275,8 +275,8 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");

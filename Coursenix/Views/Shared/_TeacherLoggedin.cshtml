@@ -1,0 +1,49 @@
+﻿
+
+<!-- Teacher Welcome Section -->
+<section id="teacherSection" class="cn-welcome-section">
+    <div class="container">
+        <div class="cn-welcome-content">
+            <!-- Don't forget to change the name -->
+            <h1>Welcome Back, Mr.@(User.FindFirst("FullName")?.Value)!</h1>
+            <p>We're thrilled to have you back! Continue making a difference in students' lives by sharing your expertise. Create engaging courses, manage your classes, and connect with eager learners. Your dedication to education helps shape the future of learning.</p>
+            <a href="@Url.Action("Create", "Course")" class="btn cn-courses-btn">Create New Course →</a>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="cn-path-selection" id="cnPath">
+    <img src="~/assets/Arrow1.svg" alt="" class="cn-decoration cn-decoration-1" />
+    <div class="cn-container">
+        <h2 class="cn-section-title">Create & Manage Courses</h2>
+        <p class="cn-section-description">
+            Empower students by designing and managing impactful courses
+        </p>
+        <p class="cn-section-description">...</p>
+        <div class="cn-paths">
+            <div class="cn-path-card">
+                <div class="cn-path-icon">
+                    <img src="~/assets/teacher.svg" alt="Create Course icon" />
+                </div>
+                <h3>Create Course</h3>
+                <p>
+                    Design engaging courses, from foundational to advanced, and deliver expert instruction to guide student learning.
+                </p>
+                <a href="@Url.Action("Create", "Course")" class="cn-create-course-btn">Create Course</a>
+            </div>
+            <div class="cn-path-card">
+                <div class="cn-path-icon">
+                    <img src="~/assets/teacher.svg" alt="Manage Courses icon" />
+                </div>
+                <h3>Manage Courses</h3>
+                <p>
+                    Organize and update courses, monitor student progress, and provide resources to enhance the teaching experience.
+                </p>
+                <a href="@Url.Action("ViewCourse", "Course")" class="btn cn-courses-btn">Manage Courses</a>
+            </div>
+        </div>
+    </div>
+    <img src="~/assets/lamp.svg" alt="" class="cn-decoration cn-decoration-2" />
+</section>
