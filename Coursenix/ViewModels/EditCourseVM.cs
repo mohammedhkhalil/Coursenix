@@ -42,5 +42,7 @@ namespace Coursenix.ViewModels
         {
             StudentsPerGroup = 10; // Default value
         }
+        public List<GradeLevelVM> GradeLevels { get; set; } = new List<GradeLevelVM>();
+
     }
 }

@@ -296,15 +296,15 @@ namespace Coursenix.Controllers
             return Json(grades);
         }
 
-        // GET: Course/Edit/5
-        [HttpGet]
+       // GET: Course/Edit/5
+    [HttpGet]
         public async Task<IActionResult> EditCourse(int id)
         {
             var course = await _context.Courses
                 .Include(c => c.Teacher)
                 .Include(c => c.GradeLevels)
-                    .ThenInclude(gl => gl.Groups)
-                        .ThenInclude(g => g.Bookings)
+                    .ThenInclude(gl => gl.Groups) // Include Groups to calculate TotalGroups and check for grade level deletion constraint
+                        .ThenInclude(g => g.Bookings) // Include Bookings to calculate TotalEnrollments
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (course == null)
@@ -317,18 +317,26 @@ namespace Coursenix.Controllers
                 Id = course.Id,
                 Name = course.Name,
                 Description = course.Description,
-                Location = course.Location,
+                Location = course.Location, // Corrected from course.L
                 StudentsPerGroup = course.StudentsPerGroup,
-                CurrentThumbnailUrl = !string.IsNullOrEmpty(course.ThumbnailFileName)
-                    ? $"/uploads/thumbnails/{course.ThumbnailFileName}"
-                    : null,
+                CurrentThumbnailUrl = course.ThumbnailFileName,
                 TeacherId = course.TeacherId,
-                TeacherName = course.Teacher?.Name ?? "Unknown",
-                TotalGroups = course.GradeLevels.SelectMany(gl => gl.Groups).Count(),
-                TotalEnrollments = course.GradeLevels
-                    .SelectMany(gl => gl.Groups)
-                    .Sum(g => g.EnrolledStudentsCount)
+                TeacherName = course.Teacher?.Name,
+                TotalGroups = course.GradeLevels?.SelectMany(gl => gl.Groups).Count() ?? 0,
+                TotalEnrollments = course.GradeLevels?.SelectMany(gl => gl.Groups).SelectMany(g => g.Bookings).Count() ?? 0,
+                GradeLevels = course.GradeLevels?.Select(gl => new GradeLevelVM
+                {
+                    Id = gl.Id,
+                    NumberOfGrade = gl.NumberOfGrade,
+                    Price = gl.Price
+                }).ToList() ?? new List<GradeLevelVM>()
             };
+
+            // Ensure there's at least one empty grade level for new entry if no grade levels exist
+            if (!viewModel.GradeLevels.Any())
+            {
+                viewModel.GradeLevels.Add(new GradeLevelVM());
+            }
 
             return View(viewModel);
         }
@@ -336,106 +344,137 @@ namespace Coursenix.Controllers
         // POST: Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCourse(EditCourseVM model)
+        public async Task<IActionResult> EditCourse(EditCourseVM viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            // Fetch the course with its grade levels and groups for update and validation checks
+            var courseToUpdate = await _context.Courses
+                .Include(c => c.GradeLevels)
+                    .ThenInclude(gl => gl.Groups) // Important for checking if a grade level can be deleted
+                .FirstOrDefaultAsync(c => c.Id == viewModel.Id);
 
-            var course = await _context.Courses.FindAsync(model.Id);
-            if (course == null)
+            if (courseToUpdate == null)
             {
                 return NotFound();
             }
 
-            // Update course properties
-            course.Name = model.Name;
-            course.Description = model.Description;
-            course.Location = model.Location;
-            course.StudentsPerGroup = model.StudentsPerGroup;
+            // Manually update scalar properties
+            courseToUpdate.Name = viewModel.Name;
+            courseToUpdate.Description = viewModel.Description;
+            courseToUpdate.Location = viewModel.Location;
+            courseToUpdate.StudentsPerGroup = viewModel.StudentsPerGroup;
 
             // Handle thumbnail upload/removal
-            if (model.RemoveThumbnail)
+            if (viewModel.RemoveThumbnail)
             {
-                // Remove existing thumbnail file
-                if (!string.IsNullOrEmpty(course.ThumbnailFileName))
+                if (!string.IsNullOrEmpty(courseToUpdate.ThumbnailFileName))
                 {
-                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails", course.ThumbnailFileName);
-                    if (System.IO.File.Exists(oldFilePath))
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, courseToUpdate.ThumbnailFileName.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
                     {
-                        System.IO.File.Delete(oldFilePath);
+                        System.IO.File.Delete(oldImagePath);
                     }
                 }
-                course.ThumbnailFileName = null;
+                courseToUpdate.ThumbnailFileName = null;
             }
-            else if (model.ThumbnailFile != null && model.ThumbnailFile.Length > 0)
+            else if (viewModel.ThumbnailFile != null)
             {
-                // Validate file
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-                var fileExtension = Path.GetExtension(model.ThumbnailFile.FileName).ToLowerInvariant();
-
-                if (!allowedExtensions.Contains(fileExtension))
+                if (!string.IsNullOrEmpty(courseToUpdate.ThumbnailFileName))
                 {
-                    ModelState.AddModelError("ThumbnailFile", "Only image files are allowed (jpg, jpeg, png, gif)");
-                    return View(model);
-                }
-
-                if (model.ThumbnailFile.Length > 5 * 1024 * 1024) // 5MB limit
-                {
-                    ModelState.AddModelError("ThumbnailFile", "File size cannot exceed 5MB");
-                    return View(model);
-                }
-
-                // Remove old thumbnail if exists
-                if (!string.IsNullOrEmpty(course.ThumbnailFileName))
-                {
-                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails", course.ThumbnailFileName);
-                    if (System.IO.File.Exists(oldFilePath))
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, courseToUpdate.ThumbnailFileName.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
                     {
-                        System.IO.File.Delete(oldFilePath);
+                        System.IO.File.Delete(oldImagePath);
                     }
                 }
 
-                // Save new thumbnail
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails");
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                 if (!Directory.Exists(uploadsFolder))
                 {
                     Directory.CreateDirectory(uploadsFolder);
                 }
-
-                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + viewModel.ThumbnailFile.FileName;
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    await model.ThumbnailFile.CopyToAsync(fileStream);
+                    await viewModel.ThumbnailFile.CopyToAsync(fileStream);
                 }
-
-                course.ThumbnailFileName = uniqueFileName;
+                courseToUpdate.ThumbnailFileName = "/uploads/" + uniqueFileName;
             }
 
-            try
-            {
-                _context.Update(course);
-                await _context.SaveChangesAsync();
+            // --- Handle GradeLevels ---
+            var gradeLevelsInDb = courseToUpdate.GradeLevels.ToList();
+            var gradeLevelsFromForm = viewModel.GradeLevels.Where(gl => !gl.IsDeleted).ToList(); // Only consider non-deleted ones from the form
 
-                TempData["SuccessMessage"] = "Course updated successfully!";
-                return RedirectToAction("ViewCourse", new { id = course.Id });
-            }
-            catch (DbUpdateConcurrencyException)
+            // Identify and update existing grade levels, and add new ones
+            foreach (var gradeLevelVM in gradeLevelsFromForm)
             {
-                if (!CourseExists(course.Id))
+                if (gradeLevelVM.Id.HasValue && gradeLevelVM.Id.Value != 0) // Existing grade level
                 {
-                    return NotFound();
+                    var existingGl = gradeLevelsInDb.FirstOrDefault(gl => gl.Id == gradeLevelVM.Id.Value);
+                    if (existingGl != null)
+                    {
+                        existingGl.NumberOfGrade = gradeLevelVM.NumberOfGrade;
+                        existingGl.Price = gradeLevelVM.Price;
+                        _context.Entry(existingGl).State = EntityState.Modified; // Explicitly mark as modified
+                    }
                 }
-                throw;
+                else // New grade level
+                {
+                    courseToUpdate.GradeLevels.Add(new GradeLevel
+                    {
+                        NumberOfGrade = gradeLevelVM.NumberOfGrade,
+                        Price = gradeLevelVM.Price,
+                        CourseId = courseToUpdate.Id
+                    });
+                }
             }
-            catch (Exception ex)
+
+            // Identify and remove deleted grade levels
+            foreach (var dbGradeLevel in gradeLevelsInDb)
             {
-                ModelState.AddModelError("", "An error occurred while updating the course. Please try again.");
-                return View(model);
+                // If a grade level from the database is not found in the form's submitted list
+                if (!gradeLevelsFromForm.Any(glvm => glvm.Id == dbGradeLevel.Id))
+                {
+                    // Check if it has associated groups before deleting
+                    if (dbGradeLevel.Groups != null && dbGradeLevel.Groups.Any())
+                    {
+                        ModelState.AddModelError("", $"Cannot delete Grade Level {dbGradeLevel.NumberOfGrade} as it has associated groups. Please delete its groups first.");
+                        // Re-add this grade level to the view model so it is displayed again with the error
+                        viewModel.GradeLevels.Add(new GradeLevelVM
+                        {
+                            Id = dbGradeLevel.Id,
+                            NumberOfGrade = dbGradeLevel.NumberOfGrade,
+                            Price = dbGradeLevel.Price,
+                            IsDeleted = false // Ensure it's not marked as deleted in the VM for display
+                        });
+                    }
+                    else
+                    {
+                        _context.GradeLevels.Remove(dbGradeLevel);
+                    }
+                }
             }
+
+            if (!ModelState.IsValid)
+            {
+                // Re-populate display-only properties if validation fails
+                viewModel.TeacherName = courseToUpdate.Teacher?.Name;
+                viewModel.TotalGroups = courseToUpdate.GradeLevels?.SelectMany(gl => gl.Groups).Count() ?? 0;
+                viewModel.TotalEnrollments = courseToUpdate.GradeLevels?.SelectMany(gl => gl.Groups).SelectMany(g => g.Bookings).Count() ?? 0;
+
+                // Ensure there's at least one empty grade level if all were removed or none existed
+                if (!viewModel.GradeLevels.Any(gl => !gl.IsDeleted))
+                {
+                    viewModel.GradeLevels.Add(new GradeLevelVM());
+                }
+
+                return View(viewModel);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Course updated successfully!";
+            return RedirectToAction("ViewCourse", new { id = courseToUpdate.Id });
         }
 
         private bool CourseExists(int id)
