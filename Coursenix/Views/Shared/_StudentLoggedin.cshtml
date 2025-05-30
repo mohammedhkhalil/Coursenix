@@ -1,12 +1,12 @@
 ﻿
 
 <!-- Student Welcome Section -->
-<section id="studentSection" class="welcome-section">
+<section id="studentSection" class="cn-welcome-section">
     <div class="container">
-        <div class="welcome-content">
+        <div class="cn-welcome-content">
             <h1>Welcome Back, @(User.FindFirst("FullName")?.Value)!</h1>
             <p>We're excited to have you back! Your learning journey continues here. Explore our wide range of courses, connect with expert teachers, and take your education to the next level. Whether you're looking to enhance your skills or discover new subjects, we're here to support your growth.</p>
-            <a href=@Url.Action("Index", "Course") class="courses-btn">Explore Courses →</a>
+            <a href=@Url.Action("Index", "Course") class="cn-courses-btn">Explore Courses →</a>
         </div>
     </div>
 </section>
@@ -27,7 +27,7 @@
                 <p>
                     Browse a wide range of courses, from beginner to advanced, and start learning at your own pace with expert guidance.
                 </p>
-                <a href="@Url.Action("Index", "Course")" class="courses-btn">Browse Courses</a>
+                <a href="@Url.Action("Index", "Course")" class="cn-courses-btn">Browse Courses</a>
             </div>
             <div class="cn-path-card">
                 <div class="cn-path-icon">
@@ -37,7 +37,7 @@
                 <p>
                     Join or manage study groups, collaborate with peers, and share resources to enhance your learning experience.
                 </p>
-                <a href="@Url.Action("Groups", "Student")" class="create-course-btn">View Groups</a>
+                <a href="@Url.Action("Groups", "Student")" class="cn-create-course-btn">View Groups</a>
             </div>
         </div>
     </div>
