@@ -459,6 +459,19 @@ namespace Coursenix.Controllers
             {
                 return NotFound();
             }
+            // --- Calculate the sequential group number within its grade ---
+            // 1. Get all groups for the current grade level, ordered by Id (or Name, StartTime, etc.)
+            var groupsInGrade = await _context.Groups
+                                              .Where(g => g.GradeLevelId == group.GradeLevelId)
+                                              .OrderBy(g => g.Id) // Order by Id to get a consistent sequence
+                                              .ToListAsync();
+
+            // 2. Find the 0-based index of the current group in that ordered list
+            int groupIndex = groupsInGrade.FindIndex(g => g.Id == group.Id);
+
+            // 3. Convert to 1-based number (add 1)
+            int groupNumber = groupIndex + 1;
+            // ---------------------------------------------------------------
 
             var viewModel = new EditGroupVM
             {
@@ -482,7 +495,9 @@ namespace Coursenix.Controllers
                         Name = b.Student.Name,
                         Email = b.Student.Email,
                         EnrollmentDate = b.BookingDate
-                    }).ToList()
+                    }).ToList(),
+                GroupNumberInGrade = groupNumber // Assign the calculated sequential number
+
             };
 
             return View(viewModel);
@@ -524,6 +539,14 @@ namespace Coursenix.Controllers
                     $"Cannot reduce total seats below current enrollments ({group.EnrolledStudentsCount})");
                 return View(model);
             }
+            // Re-calculate GroupNumberInGrade for re-display if validation fails
+            var groupsInGrade = await _context.Groups
+                                              .Where(g => g.GradeLevelId == model.GradeLevelId)
+                                              .OrderBy(g => g.Id) // Must use the same order as GET
+                                              .ToListAsync();
+            int groupIndex = groupsInGrade.FindIndex(g => g.Id == model.Id);
+            model.GroupNumberInGrade = groupIndex + 1;
+            // --- End re-calculation for re-display ---
 
             // Update group properties
             group.Name = model.Name;
@@ -644,7 +667,7 @@ namespace Coursenix.Controllers
             ViewBag.GradeId = gradeId;
             ViewBag.CourseName = gradeLevel.Course.Name;
             ViewBag.GradeNumber = gradeLevel.NumberOfGrade; // Assuming NumberOfGrade exists on GradeLevel
-            ViewBag.MaxStudentsPerGroup = 20; // Example: Set a default or fetch from configuration
+            ViewBag.MaxStudentsPerGroup = 500; // Example: Set a default or fetch from configuration
 
             var model = new CreateGroupVM
             {
@@ -676,7 +699,7 @@ namespace Coursenix.Controllers
             ViewBag.GradeId = model.GradeId;
             ViewBag.CourseName = gradeLevel.Course.Name;
             ViewBag.GradeNumber = gradeLevel.NumberOfGrade;
-            ViewBag.MaxStudentsPerGroup = 100; // Keep consistent with GET action
+            ViewBag.MaxStudentsPerGroup = 500; // Keep consistent with GET action
 
             // Server-side validation based on your ViewModel and Model
             if (model.SelectedDays == null || !model.SelectedDays.Any())
@@ -722,6 +745,38 @@ namespace Coursenix.Controllers
                 // Log the exception (ex)
                 ModelState.AddModelError("", "An error occurred while creating the group. Please try again.");
                 return View(model);
+            }
+        }
+
+
+        // POST: Course/DeleteGroup
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Crucial for security with POST requests
+        public async Task<IActionResult> DeleteGroup(int id, int courseId) // 'id' is GroupId, 'courseId' is for redirection
+        {
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                TempData["ErrorMessage"] = "Group not found.";
+                // Redirect back to the course page even if the group wasn't found
+                return RedirectToAction("ViewCourse", "Course", new { id = courseId });
+            }
+
+            try
+            {
+                _context.Groups.Remove(group);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Group '{group.Name ?? "Unnamed Group"}' has been successfully deleted.";
+                return RedirectToAction("ViewCourse", "Course", new { id = courseId });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex) here for debugging purposes
+                TempData["ErrorMessage"] = $"An error occurred while deleting group '{group.Name ?? "Unnamed Group"}'. It might have associated records. Please ensure no students are enrolled before deleting.";
+                // Redirect back to the same edit page or the course page to show the error
+                return RedirectToAction("EditGroup", "Course", new { id = id }); // Stay on current page to show error
             }
         }
 

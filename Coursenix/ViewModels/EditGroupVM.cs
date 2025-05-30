@@ -9,6 +9,7 @@ namespace Coursenix.ViewModels
 
         [Required]
         public int GradeLevelId { get; set; }
+        public int GroupNumberInGrade { get; set; }
 
         [StringLength(100, ErrorMessage = "Group name cannot exceed 100 characters")]
         [Display(Name = "Group Name")]

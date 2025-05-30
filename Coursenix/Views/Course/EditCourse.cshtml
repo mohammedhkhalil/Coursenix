@@ -96,10 +96,10 @@
                 </section>
 
                 <!-- ── Course Statistics ────────────────────────────────── -->
-                <section class="mb-4">
+                <section class="mb-3">
                     <h2 class="section-title">Course Statistics</h2>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-primary">@Model.TotalGroups</h5>
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-success">@Model.TotalEnrollments</h5>
@@ -115,7 +115,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-info">@Model.TeacherName</h5>
@@ -123,19 +123,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        @* <div class="col-md-3">
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="card-title text-warning">@Model.CreatedDate.ToString("MMM yyyy")</h5>
                                     <p class="card-text small">Created</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                     </div>
                 </section>
 
                 <div class="text-end">
-                    <a href="@Url.Action("Details", "Course", new { id = Model.Id })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+                    <a href="@Url.Action("ViewCourse", "Course", new { id = Model.Id })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
                     <button type="submit" class="btn btn-success px-4 py-2">
                         <i class="bi bi-check-circle me-1"></i>Update Course
                     </button>
