@@ -99,100 +99,151 @@ namespace Coursenix.Controllers
         }
 
         [HttpGet]
-        public IActionResult Enroll(int CourseId)
+        public async Task<IActionResult> Enroll(int id)
         {
-            EnrollViewModel Model = new EnrollViewModel() ;
-            var grades = _context.GradeLevels
-                .Where(g => g.CourseId == CourseId)
-                .Select(g => new EnrollViewModel.Grades
+            var course = await _context.Courses
+                .Include(c => c.Teacher)
+                .Include(c => c.GradeLevels)
+                    .ThenInclude(g => g.Groups)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (course == null)
+                return NotFound();
+
+            var vm = new EnrollViewModel
+            {
+                CourseId = course.Id,
+                CourseName = course.Name,
+                Description = course.Description,
+                Location = course.Location,
+                TeacherName = course.Teacher.Name,
+                TeacherEmail = course.Teacher.Email,
+                GradeLevels = course.GradeLevels.Select(g => new GradeLevelViewModel
                 {
-                    Id = g.Id,
-                    number = g.NumberOfGrade,
-                }).ToList();
+                    GradeLevelId = g.Id,
+                    NumberOfGrade = g.NumberOfGrade,
+                    Price = g.Price,
+                    Groups = g.Groups.Select(grp => new GroupsGradeLevel
+                    {
+                        GroupId = grp.Id,
+                        Name = grp.Name,
+                        SelectedDays = grp.SelectedDays,
+                        StartTime = grp.StartTime,
+                        EndTime = grp.EndTime,
+                        TotalSeats = grp.TotalSeats,
+                        EnrolledStudentsCount = grp.EnrolledStudentsCount
+                    }).ToList()
+                }).ToList()
+            };
 
-            Model.grades = grades;
-
-            Course curcourse = _context.Courses.
-                Include(c => c.Teacher)
-                .FirstOrDefault(c => c.Id == CourseId);
-
-            Model.Location = curcourse.Location;
-            Model.TeacherName = curcourse.Teacher.Name ;
-            Model.Name = curcourse.Name;
-            Model.Biography = curcourse.Teacher.Biography;
-            return View(Model);
+            return View(vm);
         }
 
-        //public async Task<IActionResult> Dashboard()
-        //{
-        //    var appUser = await _userManager.GetUserAsync(User);
-        //    if (appUser is null)
-        //        return Challenge();   // force login
+        [HttpPost]
+        public async Task<IActionResult> EnrollPost(int groupId)
+        {
+            var userId = _userManager.GetUserId(User);
 
-        //    var student = await _context.Students
-        //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
+            var student = await _context.Students
+                .Include(s => s.AppUser)
+                .FirstOrDefaultAsync(s => s.AppUserId == userId);
 
-        //    if (student is null)
-        //        return NotFound("Student profile not found.");
+            if (student == null) return NotFound();
+            var group = await _context.Groups
+               .Include(g => g.Bookings)
+               .FirstOrDefaultAsync(g => g.Id == groupId);
 
-        //    // All bookings for this student (=> groups)
-        //    var bookings = await _context.Bookings
-        //        .Where(b => b.StudentId == student.Id)
-        //        .Include(b => b.Group)
-        //            .ThenInclude(g => g.Subject)
-        //                .ThenInclude(su => su.Teacher)
-        //        .Include(b => b.Group.GroupDays)
-        //        .ToListAsync();
+            if (group == null)
+                return NotFound("Group not found.");
 
-        //    // Build the view-model list
-        //    var viewModel = new List<StudentGroupViewModel>();
+            if (group.Bookings.Any(b => b.StudentId == student.Id))
+                return BadRequest("You are already enrolled in this group.");
 
-        //    foreach (var booking in bookings)
-        //    {
-        //        var group = booking.Group;
+            var booking = new Booking
+            {
+                StudentId = student.Id,
+                GroupId = groupId,
+                BookingDate = DateTime.UtcNow
+            };
 
-        //        // a) All sessions in this group
-        //        var sessionIds = await _context.Sessions
-        //            .Where(se => se.GroupId == group.Id)
-        //            .Select(se => se.Id)
-        //            .ToListAsync();
+            group.Bookings.Add(booking);
 
-        //        var totalSessions = sessionIds.Count;
+            group.EnrolledStudentsCount++;
 
-        //        // b) How many the student attended
-        //        var sessionsAttended = await _context.Attendances
-        //            .CountAsync(a =>
-        //                a.StudentId == student.Id &&
-        //                a.IsPresent &&
-        //                sessionIds.Contains(a.SessionId));
+            await _context.SaveChangesAsync();
 
-        //        // c) One dashboard card
-        //        viewModel.Add(new StudentGroupViewModel
-        //        {
-        //            StudentId = student.Id,
-        //            StudentName = student.Name,
+            return Redirect("Home");
+        }
+            //public async Task<IActionResult> Dashboard()
+            //{
+            //    var appUser = await _userManager.GetUserAsync(User);
+            //    if (appUser is null)
+            //        return Challenge();   // force login
 
-        //            GroupId = group.Id,
-        //            GroupName = group.Name,
-        //            SubjectName = group.Subject.SubjectName,
-        //            TeacherName = group.Subject.Teacher.Name,
+            //    var student = await _context.Students
+            //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
 
-        //            Days = group.GroupDays
-        //                                .Select(d => d.Day.ToString())
-        //                                .ToList(),
-        //            StartTime = group.StartTime,
-        //            EndTime = group.EndTime,
-        //            Location = group.Location,
+            //    if (student is null)
+            //        return NotFound("Student profile not found.");
 
-        //            TotalSessions = totalSessions,
-        //            SessionsAttended = sessionsAttended
-        //        });
-        //    }
+            //    // All bookings for this student (=> groups)
+            //    var bookings = await _context.Bookings
+            //        .Where(b => b.StudentId == student.Id)
+            //        .Include(b => b.Group)
+            //            .ThenInclude(g => g.Subject)
+            //                .ThenInclude(su => su.Teacher)
+            //        .Include(b => b.Group.GroupDays)
+            //        .ToListAsync();
 
-        //    return View("Dashboard", viewModel);
-        //}
+            //    // Build the view-model list
+            //    var viewModel = new List<StudentGroupViewModel>();
 
-    }
+            //    foreach (var booking in bookings)
+            //    {
+            //        var group = booking.Group;
+
+            //        // a) All sessions in this group
+            //        var sessionIds = await _context.Sessions
+            //            .Where(se => se.GroupId == group.Id)
+            //            .Select(se => se.Id)
+            //            .ToListAsync();
+
+            //        var totalSessions = sessionIds.Count;
+
+            //        // b) How many the student attended
+            //        var sessionsAttended = await _context.Attendances
+            //            .CountAsync(a =>
+            //                a.StudentId == student.Id &&
+            //                a.IsPresent &&
+            //                sessionIds.Contains(a.SessionId));
+
+            //        // c) One dashboard card
+            //        viewModel.Add(new StudentGroupViewModel
+            //        {
+            //            StudentId = student.Id,
+            //            StudentName = student.Name,
+
+            //            GroupId = group.Id,
+            //            GroupName = group.Name,
+            //            SubjectName = group.Subject.SubjectName,
+            //            TeacherName = group.Subject.Teacher.Name,
+
+            //            Days = group.GroupDays
+            //                                .Select(d => d.Day.ToString())
+            //                                .ToList(),
+            //            StartTime = group.StartTime,
+            //            EndTime = group.EndTime,
+            //            Location = group.Location,
+
+            //            TotalSessions = totalSessions,
+            //            SessionsAttended = sessionsAttended
+            //        });
+            //    }
+
+            //    return View("Dashboard", viewModel);
+            //}
+
+        }
 
 
 }

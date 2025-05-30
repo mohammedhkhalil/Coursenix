@@ -196,8 +196,8 @@ namespace Coursenix.Controllers
                         GradeLevelId = gradeLevel.Id,
                         Name = groupModel.GroupName,
                         SelectedDays = groupModel.Days.ToList(),
-                        StartTime = groupModel.StartTime ?? TimeSpan.FromHours(9), // Default start time
-                        EndTime = groupModel.EndTime ?? TimeSpan.FromHours(10), // Default end time
+                        StartTime = groupModel.StartTime, // Default start time
+                        EndTime = groupModel.EndTime, // Default end time
                         TotalSeats = model.StudentsPerGroup,
                         EnrolledStudentsCount = 0,
                         Location = model.Location

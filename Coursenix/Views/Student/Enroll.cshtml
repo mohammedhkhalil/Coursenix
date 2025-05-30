@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="../CSS/courseDetailsG7.css">
 </head>
 <body>
+    <!-- User info -->
+    <div class="d-flex align-items-center">
+        <div class="user-avatar bg-teal text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px; font-weight: bold;">M</div>
+        <span class="ms-2 user-name">Michael Johnson</span>
+    </div>
+    </div>
     <!-- Header Section with Teal Background -->
     <!-- Header Section -->
     <!-- Main Course Card -->
@@ -19,104 +25,121 @@
         <div class="course-card">
             <div class="row align-items-center mb-4">
                 <div class="col-md-8">
-                    <h2>@Model.Name</h2>
+                    <h2>@Model.CourseName</h2>
                     <div class="course-info">
                         @* <span><i class="fas fa-graduation-cap"></i> Grades 7-9</span> *@
                         @* <span><i class="fas fa-calendar"></i> 2 Classes/Week</span> *@
-                        <span><i class="fas fa-map-marker-alt"></i> @Model.Location</span>
+                        <span><i class="fas fa-map-marker-alt"></i> @(string.IsNullOrEmpty(Model.Location) ? "" : Model.Location)</span>
                     </div>
                 </div>
             </div>
+            </div>
 
             <div class="teacher-info">
-                @* <div class="teacher-image"> *@
-                @*     <img src=" ../assets/teacher1.svg" alt="Mr. Ahmed Hassan"> *@
-                @* </div> *@
+                <div class="teacher-image">
+                    @Model.TeacherName
+                    @* <img src=" ../assets/teacher1.svg" alt=""> *@
+                </div>
                 <div>
                     <h5 class="teacher-name">@Model.TeacherName</h5>
-                    <p class="teacher-title">
-                        @(string.IsNullOrEmpty(Model.Biography) ? "" : Model.Biography )</ p >
+                    <p class="teacher-title">@(string.IsNullOrEmpty(Model.Description) ? "" : Model.Description)</p>
                 </div>
             </div>
 
             <hr>
 
             <h4 class="mb-3">Choose your Grade</h4>
-
-            <div class="grades-tabs">
-                @foreach(var item in Model.grades)
+            <div class="grade-tabs mb-4">
+                @foreach (var grade in Model.GradeLevels)
                 {
-                    <button class="grade-btn" data-grade-id="@item.Id">@item.number</button>
+                    <div class="grade-tab" data-grade-id="@grade.GradeLevelId">
+                        Grade @grade.NumberOfGrade
+                    </div>
                 }
             </div>
 
+                <p class="mb-4">Select one of the available groups below to enroll in this course.</p>
 
+    <div id="groups-container">
+        @foreach (var grade in Model.GradeLevels)
+        {
+            <div class="grade-groups" data-grade-id="@grade.GradeLevelId" style="display: none;">
+                @foreach (var group in grade.Groups)
+                {
+                    <div class="group-card mb-3" data-group-id="@group.GroupId">
+                        <h5 class="group-title">@group.Name</h5>
+                        <ul class="group-details">
+                            <li>@string.Join(", ", group.SelectedDays)</li>
+                                <li>
+                                    @group.StartTime.ToString("HH:mm") - @group.EndTime.ToString("HH:mm")
+                                </li>
+                        </ul>
 
+                        @{
+                            var availableSeats = group.TotalSeats - group.EnrolledStudentsCount;
+                        }
+                        <span class="seats-badge @(availableSeats > 0 ? "seats-available" : "seats-unavailable")">
+                            @(availableSeats > 0 ? $"{availableSeats} seats available" : "Not Available")
+                        </span>
 
-            @* <p class="mb-4">Select one of the available groups for Grade 7 below to enroll in this course.</p> *@
-
-            <div class="mt-4 text-end">
-                <button class="enroll-btn">Enroll</button>
+                        @if (availableSeats > 0)
+                        {
+                            <div class="radio-button"></div>
+                        }
+                    </div>
+                }
             </div>
-        </div>
+        }
     </div>
 
-    <script src="https://c...content-available-to-author-only...r.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <form method="post" asp-controller="Student" asp-action="Enroll" id="enroll-form">
+        <input type="hidden" name="groupId" id="selectedGroupId" />
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-primary enroll-btn">Enroll</button>
+        </div>
+    </form>
+</div>
+</body>
+@section Scripts {
     <script>
-             document.querySelectorAll('.grade-btn').forEach(button => {
-          button.addEventListener('click', () => {
-            const gradeId = button.getAttribute('data-grade-id');
+        $(document).ready(function () {
+            // تفعيل أول Grade Tab افتراضياً
+            $('.grade-tab').first().addClass('active');
+            var firstGradeId = $('.grade-tab').first().data('grade-id');
+            $('.grade-groups[data-grade-id="' + firstGradeId + '"]').show();
 
-            document.querySelectorAll('.grade-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+            // عند الضغط على Grade Tab
+            $('.grade-tab').click(function () {
+                $('.grade-tab').removeClass('active');
+                $(this).addClass('active');
 
-            fetch(`/Groups/GetGroupByGrade?GradeLevelId=${gradeId}`)
-              .then(response => response.json())
-              .then(groups => {
-                const container = document.getElementById('groupsContainer');
-                container.innerHTML = ''; 
+                var gradeId = $(this).data('grade-id');
+                $('.grade-groups').hide();
+                $('.grade-groups[data-grade-id="' + gradeId + '"]').show();
 
-                if (groups.length === 0) {
-                  container.innerHTML = '<p>لا توجد مجموعات لهذه المرحلة.</p>';
-                  return;
+                // Reset selected group
+                $('#selectedGroupId').val('');
+                $('.group-card').removeClass('selected');
+            });
+
+            // اختيار الجروب (radio-style)
+            $(document).on('click', '.group-card', function () {
+                if ($(this).find('.seats-badge').hasClass('seats-available')) {
+                    $('.group-card').removeClass('selected');
+                    $(this).addClass('selected');
+
+                    var selectedGroupId = $(this).data('group-id');
+                    $('#selectedGroupId').val(selectedGroupId);
                 }
+            });
 
-                groups.forEach((group, index) => {
-                  const groupHTML = `
-                    <div class="group-card">
-                      <h4>Group ${index + 1}</h4>
-                      <p><strong>Days:</strong> ${group.selectedDays}</p>
-                      <p><strong>Time:</strong> ${group.startTime} - ${group.endTime}</p>
-                      <p><strong>Total Seats:</strong> ${group.totalSeats}</p>
-                      <p><strong>Enrolled:</strong> ${group.enrolledStudentsCount}</p>
-                    </div>
-                  `;
-                  container.innerHTML += groupHTML;
-                });
-              })
-              .catch(err => {
-                console.error('خطأ أثناء جلب الجروبات:', err);
-                document.getElementById('groupsContainer').innerHTML = '<p>حدث خطأ، حاول لاحقًا.</p>';
-              });
-          });
-        });
-        // Group selection functionality
-        document.querySelectorAll('.group-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Skip if seats are full
-                if (this.querySelector('.seats-full')) return;
-
-                // Remove selected class from all cards
-                document.querySelectorAll('.group-card').forEach(c => {
-                    c.classList.remove('selected');
-                    c.querySelector('.radio-button').classList.remove('selected');
-                });
-
-                // Add selected class to clicked card
-                this.classList.add('selected');
-                this.querySelector('.radio-button').classList.add('selected');
+            // منع الفورم من الإرسال لو مفيش جروب متحدد
+            $('#enroll-form').submit(function (e) {
+                if (!$('#selectedGroupId').val()) {
+                    e.preventDefault();
+                    alert('Please select a group first!');
+                }
             });
         });
     </script>
-</body>
-</html>
+    }

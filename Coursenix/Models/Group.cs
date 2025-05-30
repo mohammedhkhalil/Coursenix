@@ -15,13 +15,11 @@ namespace Coursenix.Models
         // Schedule & logistics
         [StringLength(100)] public string? Name { get; set; }   // Optional 
         public List<string> SelectedDays { get; set; } = new List<string>();
-        [Column(TypeName = "time")]
         [Required]
-        public TimeSpan StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
-        [Column(TypeName = "time")]
         [Required]
-        public TimeSpan EndTime { get; set; }
+        public DateTime EndTime { get; set; }
         [Required, Range(1, int.MaxValue)] public int TotalSeats { get; set; }
         public int EnrolledStudentsCount { get; set; }
         [StringLength(200)] public string? Location { get; set; }

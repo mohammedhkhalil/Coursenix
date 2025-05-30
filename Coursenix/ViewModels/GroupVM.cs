@@ -19,12 +19,12 @@ namespace Coursenix.ViewModels
         public List<string> Days { get; set; } = new List<string>();
 
         [Display(Name = "Start Time")]
-        public TimeSpan? StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [Display(Name = "End Time")]
-        public TimeSpan? EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         // Validation: End time should be after start time
-        public bool IsValidTimeRange => !StartTime.HasValue || !EndTime.HasValue || EndTime > StartTime;
+        //public bool IsValidTimeRange => !StartTime.HasValue || !EndTime.HasValue || EndTime > StartTime;
     }
 }
