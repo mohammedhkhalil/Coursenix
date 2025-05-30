@@ -73,98 +73,87 @@ namespace Coursenix.Controllers
             return View(viewModel);
         }
 
-        ////SessionAttendance
-        //// GET: Attendance/TakeAttendance?sessionId=5
-        //[HttpGet]
-        //public IActionResult TakeAttendance(int sessionId)
-        //{
-        //    var session = _context.Sessions
-        //        .Include(s => s.Group)
-        //            .ThenInclude(g => g.Subject)
-        //        .FirstOrDefault(s => s.Id == sessionId);
-
-        //    if (session == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Get all students booked in this group
-        //    var studentBookings = _context.Bookings
-        //        .Where(b => b.GroupId == session.GroupId)
-        //        .Include(b => b.Student)
-        //        .ToList();
-
-        //    var viewModel = new SessionAttendanceViewModel
-        //    {
-        //        SessionId = session.Id,
-        //        SessionDateTime = session.SessionDateTime,
-        //        GroupId = session.GroupId,
-        //        GroupName = session.Group.Subject?.SubjectName ?? "Group",
-        //        Students = studentBookings.Select(b => new StudentAttendanceVM
-        //        {
-        //            StudentId = b.Student.Id,
-        //            StudentFullName = b.Student.Name,
-        //            IsPresent = false
-        //        }).ToList()
-        //    };
-
-        //    return View(viewModel);
-        //}
-
-        //    // POST: Attendance/TakeAttendance
-        //    [HttpPost]
-        //    public IActionResult TakeAttendance(SessionAttendanceViewModel model)
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return View(model);
-        //        }
-
-        //        // Get existing attendance records for the session
-        //        var existingAttendance = _context.Attendances
-        //            .Where(a => a.SessionId == model.SessionId)
-        //            .Select(a => a.StudentId)
-        //            .ToHashSet();
-
-        //        foreach (var student in model.Students)
-        //        {
-        //            if (existingAttendance.Contains(student.StudentId))
-        //                continue; // Skip if already recorded
-
-        //            var attendance = new Attendance
-        //            {
-        //                SessionId = model.SessionId,
-        //                StudentId = student.StudentId,
-        //                IsPresent = student.IsPresent
-        //            };
-
-        //            _context.Attendances.Add(attendance);
-        //        }
-
-        //        _context.SaveChanges();
-
-        //        TempData["Success"] = "Attendance saved successfully!";
-        //        return RedirectToAction("SessionAttendance");
-        //    }
-        //}
-
-        public IActionResult GetGroupByGrade(int GradeLevelId)
+        //SessionAttendance
+        // GET: Attendance/TakeAttendance?sessionId=5
+        [HttpGet]
+        public IActionResult TakeAttendance(int sessionId, string? searchTerm)
         {
-            var groups = _context.Groups
-                .Where(g => g.GradeLevelId == GradeLevelId)
-                .Select(g => new
+            var session = _context.Sessions
+                .Include(s => s.Group)
+                .FirstOrDefault(s => s.Id == sessionId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            // Get all students booked in this group
+            var studentBookings = _context.Bookings
+                .Where(b => b.GroupId == session.GroupId)
+                .Include(b => b.Student)
+                .ToList();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                studentBookings = studentBookings
+                    .Where(b => b.Student.Name.Contains(searchTerm))
+                    .ToList();
+            }
+
+            var viewModel = new TakeAttendanceViewModel
+            {
+                SessionId = session.Id,
+                SessionDateTime = session.SessionDateTime,
+                GStartTime = session.Group.StartTime,
+                GEndTime = session.Group.EndTime,
+                Days = session.Group.SelectedDays,
+                GroupId = session.GroupId,
+                GroupName = session.Group.Name ?? "Group",
+                Students = studentBookings.Select(b => new StudentAttendanceVM
                 {
-                    g.Id,
-                    g.Name,
-                    SelectedDays = g.SelectedDays , 
-                    StartTime = g.StartTime,
-                    EndTime = g.EndTime,
-                    TotalSeats = g.TotalSeats,
-                    EnrolledStudentsCount = g.EnrolledStudentsCount ,
+                    StudentId = b.Student.Id,
+                    StudentFullName = b.Student.Name,
+                    IsPresent = false
+                }).ToList()
+            };
 
-                }).ToList();
+            return View(viewModel);
+        }
 
-            return Json(groups);
+        // POST: Attendance/TakeAttendance
+        [HttpPost]
+        public IActionResult TakeAttendance(TakeAttendanceViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Get existing attendance records for the session
+            var existingAttendance = _context.Attendances
+                .Where(a => a.SessionId == model.SessionId)
+                .Select(a => a.StudentId)
+                .ToHashSet();
+
+            foreach (var student in model.Students)
+            {
+                if (existingAttendance.Contains(student.StudentId))
+                    continue; // Skip if already recorded
+
+                var attendance = new Attendance
+                {
+                    SessionId = model.SessionId,
+                    StudentId = student.StudentId,
+                    IsPresent = student.IsPresent
+                };
+
+                _context.Attendances.Add(attendance);
+            }
+
+            _context.SaveChanges();
+
+            TempData["Success"] = "Attendance saved successfully!";
+            return RedirectToAction("TakeAttendance");
         }
     }
 }

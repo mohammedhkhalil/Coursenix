@@ -4,6 +4,7 @@ using Coursenix.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coursenix.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250530122622_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,18 +33,11 @@ namespace Coursenix.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique();
 
                     b.ToTable("Admins");
                 });
@@ -135,11 +131,16 @@ namespace Coursenix.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StudentId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SessionId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("StudentId1");
 
                     b.ToTable("Attendances");
                 });
@@ -158,92 +159,26 @@ namespace Coursenix.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GroupId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<int?>("StudentId1")
                         .HasColumnType("int");
 
-=======
->>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("GroupId1");
+
                     b.HasIndex("StudentId");
 
-<<<<<<< HEAD
                     b.HasIndex("StudentId1");
 
-=======
->>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Coursenix.Models.Course", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("StudentsPerGroup")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ThumbnailFileName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("Coursenix.Models.GradeLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("HasValue")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NumberOfGrade")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("GradeLevels");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Group", b =>
@@ -254,41 +189,52 @@ namespace Coursenix.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("EnrolledStudentsCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("GradeLevelId")
+                    b.Property<int>("Grade")
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("SelectedDays")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GradeLevelId");
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Coursenix.Models.ResetCode", b =>
+            modelBuilder.Entity("Coursenix.Models.GroupDay", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,24 +242,17 @@ namespace Coursenix.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Expiry")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Purpose")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ResetCodes");
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupDays");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Session", b =>
@@ -361,6 +300,7 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ParentPhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -373,6 +313,53 @@ namespace Coursenix.Migrations
                         .IsUnique();
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Coursenix.Models.Subject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("GradeLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("StudentsPerGroup")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
@@ -388,6 +375,7 @@ namespace Coursenix.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Biography")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -397,13 +385,14 @@ namespace Coursenix.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicture")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -548,17 +537,6 @@ namespace Coursenix.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Coursenix.Models.Admin", b =>
-                {
-                    b.HasOne("Coursenix.Models.AppUser", "AppUser")
-                        .WithOne()
-                        .HasForeignKey("Coursenix.Models.Admin", "AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("Coursenix.Models.Attendance", b =>
                 {
                     b.HasOne("Coursenix.Models.Session", "Session")
@@ -568,10 +546,14 @@ namespace Coursenix.Migrations
                         .IsRequired();
 
                     b.HasOne("Coursenix.Models.Student", "Student")
-                        .WithMany("Attendances")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Coursenix.Models.Student", null)
+                        .WithMany("Attendances")
+                        .HasForeignKey("StudentId1");
 
                     b.Navigation("Session");
 
@@ -581,60 +563,54 @@ namespace Coursenix.Migrations
             modelBuilder.Entity("Coursenix.Models.Booking", b =>
                 {
                     b.HasOne("Coursenix.Models.Group", "Group")
-                        .WithMany("Bookings")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Coursenix.Models.Student", "Student")
+                    b.HasOne("Coursenix.Models.Group", null)
                         .WithMany("Bookings")
+                        .HasForeignKey("GroupId1");
+
+                    b.HasOne("Coursenix.Models.Student", "Student")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-<<<<<<< HEAD
                     b.HasOne("Coursenix.Models.Student", null)
                         .WithMany("Bookings")
                         .HasForeignKey("StudentId1");
 
-=======
->>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.Navigation("Group");
 
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Coursenix.Models.Course", b =>
-                {
-                    b.HasOne("Coursenix.Models.Teacher", "Teacher")
-                        .WithMany("Courses")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("Coursenix.Models.GradeLevel", b =>
-                {
-                    b.HasOne("Coursenix.Models.Course", "Course")
-                        .WithMany("GradeLevels")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
             modelBuilder.Entity("Coursenix.Models.Group", b =>
                 {
-                    b.HasOne("Coursenix.Models.GradeLevel", "GradeLevel")
+                    b.HasOne("Coursenix.Models.Subject", "Subject")
                         .WithMany("Groups")
-                        .HasForeignKey("GradeLevelId")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GradeLevel");
+                    b.HasOne("Coursenix.Models.Teacher", null)
+                        .WithMany("Groups")
+                        .HasForeignKey("TeacherId");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("Coursenix.Models.GroupDay", b =>
+                {
+                    b.HasOne("Coursenix.Models.Group", "Group")
+                        .WithMany("GroupDays")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Session", b =>
@@ -657,6 +633,17 @@ namespace Coursenix.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Coursenix.Models.Subject", b =>
+                {
+                    b.HasOne("Coursenix.Models.Teacher", "Teacher")
+                        .WithMany("Subjects")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
@@ -721,19 +708,11 @@ namespace Coursenix.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Coursenix.Models.Course", b =>
-                {
-                    b.Navigation("GradeLevels");
-                });
-
-            modelBuilder.Entity("Coursenix.Models.GradeLevel", b =>
-                {
-                    b.Navigation("Groups");
-                });
-
             modelBuilder.Entity("Coursenix.Models.Group", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("GroupDays");
 
                     b.Navigation("Sessions");
                 });
@@ -750,17 +729,16 @@ namespace Coursenix.Migrations
                     b.Navigation("Bookings");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Coursenix.Models.Subject", b =>
                 {
                     b.Navigation("Groups");
                 });
 
-=======
->>>>>>> f437c54f89ee362d562e53611edb19349d253289
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
                 {
-                    b.Navigation("Courses");
+                    b.Navigation("Groups");
+
+                    b.Navigation("Subjects");
                 });
 #pragma warning restore 612, 618
         }
