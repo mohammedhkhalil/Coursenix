@@ -288,6 +288,7 @@ namespace Coursenix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            // محتاجه ادور ف ال table حسب ال role ولا ايي؟
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {

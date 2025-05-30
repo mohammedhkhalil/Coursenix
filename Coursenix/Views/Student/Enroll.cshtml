@@ -1,7 +1,8 @@
 ﻿@model EnrollViewModel
-<!DOCTYPE html>
-<html lang="en">
-<head>
+@{
+    Layout = "_Layout";
+}
+@section css{
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,15 @@
     <link href="https://c...content-available-to-author-only...r.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://c...content-available-to-author-only...e.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/courseDetailsG7.css">
-</head>
+}
 <body>
-    <!-- User info -->
-    <div class="d-flex align-items-center">
-        <div class="user-avatar bg-teal text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px; font-weight: bold;">M</div>
-        <span class="ms-2 user-name">Michael Johnson</span>
-    </div>
-    </div>
+    @*ماا هذا*@
+    @* <!-- User info --> *@
+    @* <div class="d-flex align-items-center"> *@
+    @*     <div class="user-avatar bg-teal text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px; font-weight: bold;">M</div> *@
+    @*     <span class="ms-2 user-name">Michael Johnson</span> *@
+    @* </div> *@
+    @* </div> *@
     <!-- Header Section with Teal Background -->
     <!-- Header Section -->
     <!-- Main Course Card -->
@@ -27,7 +29,7 @@
                 <div class="col-md-8">
                     <h2>@Model.CourseName</h2>
                     <div class="course-info">
-                        @* <span><i class="fas fa-graduation-cap"></i> Grades 7-9</span> *@
+                        @* <span><i class="fas fa-graduation-cap"></i> Grades 7-9</span>*@
                         @* <span><i class="fas fa-calendar"></i> 2 Classes/Week</span> *@
                         <span><i class="fas fa-map-marker-alt"></i> @(string.IsNullOrEmpty(Model.Location) ? "" : Model.Location)</span>
                     </div>

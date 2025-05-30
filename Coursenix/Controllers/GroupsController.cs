@@ -62,6 +62,7 @@ namespace Coursenix.Controllers
 
             var viewModel = new GroupAttendanceViewModel
             {
+                groupId = group.Id,
                 GradeLevel = group.GradeLevel.NumberOfGrade,
                 GroupName = group.Name,
                 Days = group.SelectedDays,

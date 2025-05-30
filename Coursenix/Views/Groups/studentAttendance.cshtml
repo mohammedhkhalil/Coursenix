@@ -1,6 +1,11 @@
 ﻿@model Coursenix.ViewModels.GroupAttendanceViewModel
-
-<main>
+@section css{
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eduvera - Student Attendance</title>
+<link rel="stylesheet" href="../css/Student-Attendance.css">
+}
+<main id="pageMain" data-group-id="@Model.groupId">
     <div class="attendance-container">
         <h2>Students Attendance</h2>
 
@@ -23,7 +28,7 @@
                         <span>
                             day
                             if(i != Model.Days.LongCount() - 1) 
-                                &
+                            &
                         </span>
                     }
                 </div>
@@ -35,8 +40,11 @@
                 </div>
             </div>
         </div>
-
-        <form asp-action="SaveAttendance" asp-controller="Groups" method="post">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="studentSearch" class="search-input" placeholder="Search student by name...">
+        </div>
+        <form method="post">
             <table class="attendance-table">
                 <thead>
                     <tr>
@@ -55,14 +63,35 @@
                             <td>@student.PhoneNumber</td>
                             <td>@student.ParentPhoneNumber</td>
                             <td>
-                                <span class="absence @(student.AbsencePercentage >= 50 ? "high" : student.AbsencePercentage >= 25 ? "medium" : "low")">
+
+                                @{
+                                    var col = "none";
+                                    if (student.AbsencePercentage <= 15)
+                                    {
+                                        col = "low";
+                                    }
+                                    else if (student.AbsencePercentage <= 30)
+                                    {
+                                        col = "medium";
+                                    }
+                                    else if (student.AbsencePercentage <= 45)
+                                    {
+                                        col = "high";
+                                    }
+                                    else
+                                    {
+                                        col = "critical";
+                                    }
+                                    col = "absence " + col;
+                                }
+                                <span class="@col">
                                     @student.AbsencePercentage%
                                 </span>
                             </td>
                             <td>
-                                <a asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@student.Id" class="delete-btn">
+                                <button type="button" class="delete-btn" data-student-id="@student.Id">
                                     &#10060;
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     }
@@ -70,9 +99,12 @@
             </table>
 
             <div class="button-group">
-                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" asp-controller="Teacher" asp-action="Index" class="cancel-btn">Cancel</button>
                 <button type="submit" class="save-btn">Save</button>
             </div>
         </form>
     </div>
 </main>
+@section Scripts {
+    <script src="/js/Student-Attendance.js"></script>
+}

@@ -3,6 +3,7 @@
     public class GroupAttendanceViewModel
     {
         // Group Info
+        public int groupId { get; set; }
         public int GradeLevel { get; set; }
         public string GroupName { get; set; }
         public List<string> Days { get; set; } = new List<string>();

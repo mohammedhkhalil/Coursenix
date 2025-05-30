@@ -8,23 +8,21 @@ namespace Coursenix.ViewModels
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } // Not required now
-        public string PhoneNumber { get; set; }
+        public string fullName { get; set; } // Not required now
+        public string phone { get; set; }
 
         [EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [MaxLength(255)]
-        public string Biography { get; set; }
-
-        public string ExistingProfilePicture { get; set; }
+        public string bio { get; set; }
         public IFormFile ProfilePicture { get; set; }
 
         // Password change
         public string CurrentPassword { get; set; }
-        public string NewPassword { get; set; }
+        public string password { get; set; }
 
-        [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
+        [Compare("password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
     }
 

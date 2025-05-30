@@ -33,11 +33,10 @@ namespace Coursenix.Controllers
             var model = new TeacherSettingsViewModel
             {
                 Id = teacher.Id,
-                Name = teacher.Name,
-                Email = teacher.Email,
-                PhoneNumber = teacher.PhoneNumber,
-                Biography = teacher.Biography,
-                ExistingProfilePicture = teacher.ProfilePicture
+                fullName = teacher.Name,
+                email = teacher.Email,
+                phone = teacher.PhoneNumber,
+                bio = teacher.Biography,
             };
 
             return View(model);
@@ -53,28 +52,27 @@ namespace Coursenix.Controllers
             if (teacher == null) return NotFound();
 
             // Only update if value is not null or empty
-            if (!string.IsNullOrWhiteSpace(model.Name)) teacher.Name = model.Name;
-            if (!string.IsNullOrWhiteSpace(model.Email)) teacher.Email = model.Email;
-            if (!string.IsNullOrWhiteSpace(model.PhoneNumber)) teacher.PhoneNumber = model.PhoneNumber;
-            if (!string.IsNullOrWhiteSpace(model.Biography)) teacher.Biography = model.Biography;
+            if (!string.IsNullOrWhiteSpace(model.fullName)) teacher.Name = model.fullName;
+            if (!string.IsNullOrWhiteSpace(model.phone)) teacher.PhoneNumber = model.phone;
+            if (!string.IsNullOrWhiteSpace(model.bio)) teacher.Biography = model.bio;
 
-            if (model.ProfilePicture != null)
-            {
-                //Guid.NewGuid().ToString() -> randomly create name for picture 
-                //Path.GetExtension --> get Extension for the photo user upload
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfilePicture.FileName);
-                // save the new photo in root
-                var filePath = Path.Combine("wwwroot/uploads", fileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.ProfilePicture.CopyToAsync(stream);
-                }
-                teacher.ProfilePicture = "/uploads/" + fileName;
-            }
+            //if (model.ProfilePicture != null)
+            //{
+            //    //Guid.NewGuid().ToString() -> randomly create name for picture 
+            //    //Path.GetExtension --> get Extension for the photo user upload
+            //    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfilePicture.FileName);
+            //    // save the new photo in root
+            //    var filePath = Path.Combine("wwwroot/uploads", fileName);
+            //    using (var stream = new FileStream(filePath, FileMode.Create))
+            //    {
+            //        await model.ProfilePicture.CopyToAsync(stream);
+            //    }
+            //    teacher.ProfilePicture = "/uploads/" + fileName;
+            //}
 
-            if (!string.IsNullOrEmpty(model.NewPassword))
+            if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.password))
             {
-                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.password);
                 if (!result.Succeeded)
                 {
                     foreach (var error in result.Errors)

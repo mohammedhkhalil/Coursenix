@@ -36,9 +36,10 @@ namespace Coursenix.Controllers
 
             var vm = new StudentSettingsVM
             {
-                Name = student.Name,
-                PhoneNumber = student.PhoneNumber,
-                ParentPhoneNumber = student.ParentPhoneNumber,
+                fullName = student.Name,
+                email = student.Email,
+                phone = student.PhoneNumber,
+                parentPhone = student.ParentPhoneNumber,
                 gradeLevel = student.Grade
             };
 
@@ -56,14 +57,11 @@ namespace Coursenix.Controllers
 
             if (student == null) return NotFound();
 
-            if (!string.IsNullOrWhiteSpace(model.Name))
-                student.Name = model.Name;
+            if (!string.IsNullOrWhiteSpace(model.phone))
+                student.PhoneNumber = model.phone;
 
-            if (!string.IsNullOrWhiteSpace(model.PhoneNumber))
-                student.PhoneNumber = model.PhoneNumber;
-
-            if (!string.IsNullOrWhiteSpace(model.ParentPhoneNumber))
-                student.ParentPhoneNumber = model.ParentPhoneNumber;
+            if (!string.IsNullOrWhiteSpace(model.parentPhone))
+                student.ParentPhoneNumber = model.parentPhone;
 
             if (model.gradeLevel.HasValue)
                 student.Grade = model.gradeLevel.Value ;
@@ -73,9 +71,9 @@ namespace Coursenix.Controllers
             await _context.SaveChangesAsync();
 
             // Password change 
-            if (!string.IsNullOrEmpty(model.CurrPassword) && !string.IsNullOrEmpty(model.NewPassword))
+            if (!string.IsNullOrEmpty(model.CurrPassword) && !string.IsNullOrEmpty(model.password))
             {
-                var result = await _userManager.ChangePasswordAsync(student.AppUser, model.CurrPassword, model.NewPassword);
+                var result = await _userManager.ChangePasswordAsync(student.AppUser, model.CurrPassword, model.password);
                 if (!result.Succeeded)
                 {
                     foreach (var error in result.Errors)
@@ -90,15 +88,36 @@ namespace Coursenix.Controllers
             return RedirectToAction("Index", "Course");
         }
 
-        public async void DeleteStudent(int StudentId)
+        public async Task<IActionResult> DeleteStudents(int groupId, [FromBody] List<int> studentIds)
         {
-            var student = await _context.Students.FindAsync(StudentId);
+            
+            var group = await _context.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound($"Group with id {groupId} not found.");
+            }
 
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
+            foreach (var Id in studentIds)
+            {
+                var booking = await _context.Bookings
+                .FirstOrDefaultAsync(b => b.GroupId == groupId && b.StudentId == Id);
+                if (booking == null)
+                {
+                    return NotFound($"Booking for student {Id} in group {groupId} not found.");
+                }
+                _context.Bookings.Remove(booking);
 
+                // Update enrolled students count
+                group.EnrolledStudentsCount = Math.Max(0, group.EnrolledStudentsCount - 1);
+
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok();
         }
+        
         [HttpGet]
+        // course id 
         public async Task<IActionResult> Enroll(int id)
         {
             var course = await _context.Courses
