@@ -16,10 +16,17 @@
                 </div>
             </div>
             <div class="schedule">
-                @*<div class="day">
+                <div class="day">
                     <span class="calendar-icon">📅</span>
-                    <span>@Model.Days</span>
-                </div>*@
+                    @for(int i = 0; i < Model.Days.LongCount(); ++i)
+                    {
+                        <span>
+                            day
+                            if(i != Model.Days.LongCount() - 1) 
+                                &
+                        </span>
+                    }
+                </div>
                 <div class="time">
                     <span class="time-icon">🕔</span>
                     <span>
@@ -53,7 +60,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a asp-action="DeleteStudent" asp-controller="Groups" asp-route-id="@student.Id" class="delete-btn">
+                                <a asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@student.Id" class="delete-btn">
                                     &#10060;
                                 </a>
                             </td>

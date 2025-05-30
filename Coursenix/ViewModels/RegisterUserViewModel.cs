@@ -50,7 +50,7 @@ namespace Coursenix.ViewModels
             {
                 if (string.IsNullOrEmpty(ParentNumber))
                     yield return new ValidationResult("Parent number is required for students.", new[] { nameof(ParentNumber) });
-                if (!Grade.HasValue)
+                if (!Grade.HasValue) // heeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrreeeeeeeeeeeee
                     yield return new ValidationResult("Grade is required for students.", new[] { nameof(Grade) });
             }
             else if (RoleType == "Teacher")

@@ -1,4 +1,5 @@
-﻿using Coursenix.Models;
+﻿using System.Security.Claims;
+using Coursenix.Models;
 using Coursenix.Models.ViewModels;
 using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +39,7 @@ namespace Coursenix.Controllers
                 Name = student.Name,
                 PhoneNumber = student.PhoneNumber,
                 ParentPhoneNumber = student.ParentPhoneNumber,
-                Grade = student.Grade
+                gradeLevel = student.Grade
             };
 
             return View(vm);
@@ -64,8 +65,8 @@ namespace Coursenix.Controllers
             if (!string.IsNullOrWhiteSpace(model.ParentPhoneNumber))
                 student.ParentPhoneNumber = model.ParentPhoneNumber;
 
-            if (model.Grade.HasValue)
-                student.Grade = model.Grade.Value;
+            if (model.gradeLevel.HasValue)
+                student.Grade = model.gradeLevel.Value ;
 
             await _userManager.UpdateAsync(student.AppUser);
             _context.Update(student);
@@ -86,77 +87,93 @@ namespace Coursenix.Controllers
                 await _signInManager.RefreshSignInAsync(student.AppUser);
             }
 
-            TempData["SuccessMessage"] = "Settings updated successfully.";
-            return RedirectToAction("Index", "Courses");
+            return RedirectToAction("Index", "Course");
         }
 
-        public async Task<IActionResult> Dashboard()
+        public async void DeleteStudent(int StudentId)
         {
-            var appUser = await _userManager.GetUserAsync(User);
-            if (appUser is null)
-                return Challenge();   // force login
+            var student = await _context.Students.FindAsync(StudentId);
 
-            var student = await _context.Students
-                .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
 
-            if (student is null)
+        }
+        public IActionResult Dashboard()
+        {
+            // Get the logged-in user's ID from Identity
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Find the student record
+            var student = _context.Students
+                .FirstOrDefault(s => s.AppUserId == userId);
+            if (student == null)
+            {
                 return NotFound("Student profile not found.");
+            }
 
-            // All bookings for this student (=> groups)
-            var bookings = await _context.Bookings
-                .Where(b => b.StudentId == student.Id)
+            // Fetch bookings with related data
+            var bookings = _context.Bookings
                 .Include(b => b.Group)
-                    .ThenInclude(g => g.Subject)
-                        .ThenInclude(su => su.Teacher)
-                .Include(b => b.Group.GroupDays)
-                .ToListAsync();
+                    .ThenInclude(g => g.GradeLevel)
+                        .ThenInclude(gl => gl.Course)
+                            .ThenInclude(c => c.Teacher)
+                .Where(b => b.StudentId == student.Id)
+                .ToList();
 
-            // Build the view-model list
-            var viewModel = new List<StudentGroupViewModel>();
+            // Prepare view model
+            var viewModel = new StudentDashboardViewModel
+            {
+                StudentName = student.Name,
+                Courses = new List<StudentDashboardViewModel.CourseInfo>()
+            };
 
             foreach (var booking in bookings)
             {
                 var group = booking.Group;
+                var course = group.GradeLevel.Course;
 
-                // a) All sessions in this group
-                var sessionIds = await _context.Sessions
-                    .Where(se => se.GroupId == group.Id)
-                    .Select(se => se.Id)
-                    .ToListAsync();
+                // Fetch sessions for this group
+                var sessions = _context.Sessions
+                    .Where(s => s.GroupId == group.Id)
+                    .ToList();
 
-                var totalSessions = sessionIds.Count;
+                // Fetch attendances for this student, only for sessions in this group
+                var sessionIds = sessions.Select(s => s.Id).ToList();
+                var attendances = _context.Attendances
+                    .Where(a => a.StudentId == student.Id && sessionIds.Contains(a.SessionId))
+                    .ToList();
 
-                // b) How many the student attended
-                var sessionsAttended = await _context.Attendances
-                    .CountAsync(a =>
-                        a.StudentId == student.Id &&
-                        a.IsPresent &&
-                        sessionIds.Contains(a.SessionId));
+                var totalSessions = sessions.Count;
+                var absences = attendances.Count(a => !a.IsPresent);
+                var absenceRatio = totalSessions > 0 ? (double)absences / totalSessions * 100 : 0;
 
-                // c) One dashboard card
-                viewModel.Add(new StudentGroupViewModel
+                // Determine absence class
+                string absenceClass = absenceRatio switch
                 {
-                    StudentId = student.Id,
-                    StudentName = student.Name,
+                    <= 10 => "low",
+                    <= 20 => "medium",
+                    _ => "high"
+                };
 
-                    GroupId = group.Id,
-                    GroupName = group.Name,
-                    SubjectName = group.Subject.SubjectName,
-                    TeacherName = group.Subject.Teacher.Name,
-
-                    Days = group.GroupDays
-                                        .Select(d => d.Day.ToString())
-                                        .ToList(),
-                    StartTime = group.StartTime,
-                    EndTime = group.EndTime,
-                    Location = group.Location,
-
-                    TotalSessions = totalSessions,
-                    SessionsAttended = sessionsAttended
+                // Add course info to view model
+                viewModel.Courses.Add(new StudentDashboardViewModel.CourseInfo
+                {
+                    CourseName = course.Name,
+                    TeacherName = course.Teacher.Name,
+                    GroupName = group.Name ?? $"Group {group.Id}",
+                    Location = group.Location ?? course.Location ?? "Not specified",
+                    Days = string.Join(" & ", group.SelectedDays),
+                    Time = $"{group.StartTime:hh\\:mm tt} - {group.EndTime:hh\\:mm tt}",
+                    AbsenceRatio = Math.Round(absenceRatio, 1),
+                    AbsenceClass = absenceClass
                 });
             }
 
-            return View("Dashboard", viewModel);
+            return View(viewModel);
         }
 
     }

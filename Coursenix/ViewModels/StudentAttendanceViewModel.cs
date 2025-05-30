@@ -5,9 +5,10 @@
         // Group Info
         public int GradeLevel { get; set; }
         public string GroupName { get; set; }
-        //public string Days { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public List<string> Days { get; set; } = new List<string>();
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+
         // Students
         public List<StudentAttendance> Students { get; set; }
 

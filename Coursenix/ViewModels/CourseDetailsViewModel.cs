@@ -7,7 +7,7 @@ namespace Coursenix.ViewModels
 {
     public class CourseDetailsViewModel
     {
-        public Subject Subject { get; set; }
+        public Course Subject { get; set; }
 
         public List<Group> Groups { get; set; }
 

@@ -15,7 +15,7 @@ namespace Coursenix.ViewModels
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Parent number must be an 11-digit number.")]
         public string? ParentPhoneNumber { get; set; }
 
-        public GradeLevel? Grade { get; set; }
+        public int? gradeLevel { get; set; }
 
         // --- Password section ---
         [DataType(DataType.Password)]

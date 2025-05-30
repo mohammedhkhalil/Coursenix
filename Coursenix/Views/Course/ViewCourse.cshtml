@@ -1,0 +1,496 @@
+﻿@model Coursenix.Models.Course
+
+@{
+    ViewData["Title"] = "View Course";
+    Layout = "_Layout";
+}
+
+@section css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="~/css/viewCourse.css" rel="stylesheet">
+    <style>
+        .add-new-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #888;
+            margin: 10px;
+        }
+
+            .add-new-group:hover {
+                border-color: #26a69a;
+                background-color: #f0f8f7;
+                color: #26a69a;
+                text-decoration: none;
+            }
+
+            .add-new-group .plus-icon {
+                font-size: 48px;
+                margin-bottom: 10px;
+                color: inherit;
+            }
+
+            .add-new-group .add-text {
+                font-size: 16px;
+                font-weight: 500;
+                color: inherit;
+            }
+
+        /* Enhanced dropdown menu styling */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+            overflow: hidden;
+        }
+
+            .dropdown-menu.show-dropdown {
+                display: block !important;
+            }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            color: #333;
+            text-decoration: none;
+        }
+
+            .dropdown-item:hover {
+                background-color: #f8f9fa;
+            }
+
+            .dropdown-item:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-item i {
+                margin-right: 8px;
+                width: 16px;
+                text-align: center;
+            }
+
+            .dropdown-item a {
+                color: inherit;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+
+        /* Style for delete button to match edit button */
+        .btn-delete-group {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0;
+            font-size: inherit;
+            transition: color 0.2s ease;
+        }
+
+            .btn-delete-group:hover {
+                color: #c82333;
+            }
+
+            .btn-delete-group i {
+                margin-right: 8px;
+                width: 16px;
+                text-align: center;
+            }
+
+        /* Group menu positioning */
+        .group-menu {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+            .group-menu:hover {
+                background-color: #f5f5f5;
+            }
+
+        /* Ensure proper positioning */
+        .group-header {
+            position: relative;
+        }
+    </style>
+}
+
+<!--nav-->
+<nav class="navbar">
+    <a href="#" class="logo">
+        <div style="color: #26a69a;">
+            <i class="material-icons" style="font-size: 36px;">school</i>
+        </div>
+        <div class="logo-text">
+            Eduvera
+            <span>Learning Platform</span>
+        </div>
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+        <li><a href="@Url.Action("Index", "Course")">Courses</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+
+    <div class="profile-dropdown">
+        <button class="profile-btn">
+            <img src="~/assets/teacher1.svg" alt="Profile" class="profile-image">
+        </button>
+        <div class="dropdown-content">
+            <div class="dropdown-header">
+                <img src="~/assets/teacher1.svg" alt="Profile" class="profile-image large">
+                <div>
+                    <h4>@Model.Teacher?.Name</h4>
+                </div>
+            </div>
+            <hr>
+            <a href="@Url.Action("Index", "Teacher")"><i class="fas fa-user"></i> View Profile</a>
+            <a href="@Url.Action("Settings", "Teacher")"><i class="fas fa-cog"></i> Settings</a>
+            <hr>
+            <a href=@Url.Action("Logout", "Account") class="sign_out"><i class="fas fa-sign-out-alt"></i> Sign-out</a>
+        </div>
+    </div>
+</nav>
+
+<div class="course-details">
+    <h2>Course Details</h2>
+
+    <div class="course-header">
+        <div class="course-info">
+            <div class="course-title">@Model.Name</div>
+            <div class="course-meta">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-14h2v6h-2zm0 8h2v2h-2z" />
+                </svg>
+                Grades @(Model.GradeLevels != null && Model.GradeLevels.Any() ? $"{((IEnumerable<Coursenix.Models.GradeLevel>)Model.GradeLevels).Min(gl => gl.NumberOfGrade)}-{((IEnumerable<Coursenix.Models.GradeLevel>)Model.GradeLevels).Max(gl => gl.NumberOfGrade)}" : "N/A")
+            </div>
+            <div class="course-meta">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                @Model.Location
+            </div>
+            <div class="course-meta">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                </svg>
+                @Model.StudentsPerGroup students/group
+            </div>
+        </div>
+        <div class="price-actions">
+            <div class="course-actions">
+                <button class="edit-button">
+                    <a href="@Url.Action("EditCourse", "Course", new { id = Model.Id })" class="edit-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#888" />
+                        </svg>
+                    </a>
+                </button>
+                <form asp-controller="Course" asp-action="DeleteCourse" method="post" onsubmit="return confirmDelete()">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="delete-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#888" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="grades-container">
+        @foreach (var gradeLevel in ((IEnumerable<Coursenix.Models.GradeLevel>)Model.GradeLevels).OrderBy(gl => gl.NumberOfGrade))
+        {
+            <div class="grade-column">
+                <div class="grade-header">
+                    <div class="grade-title">Grade @gradeLevel.NumberOfGrade</div>
+                    <div class="grade-price">
+                        @gradeLevel.Price
+                    </div>
+                </div>
+
+                @foreach (var group in ((IEnumerable<Coursenix.Models.Group>)gradeLevel.Groups).OrderBy(g => g.Name))
+                {
+                    var startDateTime = DateTime.Today.Add(group.StartTime);
+                    var endDateTime = DateTime.Today.Add(group.EndTime);
+
+                    var seatsAvailable = group.TotalSeats - group.EnrolledStudentsCount;
+                    var seatStatusClass = seatsAvailable > 0 ? "seats-available" : "seats-full";
+                    var seatStatusText = seatsAvailable > 0 ? $"Seats Available: {seatsAvailable}/{group.TotalSeats}" : "Seats are Full";
+
+                    <div class="group-card">
+                        <div class="group-header">
+                            <div class="group-title">@group.Name</div>
+                            <div class="group-menu" onclick="toggleDropdown(this, event)">
+                                ⋮
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-item">
+                                        <i class="fas fa-plus-circle"></i> Add Session Attendance
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <i class="fas fa-clipboard-check"></i> View Students Attendance
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <a href="@Url.Action("EditGroup", "Course", new { id = group.Id })">
+                                            <i class="far fa-edit"></i> Edit
+                                        </a>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <button type="button" class="btn-delete-group" onclick="confirmGroupDelete('@group.Name', @group.Id, @Model.Id)">
+                                            <i class="far fa-trash-alt"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="group-schedule">
+                            @if (group.SelectedDays != null && group.SelectedDays.Any())
+                            {
+                                <li>@string.Join(" & ", group.SelectedDays)</li>
+                            }
+                            else
+                            {
+                                <li>No specific days</li>
+                            }
+                            <li>@startDateTime.ToString("hh:mm tt") - @endDateTime.ToString("hh:mm tt")</li>
+                        </ul>
+                        <div class="seat-status @seatStatusClass">@seatStatusText</div>
+                    </div>
+                }
+
+                <!-- Add New Group Card -->
+                <a href="@Url.Action("CreateGroup", "Course", new { courseId = Model.Id, gradeId = gradeLevel.Id })" class="add-new-group">
+                    <div class="plus-icon">+</div>
+                    <div class="add-text">Add New Group</div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Profile dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileBtn = document.querySelector('.profile-btn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            if (profileBtn && dropdownContent) {
+                profileBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    dropdownContent.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function () {
+                    dropdownContent.classList.remove('show');
+                });
+
+                dropdownContent.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        // Fixed group menu dropdown functionality
+        function toggleDropdown(element, event) {
+            // Prevent event bubbling
+            event.stopPropagation();
+
+            // Close all other dropdowns first
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            allDropdowns.forEach(dropdown => {
+                if (dropdown !== element.querySelector('.dropdown-menu')) {
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show-dropdown');
+                }
+            });
+
+            // Toggle the clicked dropdown
+            const dropdown = element.querySelector('.dropdown-menu');
+            if (dropdown) {
+                const isVisible = dropdown.style.display === 'block' || dropdown.classList.contains('show-dropdown');
+
+                if (isVisible) {
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show-dropdown');
+                } else {
+                    dropdown.style.display = 'block';
+                    dropdown.classList.add('show-dropdown');
+                }
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.group-menu')) {
+                const allDropdowns = document.querySelectorAll('.dropdown-menu');
+                allDropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show-dropdown');
+                });
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside it
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.dropdown-menu')) {
+                event.stopPropagation();
+            }
+        });
+
+        // Course deletion confirmation
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this course? This action cannot be undone.");
+        }
+
+        // Group deletion confirmation and form submission
+        function confirmGroupDelete(groupName, groupId, courseId) {
+            if (confirm(`Are you sure you want to delete the group "${groupName}"? This action cannot be undone.`)) {
+                // Create form dynamically
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("DeleteGroup", "Course")';
+
+                // Add group ID
+                const groupIdInput = document.createElement('input');
+                groupIdInput.type = 'hidden';
+                groupIdInput.name = 'id';
+                groupIdInput.value = groupId;
+
+                // Add course ID
+                const courseIdInput = document.createElement('input');
+                courseIdInput.type = 'hidden';
+                courseIdInput.name = 'courseId';
+                courseIdInput.value = courseId;
+
+                // Add anti-forgery token
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (tokenInput) {
+                    const clonedToken = tokenInput.cloneNode();
+                    form.appendChild(clonedToken);
+                }
+
+                form.appendChild(groupIdInput);
+                form.appendChild(courseIdInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Time validation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if time inputs exist (for EditGroup page)
+            const startTimeInput = document.getElementById('startTime');
+            const endTimeInput = document.getElementById('endTime');
+            const timeValidationMessage = document.getElementById('timeValidationMessage');
+
+            if (startTimeInput && endTimeInput) {
+                function validateTime() {
+                    if (startTimeInput.value && endTimeInput.value) {
+                        const startTime = new Date('1970-01-01T' + startTimeInput.value + ':00');
+                        const endTime = new Date('1970-01-01T' + endTimeInput.value + ':00');
+
+                        if (endTime <= startTime) {
+                            if (timeValidationMessage) {
+                                timeValidationMessage.style.display = 'block';
+                            }
+                            endTimeInput.setCustomValidity('End time must be after start time');
+                            return false;
+                        } else {
+                            if (timeValidationMessage) {
+                                timeValidationMessage.style.display = 'none';
+                            }
+                            endTimeInput.setCustomValidity('');
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+
+                startTimeInput.addEventListener('change', validateTime);
+                endTimeInput.addEventListener('change', validateTime);
+
+                // Form submission validation for EditGroup
+                const groupForm = document.getElementById('groupForm');
+                if (groupForm) {
+                    groupForm.addEventListener('submit', function(e) {
+                        // Validate days selection
+                        const selectedDays = document.querySelectorAll('input[name="SelectedDays"]:checked');
+                        if (selectedDays.length === 0) {
+                            e.preventDefault();
+                            alert('Please select at least one day for the group schedule.');
+                            return false;
+                        }
+
+                        // Validate time
+                        if (!validateTime()) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+        // Remove student function
+        function removeStudent(studentId, studentName) {
+            if (confirm(`Are you sure you want to remove ${studentName} from this group?`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("RemoveStudent", "Course")';
+
+                const groupIdInput = document.createElement('input');
+                groupIdInput.type = 'hidden';
+                groupIdInput.name = "groupId";
+                groupIdInput.value = '@Model.Id';
+
+                const studentIdInput = document.createElement('input');
+                studentIdInput.type = 'hidden';
+                studentIdInput.name = "studentId";
+                studentIdInput.value = studentId;
+
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (tokenInput) {
+                    form.appendChild(tokenInput.cloneNode());
+                }
+
+                form.appendChild(groupIdInput);
+                form.appendChild(studentIdInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}

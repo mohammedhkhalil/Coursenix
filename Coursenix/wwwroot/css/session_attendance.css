@@ -1,0 +1,111 @@
+:root {
+  --primary-color: #20B2AA;
+  --primary-dark1: #17a09a;
+  --secondary-color: #f8f9fa;
+  --secondary-dark: #dee2e6;
+}
+
+body {
+  background-color: var(--secondary-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main content styles */
+.attendance-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.group-info {
+  padding: 15px;
+  background-color: var(--secondary-color);
+  border-radius: 6px;
+}
+
+.form-control:focus{
+    outline: 0;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 1px var(--primary-color);
+}
+/* search */
+.search-box {
+    position: relative;
+    margin-top: 28px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-input {
+    padding-left: 35px;
+}
+
+/* Table styles */
+.table {
+  margin-bottom: 0;
+}
+.table th {
+  font-weight: 600;
+  color: #555;
+}
+
+.table td, .table th {
+  padding: 15px;
+}
+
+/* Custom checkbox styling */
+.attendance-check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--secondary-dark);
+  border-radius: 4px;
+  cursor: pointer;
+    transition: all 0.2s ease;
+
+}
+.attendance-check:focus{
+    outline: 0;
+    box-shadow: 0 0 0 var(--primary-color);
+    border:2px solid var(--secondary-dark);
+}
+.attendance-check:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Button styles */
+.btn-teal {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 30px;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-teal:hover {
+  background-color: var(--primary-dark1);
+  color: white;
+}
+
+.btn-outline-secondary {
+  padding: 8px 30px;
+  border-radius: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .attendance-wrapper {
+    padding: 15px;
+  }
+
+  .table td, .table th {
+    padding: 10px;
+  }
+}

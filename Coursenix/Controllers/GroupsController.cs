@@ -43,8 +43,9 @@ namespace Coursenix.Controllers
             var studentAttendances = group.Bookings
                 .Select(b =>
                 {
+                    // for each el
                     var student = b.Student;
-                    var attendedCount = group.Sessions
+                    var attendedCount = group.Sessions // like we iterate over all session list and count how many session that sutdent attentd
                         .Count(s => s.Attendances.Any(a => a.Student.Id == student.Id));
 
                     var absencePercentage = totalSessions == 0 ? 0 : (1 - (attendedCount / (double)totalSessions)) * 100;
@@ -61,9 +62,9 @@ namespace Coursenix.Controllers
 
             var viewModel = new GroupAttendanceViewModel
             {
-                GradeLevel = group.Subject.GradeLevel ,
+                GradeLevel = group.GradeLevel.NumberOfGrade,
                 GroupName = group.Name,
-                //Days = group.Days,
+                Days = group.SelectedDays,
                 StartTime = group.StartTime,
                 EndTime = group.EndTime,
                 Students = studentAttendances
@@ -72,11 +73,84 @@ namespace Coursenix.Controllers
             return View(viewModel);
         }
 
-        //SessionAttendance
-        // GET: Attendance/TakeAttendance?sessionId=5
-        [HttpGet]
-        public IActionResult TakeAttendance(int sessionId)
+        ////SessionAttendance
+        //// GET: Attendance/TakeAttendance?sessionId=5
+        //[HttpGet]
+        //public IActionResult TakeAttendance(int sessionId)
+        //{
+        //    var session = _context.Sessions
+        //        .Include(s => s.Group)
+        //            .ThenInclude(g => g.Subject)
+        //        .FirstOrDefault(s => s.Id == sessionId);
+
+        //    if (session == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Get all students booked in this group
+        //    var studentBookings = _context.Bookings
+        //        .Where(b => b.GroupId == session.GroupId)
+        //        .Include(b => b.Student)
+        //        .ToList();
+
+        //    var viewModel = new SessionAttendanceViewModel
+        //    {
+        //        SessionId = session.Id,
+        //        SessionDateTime = session.SessionDateTime,
+        //        GroupId = session.GroupId,
+        //        GroupName = session.Group.Subject?.SubjectName ?? "Group",
+        //        Students = studentBookings.Select(b => new StudentAttendanceVM
+        //        {
+        //            StudentId = b.Student.Id,
+        //            StudentFullName = b.Student.Name,
+        //            IsPresent = false
+        //        }).ToList()
+        //    };
+
+        //    return View(viewModel);
+        //}
+
+        //    // POST: Attendance/TakeAttendance
+        //    [HttpPost]
+        //    public IActionResult TakeAttendance(SessionAttendanceViewModel model)
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return View(model);
+        //        }
+
+        //        // Get existing attendance records for the session
+        //        var existingAttendance = _context.Attendances
+        //            .Where(a => a.SessionId == model.SessionId)
+        //            .Select(a => a.StudentId)
+        //            .ToHashSet();
+
+        //        foreach (var student in model.Students)
+        //        {
+        //            if (existingAttendance.Contains(student.StudentId))
+        //                continue; // Skip if already recorded
+
+        //            var attendance = new Attendance
+        //            {
+        //                SessionId = model.SessionId,
+        //                StudentId = student.StudentId,
+        //                IsPresent = student.IsPresent
+        //            };
+
+        //            _context.Attendances.Add(attendance);
+        //        }
+
+        //        _context.SaveChanges();
+
+        //        TempData["Success"] = "Attendance saved successfully!";
+        //        return RedirectToAction("SessionAttendance");
+        //    }
+        //}
+
+        public IActionResult GetGroupByGrade(int GradeLevelId)
         {
+<<<<<<< HEAD
             var session = _context.Sessions
                 .Include(s => s.Group)
                     .ThenInclude(g => g.Subject)
@@ -100,16 +174,23 @@ namespace Coursenix.Controllers
                 GroupId = session.GroupId,
                 GroupName = session.Group.Subject?.SubjectName ?? "Group",
                 Students = studentBookings.Select(b => new StudentAttendanceVM
+=======
+            var groups = _context.Groups
+                .Where(g => g.GradeLevelId == GradeLevelId)
+                .Select(g => new
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
                 {
-                    StudentId = b.Student.Id,
-                    StudentFullName = b.Student.Name,
-                    IsPresent = false
-                }).ToList()
-            };
+                    g.Id,
+                    g.Name,
+                    SelectedDays = g.SelectedDays , 
+                    StartTime = g.StartTime,
+                    EndTime = g.EndTime,
+                    TotalSeats = g.TotalSeats,
+                    EnrolledStudentsCount = g.EnrolledStudentsCount ,
 
-            return View(viewModel);
-        }
+                }).ToList();
 
+<<<<<<< HEAD
         // POST: Attendance/TakeAttendance
         [HttpPost]
         public IActionResult TakeAttendance(TakeAttendanceViewModel model)
@@ -144,6 +225,9 @@ namespace Coursenix.Controllers
 
             TempData["Success"] = "Attendance saved successfully!";
             return RedirectToAction("SessionAttendance");
+=======
+            return Json(groups);
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
         }
     }
 }

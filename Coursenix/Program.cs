@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Coursenix.Models;
+using Coursenix.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC support
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<EmailService>();
 // Add session support
 builder.Services.AddSession();
 
@@ -25,6 +26,15 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
+});
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequiredUniqueChars = 0;
 });
 
 var app = builder.Build();

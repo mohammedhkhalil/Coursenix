@@ -16,33 +16,46 @@ namespace Coursenix.Models
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Admin> Admins { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<ResetCode> ResetCodes { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<GradeLevel> GradeLevels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Booking to Student: One-to-Many
             modelBuilder.Entity<Booking>()
-              .HasOne(b => b.Student)
-              .WithMany()
-              .HasForeignKey(b => b.StudentId)
-              .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(b => b.Student)
+                .WithMany(s => s.Bookings)
+                .HasForeignKey(b => b.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            // Booking to Group: One-to-Many
             modelBuilder.Entity<Booking>()
-                 .HasOne(b => b.Group)
-                 .WithMany()
-                 .HasForeignKey(b => b.GroupId)
-                 .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(b => b.Group)
+                .WithMany(g => g.Bookings)
+                .HasForeignKey(b => b.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Attendance to Student: One-to-Many
             modelBuilder.Entity<Attendance>()
-               .HasOne(a => a.Student)
-               .WithMany()
-               .HasForeignKey(a => a.StudentId)
-               .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(a => a.Student)
+                .WithMany(s => s.Attendances)
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Attendance to Session: One-to-Many
+            modelBuilder.Entity<Attendance>()
+                .HasOne(a => a.Session)
+                .WithMany(s => s.Attendances)
+                .HasForeignKey(a => a.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // One-to-One: Student ↔ AppUser
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.AppUser)
@@ -57,51 +70,46 @@ namespace Coursenix.Models
                 .HasForeignKey<Teacher>(t => t.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // One-to-Many: Subject → Teacher
-            modelBuilder.Entity<Subject>()
-                .HasOne(s => s.Teacher)
-                .WithMany(t => t.Subjects)
-                .HasForeignKey(s => s.TeacherId);
-
-            // One-to-Many: Subject → Groups
-            modelBuilder.Entity<Subject>()
-                .HasMany(s => s.Groups)
-                .WithOne(g => g.Subject)
-                .HasForeignKey(g => g.SubjectId);
-
-            // Decimal Precision: Subject.Price
-            modelBuilder.Entity<Subject>()
-                .Property(s => s.Price)
-                .HasColumnType("decimal(18, 2)");
-
-            // Define the one-to-many relationship: One Group → Many GroupDays
-            modelBuilder.Entity<GroupDay>()
-                .HasOne(gd => gd.Group)
-                .WithMany(g => g.GroupDays)
-                .HasForeignKey(gd => gd.GroupId)
+            // One-to-One: Admin ↔ AppUser (assumed, adjust if not needed)
+            modelBuilder.Entity<Admin>()
+                .HasOne(a => a.AppUser)
+                .WithOne()
+                .HasForeignKey<Admin>(a => a.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Store the enum (WeekDay) as an integer in the database – explicitly stated for clarity
-            modelBuilder.Entity<GroupDay>()
-                .Property(gd => gd.Day)
-                .HasConversion<int>();
+            // One-to-Many: Course → Teacher
+            modelBuilder.Entity<Course>()
+                .HasOne(s => s.Teacher)
+                .WithMany(t => t.Courses)
+                .HasForeignKey(s => s.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // SeedData(modelBuilder);
+            // One-to-Many: Course → GradeLevel
+            modelBuilder.Entity<GradeLevel>()
+                .HasOne(gl => gl.Course)
+                .WithMany(c => c.GradeLevels)
+                .HasForeignKey(gl => gl.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-Many: GradeLevel → Group
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.GradeLevel)
+                .WithMany(gl => gl.Groups)
+                .HasForeignKey(g => g.GradeLevelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-Many: Group → Session
+            modelBuilder.Entity<Session>()
+                .HasOne(s => s.Group)
+                .WithMany(g => g.Sessions)
+                .HasForeignKey(s => s.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
-            optionsBuilder.UseSqlServer(@"Data Source=LAPTOP-0RH6BA2F\SQLEXPRESS;Initial Catalog=TestCoursenix;Integrated Security=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=TestCoursenix;Integrated Security=True;TrustServerCertificate=True;");
             base.OnConfiguring(optionsBuilder);
         }
-
-
-        /*
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            // Add initial data here
-        }
-        */
     }
 }
