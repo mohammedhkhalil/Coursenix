@@ -1,0 +1,279 @@
+﻿@model EditGroupVM
+@{
+    Layout = "_Layout";
+}
+
+@section css {
+    <link rel="stylesheet" href="/css/create_course.css" />
+    <style>
+        .day-checkbox {
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+
+        .time-input-group {
+            position: relative;
+        }
+
+        .student-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .context-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+    </style>
+}
+
+<main class="container py-4">
+    <!-- Course Context Header -->
+    <div class="card context-card shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-book me-3 fs-4"></i>
+                <div>
+                    <h5 class="mb-1">@Model.CourseName</h5>
+                    <p class="mb-0 opacity-75">Grade @Model.GradeNumber Group</p>
+                </div>
+                <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-light btn-sm ms-auto">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Course
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <form id="groupForm"
+                  asp-controller="Course"
+                  asp-action="EditGroup"
+                  method="post">
+                <input asp-for="Id" type="hidden" />
+                <input asp-for="GradeLevelId" type="hidden" />
+                <input asp-for="CourseId" type="hidden" />
+                <asp-validation-summary class="text-danger" validation-summary="All"></asp-validation-summary>
+
+                <!-- ── Group Basic Information ─────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Edit Group Information</h2>
+                    <p class="text-muted">Update group settings and schedule</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="Enter group name (optional)" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location"
+                                   class="form-control"
+                                   placeholder="Enter group location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Group Capacity ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Group Capacity</h2>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="TotalSeats" class="form-label"></label>
+                            <input asp-for="TotalSeats"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   placeholder="Maximum students" />
+                            <span asp-validation-for="TotalSeats" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Enrolled Students</label>
+                            <input type="text" class="form-control" value="@Model.EnrolledStudentsCount" readonly />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Available Seats</label>
+                            <input type="text" class="form-control text-success fw-bold" value="@Model.AvailableSeats" readonly />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Schedule Settings ────────────────────────────────── -->
+                <section class="mb-4">
+                    <h2 class="section-title">Schedule Settings</h2>
+
+                    <!-- Days Selection -->
+                    <div class="mb-3">
+                        <label class="form-label">Select Days</label>
+                        <div class="d-flex flex-wrap">
+                            @for (int i = 0; i < Model.AvailableDays.Count; i++)
+                            {
+                                <div class="form-check day-checkbox">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="SelectedDays"
+                                           value="@Model.AvailableDays[i].Value"
+                                           id="day_@Model.AvailableDays[i].Value"
+                                           @(Model.SelectedDays.Contains(Model.AvailableDays[i].Value) ? "checked" : "") />
+                                    <label class="form-check-label" for="day_@Model.AvailableDays[i].Value">
+                                        @Model.AvailableDays[i].Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <span asp-validation-for="SelectedDays" class="text-danger"></span>
+                    </div>
+
+                    <!-- Time Settings -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StartTime" class="form-label"></label>
+                            <div class="time-input-group">
+                                <input asp-for="StartTime"
+                                       class="form-control"
+                                       type="time"
+                                       id="startTime" />
+                                <span asp-validation-for="StartTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EndTime" class="form-label"></label>
+                            <div class="time-input-group">
+                                <input asp-for="EndTime"
+                                       class="form-control"
+                                       type="time"
+                                       id="endTime" />
+                                <span asp-validation-for="EndTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="timeValidationMessage" class="text-danger" style="display: none;">
+                        End time must be after start time.
+                    </div>
+                </section>
+
+                <!-- ── Enrolled Students Management ────────────────────────── -->
+                @if (Model.EnrolledStudents.Any())
+                {
+                    <section class="mb-4">
+                        <h2 class="section-title">Enrolled Students (@Model.EnrolledStudents.Count)</h2>
+                        <div class="enrolled-students-container">
+                            @foreach (var student in Model.EnrolledStudents)
+                            {
+                                <div class="student-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@student.Name</strong>
+                                        <br>
+                                        <small class="text-muted">@student.Email</small>
+                                        <br>
+                                        <small class="text-muted">Enrolled: @student.EnrollmentDate.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="removeStudent(@student.Id, '@student.Name')">
+                                        <i class="bi bi-person-dash me-1"></i>Remove
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+
+                <div class="text-end">
+                    <a href="@Url.Action("Details", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4 py-2">
+                        <i class="bi bi-check-circle me-1"></i>Update Group
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Time validation
+            const startTimeInput = document.getElementById('startTime');
+            const endTimeInput = document.getElementById('endTime');
+            const timeValidationMessage = document.getElementById('timeValidationMessage');
+
+            function validateTime() {
+                if (startTimeInput.value && endTimeInput.value) {
+                    const startTime = new Date('1970-01-01T' + startTimeInput.value + ':00');
+                    const endTime = new Date('1970-01-01T' + endTimeInput.value + ':00');
+
+                    if (endTime <= startTime) {
+                        timeValidationMessage.style.display = 'block';
+                        endTimeInput.setCustomValidity('End time must be after start time');
+                        return false;
+                    } else {
+                        timeValidationMessage.style.display = 'none';
+                        endTimeInput.setCustomValidity('');
+                        return true;
+                    }
+                }
+                return true;
+            }
+
+            startTimeInput.addEventListener('change', validateTime);
+            endTimeInput.addEventListener('change', validateTime);
+
+            // Form submission validation
+            document.getElementById('groupForm').addEventListener('submit', function(e) {
+                // Validate days selection
+                const selectedDays = document.querySelectorAll('input[name="SelectedDays"]:checked');
+                if (selectedDays.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one day for the group schedule.');
+                    return false;
+                }
+
+                // Validate time
+                if (!validateTime()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        // Remove student function
+        function removeStudent(studentId, studentName) {
+            if (confirm(`Are you sure you want to remove ${studentName} from this group?`)) {
+                // Create a form to submit the removal request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("RemoveStudent", "Group")';
+
+                const groupIdInput = document.createElement('input');
+                groupIdInput.type = 'hidden';
+                groupIdInput.name = 'groupId';
+                groupIdInput.value = '@Model.Id';
+
+                const studentIdInput = document.createElement('input');
+                studentIdInput.type = 'hidden';
+                studentIdInput.name = 'studentId';
+                studentIdInput.value = studentId;
+
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
+
+                form.appendChild(groupIdInput);
+                form.appendChild(studentIdInput);
+                form.appendChild(tokenInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}
