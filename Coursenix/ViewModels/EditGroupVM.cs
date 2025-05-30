@@ -21,11 +21,11 @@ namespace Coursenix.ViewModels
 
         [Required(ErrorMessage = "Start time is required")]
         [Display(Name = "Start Time")]
-        public TimeSpan StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required")]
         [Display(Name = "End Time")]
-        public TimeSpan EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         [Required(ErrorMessage = "Total seats is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Total seats must be at least 1")]
