@@ -27,11 +27,11 @@ namespace Coursenix.ViewModels
 
         [Required(ErrorMessage = "Start time is required")]
         [Display(Name = "Start Time")]
-        public TimeSpan StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required")]
         [Display(Name = "End Time")]
-        public TimeSpan EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         // Dictionary to hold grade numbers as keys and their groups as values
         // Key: Grade number (7-12), Value: List of groups for that grade

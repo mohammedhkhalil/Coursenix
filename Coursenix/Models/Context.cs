@@ -104,6 +104,13 @@ namespace Coursenix.Models
                 .WithMany(g => g.Sessions)
                 .HasForeignKey(s => s.GroupId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Group>()
+       .Property(g => g.StartTime)
+       .HasColumnType("datetime2"); // Use datetime2 for DateTime properties
+
+            modelBuilder.Entity<Group>()
+                .Property(g => g.EndTime)
+                .HasColumnType("datetime2"); // Use datetime2 for DateTime properties
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

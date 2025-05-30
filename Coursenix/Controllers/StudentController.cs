@@ -1,4 +1,5 @@
-﻿using Coursenix.Models;
+﻿using System.Security.Claims;
+using Coursenix.Models;
 using Coursenix.Models.ViewModels;
 using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -97,7 +98,6 @@ namespace Coursenix.Controllers
             await _context.SaveChangesAsync();
 
         }
-
         [HttpGet]
         public async Task<IActionResult> Enroll(int id)
         {
@@ -174,11 +174,89 @@ namespace Coursenix.Controllers
 
             return Redirect("Home");
         }
+        public IActionResult Dashboard()
+        {
+            // Get the logged-in user's ID from Identity
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+    
             //public async Task<IActionResult> Dashboard()
             //{
             //    var appUser = await _userManager.GetUserAsync(User);
             //    if (appUser is null)
             //        return Challenge();   // force login
+            // Find the student record
+            var student = _context.Students
+                .FirstOrDefault(s => s.AppUserId == userId);
+            if (student == null)
+            {
+                return NotFound("Student profile not found.");
+            }
+
+            // Fetch bookings with related data
+            var bookings = _context.Bookings
+                .Include(b => b.Group)
+                    .ThenInclude(g => g.GradeLevel)
+                        .ThenInclude(gl => gl.Course)
+                            .ThenInclude(c => c.Teacher)
+                .Where(b => b.StudentId == student.Id)
+                .ToList();
+
+            // Prepare view model
+            var viewModel = new StudentDashboardViewModel
+            {
+                StudentName = student.Name,
+                Courses = new List<StudentDashboardViewModel.CourseInfo>()
+            };
+
+            foreach (var booking in bookings)
+            {
+                var group = booking.Group;
+                var course = group.GradeLevel.Course;
+
+                // Fetch sessions for this group
+                var sessions = _context.Sessions
+                    .Where(s => s.GroupId == group.Id)
+                    .ToList();
+
+                // Fetch attendances for this student, only for sessions in this group
+                var sessionIds = sessions.Select(s => s.Id).ToList();
+                var attendances = _context.Attendances
+                    .Where(a => a.StudentId == student.Id && sessionIds.Contains(a.SessionId))
+                    .ToList();
+
+                var totalSessions = sessions.Count;
+                var absences = attendances.Count(a => !a.IsPresent);
+                var absenceRatio = totalSessions > 0 ? (double)absences / totalSessions * 100 : 0;
+
+                // Determine absence class
+                string absenceClass = absenceRatio switch
+                {
+                    <= 10 => "low",
+                    <= 20 => "medium",
+                    _ => "high"
+                };
+
+                // Add course info to view model
+                viewModel.Courses.Add(new StudentDashboardViewModel.CourseInfo
+                {
+                    CourseName = course.Name,
+                    TeacherName = course.Teacher.Name,
+                    GroupName = group.Name ?? $"Group {group.Id}",
+                    Location = group.Location ?? course.Location ?? "Not specified",
+                    Days = string.Join(" & ", group.SelectedDays),
+                    Time = $"{group.StartTime:hh\\:mm tt} - {group.EndTime:hh\\:mm tt}",
+                    AbsenceRatio = Math.Round(absenceRatio, 1),
+                    AbsenceClass = absenceClass
+                });
+            }
+
+            return View(viewModel);
+        }
 
             //    var student = await _context.Students
             //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);

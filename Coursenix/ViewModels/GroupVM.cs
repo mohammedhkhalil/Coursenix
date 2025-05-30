@@ -25,6 +25,12 @@ namespace Coursenix.ViewModels
         public DateTime EndTime { get; set; }
 
         // Validation: End time should be after start time
-        //public bool IsValidTimeRange => !StartTime.HasValue || !EndTime.HasValue || EndTime > StartTime;
+        public bool IsValidTimeRange
+        {
+            get
+            {
+                return EndTime > StartTime;
+            }
+        }
     }
 }

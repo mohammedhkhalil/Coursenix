@@ -1,32 +1,17 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dresley - Forgot Password</title>
+﻿@{
+    Layout = "_Layout";
+}
+@section css{
+
     <link rel="stylesheet" href="~/css/forget_pass.css">
-</head>
-<body>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">D</div>
-            <div class="logo-text">
-                <h2>Dresley</h2>
-                <p>Course Booking</p>
-            </div>
-        </div>
-    </header>
+}
 
-    <div class="main-content">
-        <div class="forgot-card">
-            <h1>Forgot Password</h1>
-            <p>Enter your email address and we'll send you a link to reset your password.</p>
-            <input type="email" class="email-input" placeholder="Enter your email address">
-            <button class="send-btn">Send</button>
-            <a href="@Url.Action("Sign_In", "Home")" class="back-link">Back to Sign in</a>
-        </div>
+<div class="main-content">
+    <div class="forgot-card">
+        <h1>Forgot Password</h1>
+        <p>Enter your email address and we'll send you a link to reset your password.</p>
+        <input type="email" class="email-input" placeholder="Enter your email address">
+        <button class="send-btn">Send</button>
+        <a href="@Url.Action("Sign_In", "Home")" class="back-link">Back to Sign in</a>
     </div>
-
- 
-</body>
-</html>
+</div>

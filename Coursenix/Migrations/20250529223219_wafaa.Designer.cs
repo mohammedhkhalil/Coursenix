@@ -14,6 +14,7 @@ namespace Coursenix.Migrations
     [DbContext(typeof(Context))]
     [Migration("20250529223219_wafaa")]
     partial class wafaa
+
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
