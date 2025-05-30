@@ -24,7 +24,7 @@
         }
 
         .context-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #30a798 0%, #158f80 100%);
             color: white;
             border-radius: 12px;
         }
@@ -39,7 +39,7 @@
                 <i class="bi bi-book me-3 fs-4"></i>
                 <div>
                     <h5 class="mb-1">@Model.CourseName</h5>
-                    <p class="mb-0 opacity-75">Grade @Model.GradeNumber Group</p>
+                    <p class="mb-0 opacity-75">Grade  @Model.GradeNumber Group  @Model.GroupNumberInGrade</p>
                 </div>
                 <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-light btn-sm ms-auto">
                     <i class="bi bi-arrow-left me-1"></i>Back to Course
@@ -189,7 +189,7 @@
                 }
 
                 <div class="text-end">
-                    <a href="@Url.Action("Details", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
+                    <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
                     <button type="submit" class="btn btn-success px-4 py-2">
                         <i class="bi bi-check-circle me-1"></i>Update Group
                     </button>

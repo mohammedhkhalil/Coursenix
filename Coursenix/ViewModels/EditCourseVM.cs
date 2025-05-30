@@ -22,22 +22,16 @@ namespace Coursenix.ViewModels
         public string? Location { get; set; }
 
         [Required(ErrorMessage = "Students per group is required")]
-        [Range(1, 100, ErrorMessage = "Students per group must be between 1 and 100")]
+        [Range(1, 500, ErrorMessage = "Students per group must be between 1 and 500")]
         [Display(Name = "Maximum Students Per Group")]
         public int StudentsPerGroup { get; set; }
 
         [Display(Name = "Course Thumbnail")]
         public IFormFile? ThumbnailFile { get; set; }
-
-        // Additional properties for edit functionality
         public string? CurrentThumbnailUrl { get; set; }
         public bool RemoveThumbnail { get; set; } = false;
-
-        // Teacher info (readonly for edit)
         public int TeacherId { get; set; }
         public string TeacherName { get; set; } = string.Empty;
-
-        // Metadata
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public int TotalGroups { get; set; }
@@ -48,5 +42,7 @@ namespace Coursenix.ViewModels
         {
             StudentsPerGroup = 10; // Default value
         }
+        public List<GradeLevelVM> GradeLevels { get; set; } = new List<GradeLevelVM>();
+
     }
 }

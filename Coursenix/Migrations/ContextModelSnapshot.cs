@@ -161,12 +161,23 @@ namespace Coursenix.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+<<<<<<< HEAD
+                    b.Property<int?>("StudentId1")
+                        .HasColumnType("int");
+
+=======
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.HasIndex("StudentId");
 
+<<<<<<< HEAD
+                    b.HasIndex("StudentId1");
+
+=======
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.ToTable("Bookings");
                 });
 
@@ -243,8 +254,8 @@ namespace Coursenix.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EnrolledStudentsCount")
                         .HasColumnType("int");
@@ -264,8 +275,8 @@ namespace Coursenix.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
@@ -581,6 +592,13 @@ namespace Coursenix.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+<<<<<<< HEAD
+                    b.HasOne("Coursenix.Models.Student", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("StudentId1");
+
+=======
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
                     b.Navigation("Group");
 
                     b.Navigation("Student");
@@ -732,6 +750,14 @@ namespace Coursenix.Migrations
                     b.Navigation("Bookings");
                 });
 
+<<<<<<< HEAD
+            modelBuilder.Entity("Coursenix.Models.Subject", b =>
+                {
+                    b.Navigation("Groups");
+                });
+
+=======
+>>>>>>> f437c54f89ee362d562e53611edb19349d253289
             modelBuilder.Entity("Coursenix.Models.Teacher", b =>
                 {
                     b.Navigation("Courses");

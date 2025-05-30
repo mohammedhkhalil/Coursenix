@@ -1,15 +1,11 @@
 ﻿@using System.Linq
 @model IEnumerable<Coursenix.ViewModels.StudentGroupViewModel>
 
-
-@functions {
-    /* Helper picks CSS class for absence badge */
-    public string GetAbsenceClass(double absence)
-    {
-        if (absence < 10) return "low";    // green
-        if (absence < 20) return "medium"; // yellow
-        return "high";                      // red
-    }
+@{
+    Layout = "_Layout";
+}
+@section css{
+    <link rel="stylesheet" href="/css/student-dashboard.css">
 }
 
 <!DOCTYPE html>
