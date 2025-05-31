@@ -161,7 +161,7 @@
                     </div>
                 </section>
 
-                <!-- ── Enrolled Students Management ────────────────────────── -->
+                @* <!-- ── Enrolled Students Management ────────────────────────── -->
                 @if (Model.EnrolledStudents.Any())
                 {
                     <section class="mb-4">
@@ -186,7 +186,7 @@
                             }
                         </div>
                     </section>
-                }
+                } *@
 
                 <div class="text-end">
                     <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
