@@ -84,7 +84,7 @@
             </table>
 
             <div class="button-group">
-                <a href="@Url.Action("ViewCourse", "Course")" class="cancel-btn">Cancel</a>
+                <a href="@Url.Action("ViewCourse", "Course", new { id = Model.TeacherId })" class="cancel-btn">Cancel</a>
                 <a href="@Url.Action("TakeAttendance", new { id = Model.GroupId })" class="save-btn">Take Attendance</a>
             </div>
         </div>

@@ -9,7 +9,7 @@ namespace Coursenix.Models.ViewModels
         public string GroupName { get; set; }
         public string CourseName { get; set; } // Assuming you link GradeLevel to Course
         public int GradeLevelNumber { get; set; } // Assuming you link GradeLevel to a number
-
+        public int? TeacherId { get; set; }
         public List<string> GroupDays { get; set; } = new List<string>();
         public TimeSpan GroupStartTime { get; set; }
         public TimeSpan GroupEndTime { get; set; }

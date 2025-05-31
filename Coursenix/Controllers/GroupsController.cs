@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Coursenix.Models;
 using Coursenix.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace Coursenix.Controllers
 {
@@ -112,6 +113,12 @@ namespace Coursenix.Controllers
                 .ThenInclude(a => a.Session)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
+            string userId = User.Identity.GetUserId();
+            int? numericTeacherId = _context.Teachers
+                                            .Where(t => t.AppUserId == userId)
+                                            .Select(t => t.Id)
+                                            .FirstOrDefault();
+
             if (group == null)
             {
                 return NotFound();
@@ -126,6 +133,7 @@ namespace Coursenix.Controllers
                 //CourseName = group.GradeLevel?.Subject ?? "N/A",
                 Grade = group.GradeLevel?.NumberOfGrade ?? 0,
                 Days = string.Join(" & ", group.SelectedDays),
+                TeacherId = numericTeacherId,
                 StartTime = group.StartTime.ToString("h:mm tt"),
                 EndTime = group.EndTime.ToString("h:mm tt"),
                 Students = students.Select(s => new StudentAttendanceRecord
