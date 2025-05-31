@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>coursenix</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Coursenix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet" />
     <link href="/css/home-logged-in.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="/css/home.css" />
     @RenderSection("css", required: false)
-
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-
     <nav class="cn-navbar navbar-expand-lg navbar-light bg-white py-3">
         <div class="cn-container">
             <a class="cn-navbar-brand d-flex align-items-center" href="#">
                 <div class="cn-navbar-logo">
-                    <img src="/assets/logo.svg" alt="" />
+                    <img src="/assets/logo.svg" alt="Coursenix Logo" />
                 </div>
                 <div>
                     <span class="cn-navbar-word">Coursenix</span>
@@ -34,8 +32,7 @@
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-center"
-                 id="cnNavbarNav">
+            <div class="collapse navbar-collapse justify-content-center" id="cnNavbarNav">
                 <ul class="cn-navbar-nav navbar-nav">
                     <li class="cn-nav-item">
                         <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Home")">Home</a>
@@ -55,16 +52,15 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         var name = User.FindFirst("FullName")?.Value;
-
                         <li class="cn-user-profile" id="cnUserProfile">
                             <span class="cn-username"> @name </span>
-                            <div class="cn-user-icon">@char.ToUpper(name[0])</div>
+                            <div class="cn-user-icon">@(name != null ? char.ToUpper(name[0]) : "U")</div>
                             <div class="cn-dropdown-menu" id="cnUserDropdown">
                                 <ul>
                                     @if (User.IsInRole("Teacher"))
                                     {
                                         <li>
-                                            <a href="@Url.Action("Index", "Teacher")"><i class="fas fa-chalkboard-teacher"></i>Dashboard</a>
+                                            <a href="@Url.Action("Index", "Teacher")"><i class="fas fa-chalkboard-teacher"></i> Dashboard</a>
                                         </li>
                                         <li>
                                             <a href="@Url.Action("Settings", "Teacher")"><i class="fas fa-cog"></i> Settings</a>
@@ -73,7 +69,7 @@
                                     else if (User.IsInRole("Student"))
                                     {
                                         <li>
-                                            <a href="@Url.Action("Dashboard", "Student")"><i class="fas fa-book"></i>Dashboard</a>
+                                            <a href="@Url.Action("Dashboard", "Student")"><i class="fas fa-book"></i> Dashboard</a>
                                         </li>
                                         <li>
                                             <a href="@Url.Action("Settings", "Student")"><i class="fas fa-cog"></i> Settings</a>
@@ -81,15 +77,13 @@
                                     }
                                     else
                                     {
-                                        // Fallback for users without a specific role or other roles
                                         <li>
                                             <a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i> Home</a>
                                         </li>
                                     }
                                     <li class="cn-divider-menu"></li>
                                     <li>
-                                        <a href="@Url.Action("Logout", "Account")"
-                                           class="cn-logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                        <a href="@Url.Action("Logout", "Account")" class="cn-logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
                                     </li>
                                 </ul>
                             </div>
@@ -113,7 +107,6 @@
     @RenderSection("_StudentLoggedin", required: false)
     @RenderSection("_TeacherLoggedin", required: false)
 
-
     <footer class="cn-footer" id="cnFooter">
         <div class="cn-container">
             <div class="cn-footer-columns">
@@ -121,62 +114,43 @@
                     <h3>Coursenix</h3>
                     <p>Simplifying the educational flow between students and teachers</p>
                 </div>
-
                 <div class="cn-footer-column">
                     <h3>Follow Us</h3>
                     <div class="cn-social-links">
                         <a href="#" class="cn-social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="20"
-                                 height="20"
-                                 viewBox="0 0 24 24"
-                                 fill="#fff">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#fff">
                                 <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                             </svg>
                         </a>
                         <a href="#" class="cn-social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="20"
-                                 height="20"
-                                 viewBox="0 0 24 24"
-                                 fill="#fff">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#fff">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                             </svg>
                         </a>
                         <a href="#" class="cn-social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="20"
-                                 height="20"
-                                 viewBox="0 0 24 24"
-                                 fill="#fff">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#fff">
                                 <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                             </svg>
                         </a>
                     </div>
                 </div>
-
                 <div class="cn-footer-column">
                     <h3>Contact us</h3>
                     <p>Phone number: +20 1048725304</p>
                     <p>Email: Coursenix@Coursenix.com</p>
                 </div>
             </div>
-
             <div class="cn-copyright">
-                <p>&copy; 2025 Coursenix. All Rights reserved.</p>
+                <p>© 2025 Coursenix. All Rights reserved.</p>
             </div>
         </div>
     </footer>
 
-
     <script src="/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
-    <script src="~/js/profile-drop-down.js"></script>
+    <script src="/js/profile-drop-down.js"></script>
     @RenderSection("Scripts", required: false)
-    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestId="cd0d27b3faa64536a5a340f5341c57cf" data-requestMappingFromServer="false" data-connectUrl="http://localhost:53650/911ccce0d3f84725836b41431d75a044/browserLink"></script>
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 </body>
 </html>
