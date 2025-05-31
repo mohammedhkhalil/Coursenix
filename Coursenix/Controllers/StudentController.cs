@@ -142,6 +142,10 @@ namespace Coursenix.Controllers
                     GradeLevelId = g.Id,
                     NumberOfGrade = g.NumberOfGrade,
                     Price = g.Price,
+                    NumberOfClassesPerWeek = g.Groups
+                                          .SelectMany(grp => grp.SelectedDays) // Flatten all SelectedDays lists
+                                          .Distinct() 
+                                          .Count(),    
                     Groups = g.Groups.Select(grp => new GroupsGradeLevel
                     {
                         GroupId = grp.Id,
@@ -159,24 +163,50 @@ namespace Coursenix.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnrollPost(int groupId)
+        [ActionName("Enroll")] 
+        public async Task<IActionResult> EnrollConfirmed(int groupId) 
         {
             var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+            {
+                TempData["ErrorMessage"] = "You must be logged in to enroll in a course.";
+                return RedirectToAction("Login", "Account"); // Redirect to login page (adjust if your login action is different)
+            }
 
             var student = await _context.Students
                 .Include(s => s.AppUser)
                 .FirstOrDefaultAsync(s => s.AppUserId == userId);
 
-            if (student == null) return NotFound();
+            if (student == null)
+            {
+                TempData["ErrorMessage"] = "Student profile not found. Please complete your profile.";
+                return RedirectToAction("StudentRegister", "Account"); // Example: Redirect to a profile creation page
+            }
+
             var group = await _context.Groups
-               .Include(g => g.Bookings)
+               .Include(g => g.Bookings) 
+               .Include(g => g.GradeLevel) 
+                   .ThenInclude(gl => gl.Course)
                .FirstOrDefaultAsync(g => g.Id == groupId);
 
             if (group == null)
-                return NotFound("Group not found.");
+            {
+                TempData["ErrorMessage"] = "Selected group not found.";
+                return RedirectToAction("Index", "Home"); 
+            }
 
             if (group.Bookings.Any(b => b.StudentId == student.Id))
-                return BadRequest("You are already enrolled in this group.");
+            {
+                TempData["ErrorMessage"] = "You are already enrolled in this group.";
+                return RedirectToAction("Enroll", new { id = group.GradeLevel.CourseId });
+            }
+
+            if (group.EnrolledStudentsCount >= group.TotalSeats)
+            {
+                TempData["ErrorMessage"] = "No available seats in this group.";
+                return RedirectToAction("Enroll", new { id = group.GradeLevel.CourseId });
+            }
 
             var booking = new Booking
             {
@@ -189,21 +219,27 @@ namespace Coursenix.Controllers
 
             group.EnrolledStudentsCount++;
 
-            await _context.SaveChangesAsync();
-
-            return Redirect("Home");
+            try
+            {
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Enrollment successful!";
+                return RedirectToAction("Index", "Home"); 
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred during enrollment. Please try again.";
+                return RedirectToAction("Enroll", new { id = group.GradeLevel.CourseId });
+            }
         }
 
         public async Task<IActionResult> Dashboard()
         {
-            // Get the current logged-in user's ID
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("Login", "Account"); // Redirect if not logged in
+                return RedirectToAction("Login", "Account"); 
             }
 
-            // Find the student record
             var student = await _context.Students
                 .FirstOrDefaultAsync(s => s.AppUserId == userId);
             if (student == null)
@@ -211,7 +247,6 @@ namespace Coursenix.Controllers
                 return NotFound("Student record not found.");
             }
 
-            // Fetch bookings for the student, including related data
             var bookings = await _context.Bookings
                 .Where(b => b.StudentId == student.Id)
                 .Include(b => b.Group)
@@ -220,7 +255,6 @@ namespace Coursenix.Controllers
                             .ThenInclude(c => c.Teacher)
                 .ToListAsync();
 
-            // Build the ViewModel
             var viewModel = new StudentDashboardViewModel
             {
                 StudentName = student.Name,
@@ -233,24 +267,20 @@ namespace Coursenix.Controllers
                 var course = group.GradeLevel.Course;
                 var teacher = course.Teacher;
 
-                // Fetch sessions for this group
                 var sessions = await _context.Sessions
                     .Where(s => s.GroupId == group.Id)
                     .ToListAsync();
 
-                // Fetch attendances for this student in this group
                 var attendances = await _context.Attendances
                     .Where(a => a.StudentId == student.Id && a.Session.GroupId == group.Id)
                     .ToListAsync();
 
-                // Calculate absence ratio and class
                 var totalSessions = sessions.Count;
                 var absences = attendances.Count(a => !a.IsPresent);
                 var absenceRatio = totalSessions > 0 ? (absences * 100.0 / totalSessions).ToString("F0") + "%" : "0%";
                 var absenceValue = totalSessions > 0 ? absences * 100.0 / totalSessions : 0;
                 var absenceClass = absenceValue <= 5 ? "low" : absenceValue <= 15 ? "medium" : "high";
 
-                // Add course info to the list
                 viewModel.Courses.Add(new StudentDashboardViewModel.CourseInfo
                 {
                     CourseName = course.Name,

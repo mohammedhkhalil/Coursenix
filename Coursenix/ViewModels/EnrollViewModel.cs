@@ -18,6 +18,7 @@
         public int GradeLevelId { get; set; }
         public int NumberOfGrade { get; set; }
         public decimal Price { get; set; }
+        public int NumberOfClassesPerWeek { get; set; }
         public List<GroupsGradeLevel> Groups { get; set; }
     }
 
