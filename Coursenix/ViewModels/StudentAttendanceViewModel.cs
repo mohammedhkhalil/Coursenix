@@ -1,25 +1,30 @@
-﻿namespace Coursenix.ViewModels
+﻿using Coursenix.Models; // Assuming your models are in this namespace
+using System.Collections.Generic;
+
+namespace Coursenix.Models.ViewModels
 {
-    public class GroupAttendanceViewModel
+    public class StudentAttendanceViewModel
     {
-        // Group Info
-        public int groupId { get; set; }
-        public int GradeLevel { get; set; }
+        public int GroupId { get; set; }
         public string GroupName { get; set; }
-        public List<string> Days { get; set; } = new List<string>();
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public string CourseName { get; set; } // Assuming you link GradeLevel to Course
+        public int GradeLevelNumber { get; set; } // Assuming you link GradeLevel to a number
 
-        // Students
-        public List<StudentAttendance> Students { get; set; }
+        public List<string> GroupDays { get; set; } = new List<string>();
+        public TimeSpan GroupStartTime { get; set; }
+        public TimeSpan GroupEndTime { get; set; }
 
-        public class StudentAttendance
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string PhoneNumber { get; set; }
-            public string ParentPhoneNumber { get; set; }
-            public double AbsencePercentage { get; set; }
-        }
+        public string? SearchTerm { get; set; }
+
+        public List<StudentAttendanceDetailVM> Students { get; set; } = new List<StudentAttendanceDetailVM>();
+    }
+
+    public class StudentAttendanceDetailVM
+    {
+        public int StudentId { get; set; }
+        public string StudentName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string? ParentPhoneNumber { get; set; }
+        public decimal AbsencePercentage { get; set; } // Calculated absence percentage
     }
 }

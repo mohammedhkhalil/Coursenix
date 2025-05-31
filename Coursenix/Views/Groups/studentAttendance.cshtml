@@ -1,51 +1,58 @@
-﻿@model Coursenix.ViewModels.GroupAttendanceViewModel
-@section css{
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eduvera - Student Attendance</title>
-<link rel="stylesheet" href="../css/Student-Attendance.css">
-}
-<main id="pageMain" data-group-id="@Model.groupId">
-    <div class="attendance-container">
-        <h2>Students Attendance</h2>
+﻿@model Coursenix.ViewModels.StudentAttendanceViewModel
 
-        <div class="group-info">
-            <div class="course-details">
-                <div class="grade-level">
-                    <span class="grade-label">Grade:</span>
-                    <span class="grade-value">@Model.GradeLevel</span>
+@{
+    ViewData["Title"] = "Student Attendance";
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduvera - Student Attendance</title>
+    <link rel="stylesheet" href="~/css/Student-Attendance.css">
+    <script src="~/js/Student-Attendance.js" defer></script>
+</head>
+<body>
+   
+    <main>
+        <div class="attendance-container">
+            <h2>Students Attendance</h2>
+
+            <div class="group-info">
+                <div class="course-details">
+                    <div class="course-name">
+                        <span class="course-label">Course:</span>
+                        <span class="course-value">@Model.CourseName</span>
+                    </div>
+                    <div class="grade-level">
+                        <span class="grade-label">Grade:</span>
+                        <span class="grade-value">@Model.Grade</span>
+                    </div>
+                    <div class="group">
+                        <span class="group-label">Group:</span>
+                        <span class="group-value">@Model.GroupName</span>
+                    </div>
                 </div>
-                <div class="group">
-                    <span class="group-label">Group:</span>
-                    <span class="group-value">@Model.GroupName</span>
+                <div class="schedule">
+                    <div class="day">
+                        <span class="calendar-icon">📅</span>
+                        <span>@Model.Days</span>
+                    </div>
+                    <div class="time">
+                        <span class="time-icon">🕔</span>
+                        <span>@Model.StartTime - @Model.EndTime</span>
+                    </div>
                 </div>
             </div>
-            <div class="schedule">
-                <div class="day">
-                    <span class="calendar-icon">📅</span>
-                    @for(int i = 0; i < Model.Days.LongCount(); ++i)
-                    {
-                        <span>
-                            day
-                            if(i != Model.Days.LongCount() - 1) 
-                            &
-                        </span>
-                    }
-                </div>
-                <div class="time">
-                    <span class="time-icon">🕔</span>
-                    <span>
-                        @Model.StartTime.ToString("h:mm tt") - @Model.EndTime.ToString("h:mm tt")
-                    </span>
-                </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="studentSearch" class="search-input" placeholder="Search student by name...">
             </div>
-        </div>
-        <!-- Search Bar -->
-        <div class="search-container">
-            <input type="text" id="studentSearch" class="search-input" placeholder="Search student by name...">
-        </div>
-        <form method="post">
-            <table class="attendance-table">
+
+            <table class="attendance-table" id="attendanceTable">
                 <thead>
                     <tr>
                         <th>Student Name</th>
@@ -56,42 +63,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var student in Model.Students)
+                    @foreach (var student in Model.Students)
                     {
-                        <tr>
-                            <td>@student.Name</td>
+                        <tr class="student-row" data-student-name="@student.StudentName.ToLower()">
+                            <td>@student.StudentName</td>
                             <td>@student.PhoneNumber</td>
                             <td>@student.ParentPhoneNumber</td>
+                            <td><span class="absence @student.AbsenceClass">@student.AbsencePercentage%</span></td>
                             <td>
-
-                                @{
-                                    var col = "none";
-                                    if (student.AbsencePercentage <= 15)
-                                    {
-                                        col = "low";
-                                    }
-                                    else if (student.AbsencePercentage <= 30)
-                                    {
-                                        col = "medium";
-                                    }
-                                    else if (student.AbsencePercentage <= 45)
-                                    {
-                                        col = "high";
-                                    }
-                                    else
-                                    {
-                                        col = "critical";
-                                    }
-                                    col = "absence " + col;
-                                }
-                                <span class="@col">
-                                    @student.AbsencePercentage%
-                                </span>
-                            </td>
-                            <td>
-                                <button type="button" class="delete-btn" data-student-id="@student.Id">
-                                    &#10060;
-                                </button>
+                                <form asp-action="DeleteStudent" method="post" style="display: inline;"
+                                      onsubmit="return confirm('Are you sure you want to remove this student from the group?');">
+                                    <input type="hidden" name="studentId" value="@student.StudentId" />
+                                    <input type="hidden" name="groupId" value="@Model.GroupId" />
+                                    <button type="submit" class="delete-btn">&#10060;</button>
+                                </form>
                             </td>
                         </tr>
                     }
@@ -99,12 +84,74 @@
             </table>
 
             <div class="button-group">
-                <button type="button" asp-controller="Teacher" asp-action="Index" class="cancel-btn">Cancel</button>
-                <button type="submit" class="save-btn">Save</button>
+                <a href="@Url.Action("ViewCourse", "Course")" class="cancel-btn">Cancel</a>
+                <a href="@Url.Action("TakeAttendance", new { id = Model.GroupId })" class="save-btn">Take Attendance</a>
             </div>
-        </form>
-    </div>
-</main>
-@section Scripts {
-    <script src="/js/Student-Attendance.js"></script>
-}
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Eduvera. All Rights reserved</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('studentSearch');
+            const studentRows = document.querySelectorAll('.student-row');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                studentRows.forEach(row => {
+                    const studentName = row.getAttribute('data-student-name');
+                    if (studentName.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Success/Error message handling with present students
+            @if (TempData["SuccessMessage"] != null)
+            {
+                    <text>
+                    // Show success message with present students
+                    const successMsg = '@Html.Raw(TempData["SuccessMessage"])';
+                    alert(successMsg);
+
+                    // Highlight present students if available
+                    @if (TempData["PresentStudents"] != null)
+                    {
+                            <text>
+                            const presentStudents = '@TempData["PresentStudents"]'.split(', ');
+                            presentStudents.forEach(studentName => {
+                                const rows = document.querySelectorAll('.student-row');
+                                rows.forEach(row => {
+                                    const nameCell = row.querySelector('td:first-child');
+                                    if (nameCell && nameCell.textContent.trim() === studentName.trim()) {
+                                        row.style.backgroundColor = '#d4edda';
+                                        row.style.border = '2px solid #28a745';
+                                        setTimeout(() => {
+                                            row.style.backgroundColor = '';
+                                            row.style.border = '';
+                                        }, 3000);
+                                    }
+                                });
+                            });
+                            </text>
+                    }
+                    </text>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                    <text>
+                    alert('@TempData["ErrorMessage"]');
+                    </text>
+            }
+        });
+    </script>
+</body>
+</html>

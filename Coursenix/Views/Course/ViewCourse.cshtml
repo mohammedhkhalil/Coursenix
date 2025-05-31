@@ -220,10 +220,14 @@
                                 ⋮
                                 <div class="dropdown-menu">
                                     <div class="dropdown-item">
+                                        <a href="@Url.Action("TakeAttendance", "Groups", new { id = group.Id })">
                                         <i class="fas fa-plus-circle"></i> Add Session Attendance
+                                        </a>
                                     </div>
                                     <div class="dropdown-item">
+                                        <a href="@Url.Action("studentAttendance", "Groups", new { id = group.Id })">
                                         <i class="fas fa-clipboard-check"></i> View Students Attendance
+                                        </a>
                                     </div>
                                     <div class="dropdown-item">
                                         <a href="@Url.Action("EditGroup", "Course", new { id = group.Id })">

@@ -1,0 +1,166 @@
+﻿@model Coursenix.ViewModels.AttendanceSuccessViewModel
+
+@{
+    ViewData["Title"] = "Attendance Saved Successfully";
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Success</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="~/css/session_attendance.css">
+</head>
+<body>
+
+    <main class="container my-5">
+        <div class="attendance-wrapper bg-white p-4 rounded shadow-sm">
+            <div class="text-center mb-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                <h2 class="text-success mt-2">Attendance Saved Successfully!</h2>
+            </div>
+
+            <!-- Session Info -->
+            <div class="group-info mb-4">
+                <h5 class="text-secondary mb-2">@Model.GroupName</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p class="mb-0"><i class="bi bi-book text-muted me-2"></i> Course: @Model.CourseName</p>
+                        <p class="mb-0"><i class="bi bi-mortarboard text-muted me-2"></i> Grade: @Model.Grade</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p class="mb-0"><i class="bi bi-calendar-date text-muted me-2"></i> Session Date: @Model.SessionDate.ToString("MMM dd, yyyy")</p>
+                        <p class="mb-0"><i class="bi bi-clock text-muted me-2"></i> @Model.StartTime - @Model.EndTime</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Present Students -->
+            @if (Model.PresentStudents.Any())
+            {
+                <div class="mb-4">
+                    <h4 class="text-success mb-3">
+                        <i class="bi bi-person-check-fill me-2"></i>
+                        Students Present (@Model.PresentStudents.Count)
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-success table-striped">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-person-fill me-1"></i> Student Name</th>
+                                    <th class="text-center"><i class="bi bi-check-circle-fill me-1"></i> Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model.PresentStudents)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@student</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-lg me-1"></i> Present
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>No students were present</strong> for this session.
+                </div>
+            }
+
+            <!-- Absent Students -->
+            @if (Model.AbsentStudents.Any())
+            {
+                <div class="mb-4">
+                    <h4 class="text-danger mb-3">
+                        <i class="bi bi-person-x-fill me-2"></i>
+                        Students Absent (@Model.AbsentStudents.Count)
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-danger table-striped">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-person-fill me-1"></i> Student Name</th>
+                                    <th class="text-center"><i class="bi bi-x-circle-fill me-1"></i> Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model.AbsentStudents)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@student</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-lg me-1"></i> Absent
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            <!-- Summary -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <h3 class="text-success">@Model.PresentStudents.Count</h3>
+                            <p class="mb-0">Present</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-danger">
+                        <div class="card-body text-center">
+                            <h3 class="text-danger">@Model.AbsentStudents.Count</h3>
+                            <p class="mb-0">Absent</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-primary">
+                        <div class="card-body text-center">
+                            <h3 class="text-primary">@(Model.PresentStudents.Count + Model.AbsentStudents.Count)</h3>
+                            <p class="mb-0">Total Students</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="@Url.Action("TakeAttendance", new { id = Model.GroupId })" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle me-1"></i> Take Another Attendance
+                </a>
+                <a href="@Url.Action("StudentAttendance", new { id = Model.GroupId })" class="btn btn-teal">
+                    <i class="bi bi-table me-1"></i> View All Students
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center text-muted">
+            <small>© 2025 Eduvera. All Rights reserved</small>
+        </div>
+    </footer>
+
+</body>
+</html>
