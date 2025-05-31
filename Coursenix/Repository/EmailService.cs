@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Nest;
 using System.Net;
 using System.Net.Mail;
 namespace Coursenix.Repository
