@@ -19,6 +19,7 @@ namespace Coursenix.ViewModels
         public IFormFile ProfilePicture { get; set; }
 
         // Password change
+        [Required]
         public string CurrentPassword { get; set; }
         public string password { get; set; }
 
