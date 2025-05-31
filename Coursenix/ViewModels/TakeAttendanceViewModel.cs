@@ -30,7 +30,7 @@ namespace Coursenix.ViewModels
     public class StudentAttendanceViewModel
     {
         public int GroupId { get; set; }
-        public int? TeacherId { get; set; }
+        public int? CourseId { get; set; }
         public string GroupName { get; set; }
         public string CourseName { get; set; }
         public int Grade { get; set; }

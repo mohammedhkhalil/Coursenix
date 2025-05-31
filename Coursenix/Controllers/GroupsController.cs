@@ -2,19 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Coursenix.Models;
 using Coursenix.ViewModels;
-using Microsoft.AspNetCore.Identity;
 
 namespace Coursenix.Controllers
 {
     public class GroupsController : Controller
     {
         private readonly Context _context;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public GroupsController(Context context, UserManager<IdentityUser> userManager)
+        public GroupsController(Context context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         public async Task<IActionResult> TakeAttendance(int id)
@@ -36,7 +33,7 @@ namespace Coursenix.Controllers
             {
                 GroupId = group.Id,
                 GroupName = group.Name ?? $"Group {group.Id}",
-                CourseName = group.GradeLevel.Course.Name,
+                //CourseName = group.GradeLevel.Course.Name,
                 Grade = group.GradeLevel?.NumberOfGrade ?? 0,
                 Days = string.Join(" & ", group.SelectedDays),
                 StartTime = group.StartTime.ToString("h:mm tt"),
@@ -115,11 +112,11 @@ namespace Coursenix.Controllers
                 .ThenInclude(a => a.Session)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
-            string userId = _userManager.GetUserId(User);
-            int? numericTeacherId = _context.Teachers
-                                            .Where(t => t.AppUserId == userId)
-                                            .Select(t => t.Id)
-                                            .FirstOrDefault();
+            //string userId = _userManager.GetUserId(User);
+            //int? numericTeacherId = _context.Teachers
+            //                                .Where(t => t.AppUserId == userId)
+            //                                .Select(t => t.Id)
+            //                                .FirstOrDefault();
 
             if (group == null)
             {
@@ -135,7 +132,8 @@ namespace Coursenix.Controllers
                 //CourseName = group.GradeLevel?.Subject ?? "N/A",
                 Grade = group.GradeLevel?.NumberOfGrade ?? 0,
                 Days = string.Join(" & ", group.SelectedDays),
-                TeacherId = numericTeacherId,
+                //TeacherId = numericTeacherId,
+                CourseId = group.GradeLevel.CourseId,
                 StartTime = group.StartTime.ToString("h:mm tt"),
                 EndTime = group.EndTime.ToString("h:mm tt"),
                 Students = students.Select(s => new StudentAttendanceRecord
