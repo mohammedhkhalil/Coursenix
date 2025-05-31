@@ -14,12 +14,14 @@ namespace Coursenix.Controllers
     [Authorize]
     public class TeacherController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
         private readonly Context _context;
-        public TeacherController(UserManager<AppUser> userManager, Context context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        public TeacherController(UserManager<AppUser> userManager, Context context, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _context = context;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -50,6 +52,18 @@ namespace Coursenix.Controllers
             var teacher = _context.Teachers.FirstOrDefault(t => t.AppUserId == user.Id);
 
             if (teacher == null) return NotFound();
+            if (string.IsNullOrEmpty(model.CurrentPassword))
+            {
+                ModelState.AddModelError(nameof(model.CurrentPassword), "Please enter your current password");
+                return View(model);
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.CurrentPassword, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError(nameof(model.CurrentPassword), "Current password is incorrect.");
+                return View(model);
+            }
 
             // Only update if value is not null or empty
             if (!string.IsNullOrWhiteSpace(model.fullName)) teacher.Name = model.fullName;
@@ -70,12 +84,12 @@ namespace Coursenix.Controllers
             //    teacher.ProfilePicture = "/uploads/" + fileName;
             //}
 
-            if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.password))
+            if (!string.IsNullOrEmpty(model.password))
             {
-                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.password);
-                if (!result.Succeeded)
+                var resultchange = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.password);
+                if (!resultchange.Succeeded)
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in resultchange.Errors)
                         ModelState.AddModelError("", error.Description);
 
                     return View(model);
@@ -84,7 +98,7 @@ namespace Coursenix.Controllers
 
             _context.SaveChanges();
             ViewBag.Message = "Changes saved successfully!";
-            return View(model);
+            return RedirectToAction("Index", "Course");
         }
 
         // ---------- DashBoard ---------

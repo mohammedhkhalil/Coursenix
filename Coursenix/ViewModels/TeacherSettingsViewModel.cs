@@ -21,10 +21,10 @@ namespace Coursenix.ViewModels
         // Password change
         [Required]
         public string CurrentPassword { get; set; }
-        public string password { get; set; }
+        public string? password { get; set; }
 
         [Compare("password", ErrorMessage = "Passwords do not match")]
-        public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; set; }
     }
 
 }

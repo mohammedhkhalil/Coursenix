@@ -58,11 +58,15 @@ namespace Coursenix.Controllers
                 .FirstOrDefaultAsync(s => s.AppUserId == userId);
 
             if (student == null) return NotFound();
-
+            if (string.IsNullOrEmpty(model.CurrPassword))
+            {
+                ModelState.AddModelError(nameof(model.CurrPassword), "Please enter your current password");
+                return View(model);
+            }
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.CurrPassword, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+                ModelState.AddModelError(nameof(model.CurrPassword), "Current password is incorrect.");
                 return View(model);
             }
             if (!string.IsNullOrWhiteSpace(model.phone))
