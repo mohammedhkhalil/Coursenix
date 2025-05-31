@@ -102,6 +102,7 @@ else
     }
     else
     {
+		@await Html.PartialAsync("_Adminloggedin")
         @* Admin or other roles logic can go here if needed *@
     }
 }
