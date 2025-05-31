@@ -117,13 +117,19 @@ namespace Coursenix.Controllers
                     Id = course.Id,
                     Name = course.Name,
                     Description = course.Description,
-                    ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName) ? "/assets/course7.svg" : $"/uploads/thumbnails/{course.ThumbnailFileName}",
-                    GradeRange =  $"Grades {course.GradeLevels.Min(g => g.NumberOfGrade)}–{course.GradeLevels.Max(g => g.NumberOfGrade)}"
+                    ThumbnailFileName = string.IsNullOrEmpty(course.ThumbnailFileName)
+        ? "/assets/course7.svg"
+        : $"/uploads/thumbnails/{course.ThumbnailFileName}",
+                    GradeRange = (course.GradeLevels != null && course.GradeLevels.Any())
+        ? string.Join(", ", course.GradeLevels
+            .Select(gl => gl.NumberOfGrade)
+            .Distinct()
+            .OrderBy(n => n)
+            .Select(n => $"{n}"))
+        : string.Empty
                 }).ToList()
             };
-
-
-
+       
             return View(VM); 
         }
     }
