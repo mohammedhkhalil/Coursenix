@@ -3,12 +3,14 @@
 @{
     Layout = "_Layout";
 }
-@section css{
+@section css {
     <link href="/css/teacherSetting.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/student-settings.css">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://c...content-available-to-author-only...e.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://c...content-available-to-author-only...e.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet">
     <title>Eduvera - Account Settings</title>
 }
 
@@ -18,7 +20,7 @@
     <form asp-action="Settings" method="post" asp-controller="Teacher">
         <div class="profile-section">
             <div class="form-section">
-                <div class="form-group"> 
+                <div class="form-group">
                     <label for="fullName">Full Name</label>
                     <input type="text" asp-for="fullName" id="fullName" name="fullName" readonly class="readonly-field">
                 </div>
@@ -54,39 +56,43 @@
         <h1>Change Password</h1>
 
         @*need to change name id="current-password" to "CurrentPassword"*@
-        <div class="form-group">
-            <label for="current-password">Current Password</label>
-            <div class="form-group password-group">
-                <input type="password" asp-for="CurrentPassword" id="current-password" name="password" placeholder="Current password" required minlength="8" />
-                <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
-                <span class="error-message" id="password-error"></span>
-            </div>
+        <div class="form-group password-group">
+
+            <input type="password"
+                   asp-for="CurrentPassword"
+                   id="current-password"
+                   name="password"
+                   placeholder="Current password"
+                   required
+                   minlength="8" />
+            <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
+            <span class="error-message" id="password-error"></span>
         </div>
 
-        <div class="form-group">
-            <label for="password">New Password</label>
-            <div class="form-group password-group">
-                <input type="password" asp-for="password" id="password" name="password" placeholder="password" minlength="8" />
-                <i class="far fa-eye-slash toggle-password" data-target="password"></i>
-                <span class="error-message" id="password-error"></span>
-            </div>
+        <div class="form-group password-group">
+
+            <input type="password" asp-for="password" id="password" name="password" placeholder="Create a password" minlength="8" />
+            <i class="far fa-eye-slash toggle-password" data-target="password"></i>
+            <span class="error-message" id="password-error"></span>
         </div>
+
 
 
         @*need to change name id="confirm-password" to "ConfirmPassword"*@
-        <div class="form-group">
-            <label for="confirm-password">Confirm Password</label>
-            <div class="form-group password-group">
-                <input type="password" asp-for="ConfirmPassword" id="confirm-password" name="confirm-password" placeholder="Confirm Password" />
-                <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
-                <span class="error-message" id="confirm-password-error"></span>
-            </div>
+        <div class="form-group password-group">
+
+
+            <input type="password" asp-for="ConfirmPassword" id="confirm-password" name="confirm-password" placeholder="Repeat a password" />
+            <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
+            <span class="error-message" id="confirm-password-error"></span>
         </div>
 
+
         <button type="submit" class="save-btn">Save Changes</button>
+        <div style="clear: both;"></div>
     </form>
 </div>
-@section scripts{
+@section scripts {
     <script>
                         // فتح/إغلاق القائمة
         document.querySelector('.profile-btn').addEventListener('click', function(e) {
@@ -104,31 +110,19 @@
           e.stopPropagation();
         });
 
-                // Toggle password visibility
-                document.querySelectorAll('.toggle-password').forEach(toggle => {
-                    toggle.addEventListener('click', function() {
-                        const input = this.previousElementSibling;
-                        if (input.type === 'password') {
-                            input.type = 'text';
-                        } else {
-                            input.type = 'password';
-                        }
-                    });
-                });
-
                 // Profile dropdown functionality (optional enhancement)
-                const profileDropdown = document.querySelector('.profile-dropdown');
-                const dropdownMenu = document.querySelector('.dropdown-menu');
+        const profileDropdown = document.querySelector('.profile-dropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
 
-                profileDropdown.addEventListener('click', function() {
-                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-                });
+        profileDropdown.addEventListener('click', function() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
 
-                // Close dropdown when clicking elsewhere
-                document.addEventListener('click', function(event) {
-                    if (!profileDropdown.contains(event.target)) {
-                        dropdownMenu.style.display = 'none';
-                    }
-                });
+        // Close dropdown when clicking elsewhere
+        document.addEventListener('click', function(event) {
+            if (!profileDropdown.contains(event.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
     </script>
 }

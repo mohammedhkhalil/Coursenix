@@ -50,6 +50,8 @@ namespace Coursenix.Controllers
         public async Task<IActionResult> Settings(StudentSettingsVM model)
         {
             var userId = _userManager.GetUserId(User);
+            // curr user
+            var user = await _userManager.GetUserAsync(User);
 
             var student = await _context.Students
                 .Include(s => s.AppUser)
@@ -57,6 +59,12 @@ namespace Coursenix.Controllers
 
             if (student == null) return NotFound();
 
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.CurrPassword, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
+                return View(model);
+            }
             if (!string.IsNullOrWhiteSpace(model.phone))
                 student.PhoneNumber = model.phone;
 
@@ -71,12 +79,14 @@ namespace Coursenix.Controllers
             await _context.SaveChangesAsync();
 
             // Password change 
-            if (!string.IsNullOrEmpty(model.CurrPassword) && !string.IsNullOrEmpty(model.password))
+
+            if (!string.IsNullOrEmpty(model.password))
             {
-                var result = await _userManager.ChangePasswordAsync(student.AppUser, model.CurrPassword, model.password);
-                if (!result.Succeeded)
+
+                var resultchange = await _userManager.ChangePasswordAsync(student.AppUser, model.CurrPassword, model.password);
+                if (!resultchange.Succeeded)
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in resultchange.Errors)
                         ModelState.AddModelError(string.Empty, error.Description);
                     return View(model);
                 }
@@ -84,7 +94,6 @@ namespace Coursenix.Controllers
                 // sgin in 
                 await _signInManager.RefreshSignInAsync(student.AppUser);
             }
-
             return RedirectToAction("Index", "Course");
         }
 
@@ -164,7 +173,7 @@ namespace Coursenix.Controllers
 
         [HttpPost]
         [ActionName("Enroll")] 
-        public async Task<IActionResult> EnrollConfirmed(int groupId) 
+        public async Task<IActionResult> EnrollConfirmed(int groupId)
         {
             var userId = _userManager.GetUserId(User);
 
