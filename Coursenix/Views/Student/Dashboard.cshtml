@@ -1,160 +1,72 @@
-﻿@using System.Linq
-@model IEnumerable<Coursenix.ViewModels.StudentGroupViewModel>
+﻿@model Coursenix.ViewModels.StudentDashboardViewModel
 
 @{
-    Layout = "_Layout";
+	Layout = "_Layout";
 }
 @section css{
     <link rel="stylesheet" href="/css/student-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 }
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eduvera - Dashboard</title>
-    <link rel="stylesheet" href="/css/student-dashboard.css">
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <img src="~/assets/logo.svg" alt="Coursenix Logo">
-            <div>
-                <div class="logo-text">Coursenix</div>
-                <span>Online Booking Course</span>
-            </div>
-        </div>
-
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <span class="menu-icon"></span>
-        </button>
-
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-            <li><a href="@Url.Action("Index", "Course")">Courses</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">About</a></li>
-        </ul>
-
-        <div class="user-profile" id="userProfile">
-            <span class="username">Ahmed Elseyoufi</span>
-            <div class="user-icon">M</div>
-
-            <!-- User Dropdown Menu -->
-            <div class="dropdown-menu" id="userDropdown">
-                <ul>
-                    <li><a href="#"><i class="fas fa-book"></i> Dashboard</a></li>
-                    <li><a href="@Url.Action("Settings", "Student")"><i class="fas fa-cog"></i> Settings</a></li>
-                    <li class="divider-menu"></li>
-                    <li><a href="@Url.Action("Logout", "Account")" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
 
     <!-- Subheader -->
     <div class="subheader">
         <ul class="sub-nav">
-            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="#" class="active">Courses</a></li>
             <li><a href="@Url.Action("Settings", "Student")">Settings</a></li>
         </ul>
     </div>
-
     <main>
         <h2 class="page-title">My Courses</h2>
 
-        @if (Model?.Any() == true)
-        {
-            <div class="courses-grid" id="coursesGrid">
-                @foreach (var g in Model)
-                {
-                    <div class="course-card" data-course="@g.SubjectName-@g.GroupId">
-                        <div class="course-header">
-                            <h3>@g.SubjectName</h3>
-                            <div class="teacher">
-                                <div class="teacher-avatar"></div>
-                                <span class="teacher-name">@g.TeacherName</span>
+        <div class="courses-grid" id="coursesGrid">
+            @foreach (var course in Model.Courses)
+            {
+                <!-- Dynamic Course Card -->
+                <div class="course-card" data-course="@course.CourseName.ToLower().Replace(" ", "-")">
+                    <div class="course-header">
+                        <h3>@course.CourseName</h3>
+                        <div class="teacher">
+                            <div class="teacher-avatar"></div>
+                            <span class="teacher-name">@course.TeacherName</span>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-info">
+                            <div class="course-info-item">
+                                <i class="icon group-icon"></i>
+                                <div class="course-info-label">Group:</div>
+                                <div class="course-info-value">@course.GroupName</div>
+                            </div>
+                            <div class="course-info-item">
+                                <i class="icon location-icon"></i>
+                                <div class="course-info-label">Location:</div>
+                                <div class="course-info-value">@course.Location</div>
+                            </div>
+                            <div class="course-info-item">
+                                <i class="icon days-icon"></i>
+                                <div class="course-info-label">Days:</div>
+                                <div class="course-info-value">@string.Join(" & ", course.Days)</div>
+                            </div>
+                            <div class="course-info-item">
+                                <i class="icon time-icon"></i>
+                                <div class="course-info-label">Time:</div>
+                                <div class="course-info-value">@course.TimeRange</div>
+                            </div>
+                            <div class="course-info-item">
+                                <i class="icon absence-icon"></i>
+                                <div class="course-info-label">Absence:</div>
+                                <div class="course-info-value">
+                                    <span class="absence-ratio @course.AbsenceClass">@course.AbsenceRatio</span>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="course-content">
-                            <div class="course-info">
-                                <div class="course-info-item">
-                                    <i class="icon group-icon"></i>
-                                    <div class="course-info-label">Group:</div>
-                                    <div class="course-info-value">@g.GroupName</div>
-                                </div>
-
-                                <div class="course-info-item">
-                                    <i class="icon location-icon"></i>
-                                    <div class="course-info-label">Location:</div>
-                                    <div class="course-info-value">@g.Location</div>
-                                </div>
-
-                                <div class="course-info-item">
-                                    <i class="icon days-icon"></i>
-                                    <div class="course-info-label">Days:</div>
-                                    <div class="course-info-value">
-                                        @string.Join(" & ", g.Days)
-                                    </div>
-                                </div>
-
-                                <div class="course-info-item">
-                                    <i class="icon time-icon"></i>
-                                    <div class="course-info-label">Time:</div>
-                                    <div class="course-info-value">
-                                        @g.StartTime.ToString("h:mm tt") –
-                                        @g.EndTime.ToString("h:mm tt")
-                                    </div>
-                                </div>
-
-                                <div class="course-info-item">
-                                    <i class="icon absence-icon"></i>
-                                    <div class="course-info-label">Absence:</div>
-                                    <div class="course-info-value">
-                                        @* <span class="absence-ratio @GetAbsenceClass(g.AbsencePercentage)"> *@
-                                        <span class="absence-ratio @g.AbsencePercentage">
-
-                                            @g.AbsencePercentage&nbsp;%
-                                        </span>
-                                    </div>
-                                </div>
-                            </div> <!-- /course-info -->
-                        </div> <!-- /course-content -->
-                    </div> <!-- /course-card -->
-                }
-            </div> <!-- /courses-grid -->
-        }
-        else
-        {
-            <p class="no-courses">You are not enrolled in any groups yet.</p>
-        }
+                    </div>
+                </div>
+            }
+        </div>
     </main>
 
- 
 
-    <!-- Course Details Modal -->
-    <div id="courseModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h3 id="modalCourseName"></h3>
-            <p id="modalLocation"></p>
-            <p id="modalDescription"></p>
-            <div class="enrolled-group">
-                <h4>Your Enrolled Group</h4>
-                <div class="group-details">
-                    <h5 id="groupName"></h5>
-                    <ul>
-                        <li id="groupDays"></li>
-                        <li id="groupTime"></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="~/js/student-dashboard.js"></script>
-</body>
-</html>
+@section scripts{
+    <script src="/JavaScript/student-dashboard.js"></script>
+}
