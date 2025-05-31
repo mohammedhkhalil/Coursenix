@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coursenix</title>
-    <link rel="stylesheet" href="/css/student-settings.css">
+    <link rel="stylesheet" href="/css/StudentTeacherSettings.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 }
@@ -53,34 +53,29 @@
             <h2>Change Password</h2>@*need to change id *@
             <div class="form-group password-group">
                 <input type="password"
-                       id="CurrPassword"
-                       name="CurrPassword"
-                       asp-for="CurrPassword"
+                       asp-for="CurrentPassword"
+                       id="current-password"
+                       name="password"
                        placeholder="Current password"
+                       required
                        minlength="8" />
-                <i class="far fa-eye-slash toggle-password"
-                   data-target="current-password"></i>
+                <i class="far fa-eye-slash toggle-password" data-target="current-password"></i>
+                <span class="error-message" id="password-error"></span>
             </div>
 
             <div class="form-group password-group">
-                <input type="password"
-                       id="password"
-                       name="password"
-                       asp-for="password"
-                       placeholder="Create a password"
-                       minlength="8" />
-                <i class="far fa-eye-slash toggle-password"
-                   data-target="password"></i>
+                <input type="password" asp-for="password" id="password" name="password" placeholder="Create a password" minlength="8" />
+                <i class="far fa-eye-slash toggle-password" data-target="password"></i>
+                <span class="error-message" id="password-error"></span>
             </div>
 
-            <div class="form-group password-group">@*need to change id *@
-                <input type="password"
-                       id="ConfirmPassword"
-                       name="ConfirmPassword"
-                       asp-for="ConfirmPassword"
-                       placeholder="Repeat a password" />
-                <i class="far fa-eye-slash toggle-password"
-                   data-target="confirm-password"></i>
+
+
+            @*need to change name id="confirm-password" to "ConfirmPassword"*@
+            <div class="form-group password-group">
+                <input type="password" asp-for="ConfirmPassword" id="confirm-password" name="confirm-password" placeholder="Repeat a password" />
+                <i class="far fa-eye-slash toggle-password" data-target="confirm-password"></i>
+                <span class="error-message" id="confirm-password-error"></span>
             </div>
 
             <button type="submit" class="save-btn">Save Changes</button>
@@ -88,6 +83,8 @@
         </form>
     </div>
 </div>
-@section scripts {
-    <script src="/js/student-settings.js"></script>
+@section Scripts {
+    <script src="/js/TogglePassword.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
