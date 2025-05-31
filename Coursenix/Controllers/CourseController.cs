@@ -27,7 +27,7 @@ namespace Coursenix.Controllers
         }
 
 
-
+        [Authorize]
         public async Task<IActionResult> Index(string selectedSubject = "", int selectedGrade = 0, string searchQuery = "", int page = 1)
         {
             // Get all courses with related data
