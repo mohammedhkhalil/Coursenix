@@ -1,4 +1,5 @@
-﻿using Coursenix.Models;
+﻿using System.Security.Claims;
+using Coursenix.Models;
 using Coursenix.Models.ViewModels;
 using Coursenix.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -63,7 +64,7 @@ namespace Coursenix.Controllers
                 student.ParentPhoneNumber = model.parentPhone;
 
             if (model.gradeLevel.HasValue)
-                student.Grade = model.gradeLevel.Value ;
+                student.Grade = model.gradeLevel.Value;
 
             await _userManager.UpdateAsync(student.AppUser);
             _context.Update(student);
@@ -89,7 +90,7 @@ namespace Coursenix.Controllers
 
         public async Task<IActionResult> DeleteStudents(int groupId, [FromBody] List<int> studentIds)
         {
-            
+
             var group = await _context.Groups.FindAsync(groupId);
             if (group == null)
             {
@@ -114,7 +115,7 @@ namespace Coursenix.Controllers
 
             return Ok();
         }
-        
+
         [HttpGet]
         // course id 
         public async Task<IActionResult> Enroll(int id)
@@ -193,155 +194,79 @@ namespace Coursenix.Controllers
             return Redirect("Home");
         }
 
-        //public IActionResult Dashboard()
-        //{
-        //    // Get the logged-in user's ID from Identity
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    if (string.IsNullOrEmpty(userId))
-        //    {
-        //        return RedirectToAction("Login", "Account");
-        //    }
+        public async Task<IActionResult> Dashboard()
+        {
+            // Get the current logged-in user's ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account"); // Redirect if not logged in
+            }
 
-        //public async Task<IActionResult> Dashboard()
-        //{
-        //    var appUser = await _userManager.GetUserAsync(User);
-        //    if (appUser is null)
-        //        return Challenge();   // force login
             // Find the student record
-            //var student = _context.Students
-            //    .FirstOrDefault(s => s.AppUserId == userId);
-            //if (student == null)
-            //{
-            //    return NotFound("Student profile not found.");
-            //}
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.AppUserId == userId);
+            if (student == null)
+            {
+                return NotFound("Student record not found.");
+            }
 
-        //    var student = await _context.Students
-        //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
+            // Fetch bookings for the student, including related data
+            var bookings = await _context.Bookings
+                .Where(b => b.StudentId == student.Id)
+                .Include(b => b.Group)
+                    .ThenInclude(g => g.GradeLevel)
+                        .ThenInclude(gl => gl.Course)
+                            .ThenInclude(c => c.Teacher)
+                .ToListAsync();
 
-        //    if (student is null)
-        //        return NotFound("Student profile not found.");
+            // Build the ViewModel
+            var viewModel = new StudentDashboardViewModel
+            {
+                StudentName = student.Name,
+                Courses = new List<StudentDashboardViewModel.CourseInfo>()
+            };
 
-        //    // All bookings for this student (=> groups)
-        //    var bookings = await _context.Bookings
-        //        .Where(b => b.StudentId == student.Id)
-        //        .Include(b => b.Group)
-        //            .ThenInclude(g => g.Subject)
-        //                .ThenInclude(su => su.Teacher)
-        //        .Include(b => b.Group.GroupDays)
-        //        .ToListAsync();
+            foreach (var booking in bookings)
+            {
+                var group = booking.Group;
+                var course = group.GradeLevel.Course;
+                var teacher = course.Teacher;
 
-        //    // Build the view-model list
-        //    var viewModel = new List<StudentGroupViewModel>();
+                // Fetch sessions for this group
+                var sessions = await _context.Sessions
+                    .Where(s => s.GroupId == group.Id)
+                    .ToListAsync();
 
-        //    foreach (var booking in bookings)
-        //    {
-        //        var group = booking.Group;
+                // Fetch attendances for this student in this group
+                var attendances = await _context.Attendances
+                    .Where(a => a.StudentId == student.Id && a.Session.GroupId == group.Id)
+                    .ToListAsync();
 
-        //        // a) All sessions in this group
-        //        var sessionIds = await _context.Sessions
-        //            .Where(se => se.GroupId == group.Id)
-        //            .Select(se => se.Id)
-        //            .ToListAsync();
+                // Calculate absence ratio and class
+                var totalSessions = sessions.Count;
+                var absences = attendances.Count(a => !a.IsPresent);
+                var absenceRatio = totalSessions > 0 ? (absences * 100.0 / totalSessions).ToString("F0") + "%" : "0%";
+                var absenceValue = totalSessions > 0 ? absences * 100.0 / totalSessions : 0;
+                var absenceClass = absenceValue <= 5 ? "low" : absenceValue <= 15 ? "medium" : "high";
 
-        //        var totalSessions = sessionIds.Count;
+                // Add course info to the list
+                viewModel.Courses.Add(new StudentDashboardViewModel.CourseInfo
+                {
+                    CourseName = course.Name,
+                    TeacherName = teacher.Name,
+                    GroupName = group.Name ?? $"Group {group.Id}",
+                    Location = group.Location ?? course.Location ?? "Not specified",
+                    Days = group.SelectedDays,
+                    TimeRange = $"{group.StartTime:HH:mm} - {group.EndTime:HH:mm}",
+                    AbsenceRatio = absenceRatio,
+                    AbsenceClass = absenceClass
+                });
+            }
 
-        //        // b) How many the student attended
-        //        var sessionsAttended = await _context.Attendances
-        //            .CountAsync(a =>
-        //                a.StudentId == student.Id &&
-        //                a.IsPresent &&
-        //                sessionIds.Contains(a.SessionId));
-
-        //        // c) One dashboard card
-        //        viewModel.Add(new StudentGroupViewModel
-        //        {
-        //            StudentId = student.Id,
-        //            StudentName = student.Name,
-
-        //            GroupId = group.Id,
-        //            GroupName = group.Name,
-        //            SubjectName = group.Subject.SubjectName,
-        //            TeacherName = group.Subject.Teacher.Name,
-
-        //            Days = group.GroupDays
-        //                                .Select(d => d.Day.ToString())
-        //                                .ToList(),
-        //            StartTime = group.StartTime,
-        //            EndTime = group.EndTime,
-        //            Location = group.Location,
-
-        //            TotalSessions = totalSessions,
-        //            SessionsAttended = sessionsAttended
-        //        });
-        //    }
-
-        //    return View("Dashboard", viewModel);
-        //}
-
-            //    var student = await _context.Students
-            //        .FirstOrDefaultAsync(s => s.AppUserId == appUser.Id);
-
-            //    if (student is null)
-            //        return NotFound("Student profile not found.");
-
-            //    // All bookings for this student (=> groups)
-            //    var bookings = await _context.Bookings
-            //        .Where(b => b.StudentId == student.Id)
-            //        .Include(b => b.Group)
-            //            .ThenInclude(g => g.Subject)
-            //                .ThenInclude(su => su.Teacher)
-            //        .Include(b => b.Group.GroupDays)
-            //        .ToListAsync();
-
-            //    // Build the view-model list
-            //    var viewModel = new List<StudentGroupViewModel>();
-
-            //    foreach (var booking in bookings)
-            //    {
-            //        var group = booking.Group;
-
-            //        // a) All sessions in this group
-            //        var sessionIds = await _context.Sessions
-            //            .Where(se => se.GroupId == group.Id)
-            //            .Select(se => se.Id)
-            //            .ToListAsync();
-
-            //        var totalSessions = sessionIds.Count;
-
-            //        // b) How many the student attended
-            //        var sessionsAttended = await _context.Attendances
-            //            .CountAsync(a =>
-            //                a.StudentId == student.Id &&
-            //                a.IsPresent &&
-            //                sessionIds.Contains(a.SessionId));
-
-            //        // c) One dashboard card
-            //        viewModel.Add(new StudentGroupViewModel
-            //        {
-            //            StudentId = student.Id,
-            //            StudentName = student.Name,
-
-            //            GroupId = group.Id,
-            //            GroupName = group.Name,
-            //            SubjectName = group.Subject.SubjectName,
-            //            TeacherName = group.Subject.Teacher.Name,
-
-            //            Days = group.GroupDays
-            //                                .Select(d => d.Day.ToString())
-            //                                .ToList(),
-            //            StartTime = group.StartTime,
-            //            EndTime = group.EndTime,
-            //            Location = group.Location,
-
-            //            TotalSessions = totalSessions,
-            //            SessionsAttended = sessionsAttended
-            //        });
-            //    }
-
-            //    return View("Dashboard", viewModel);
-            //}
-
+            return View(viewModel);
         }
 
+    }
 
 }
