@@ -6,14 +6,16 @@ namespace Coursenix.ViewModels
     {
 
 
+
+
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
-        [MaxLength(255)]
-        [MinLength(6, ErrorMessage = "Use 6 characters or more for your password\r\n")]
+        [StringLength(100, ErrorMessage = "Use 8 characters or more for your password\r\n", MinimumLength = 8)]
         public string Password { get; set; }
 
         [Required]
