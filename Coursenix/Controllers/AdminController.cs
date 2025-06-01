@@ -52,8 +52,8 @@ namespace Coursenix.Controllers
                     UserName = t.Name,
                     //PP = string.IsNullOrEmpty(t.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{t.ProfilePicture}",
                     UserEmail = t.Email,
-                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd==null
-                    ? true 
+                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd == null
+                    ? true
                     : false,
                     AppUserId = t.AppUserId
                 })
@@ -68,11 +68,11 @@ namespace Coursenix.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             user.LockoutEnd = DateTime.Now.AddYears(100);
-           
+
             await _userManager.UpdateAsync(user);
             if (user.RoleType == "Teacher")
             {
-                var Teacher = await _context.Teachers.FirstOrDefaultAsync(i => i.Id.ToString() == userId);
+                var Teacher = await _context.Teachers.FirstOrDefaultAsync(i => i.AppUserId == userId);
                 if (Teacher != null && Teacher.Courses != null)
                 {
                     Teacher.Courses.Clear();
@@ -82,7 +82,7 @@ namespace Coursenix.Controllers
             }
             else if (user.RoleType == "Student")
             {
-                var Student = await _context.Students.FirstOrDefaultAsync(i => i.Id.ToString() == userId);
+                var Student = await _context.Students.FirstOrDefaultAsync(i => i.AppUserId == userId);
                 if (Student != null && Student.Bookings != null)
                     Student.Bookings.Clear();
                 if (Student != null && Student.Attendances != null)

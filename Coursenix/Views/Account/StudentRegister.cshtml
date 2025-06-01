@@ -1,49 +1,48 @@
-﻿@model RegisterUserViewModel 
+﻿@model RegisterUserViewModel
 
 @{
     Layout = "_Layout";
 }
-@section css{
-    <link rel="stylesheet" href= "/css/sign-up.css" />
+@section css {
+    <link rel="stylesheet" href="/css/sign-up.css" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 }
 
-    <main>
-        <div class="form-container">
-            <h1>Start your journey</h1>
-            <p class="subtitle">
-                Create your student account and discover thousands of courses
-            </p>
+<main>
+    <div class="form-container">
+        <h1>Start your journey</h1>
+        <p class="subtitle">
+            Create your student account and discover thousands of courses
+        </p>
 
-            <form asp-controller="Account" asp-action="Register" method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <input type="hidden" asp-for="RoleType" value="Student" />
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <input type="hidden" asp-for="RoleType" value="Student" />
 
-                <div class="form-group">
-                    <input asp-for="FullName" class="form-control" placeholder="Full name" />
-                    <span asp-validation-for="FullName" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="FullName" class="form-control" placeholder="Full name" />
+                <span asp-validation-for="FullName" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <input asp-for="Email" class="form-control" placeholder="Email address" />
-                    <span asp-validation-for="Email" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="Email" class="form-control" placeholder="Email address" />
+                <span asp-validation-for="Email" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
-                    <span asp-validation-for="PhoneNumber" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
+                <span asp-validation-for="PhoneNumber" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <input asp-for="ParentNumber" class="form-control" placeholder="Parent's phone number" />
-                    <span asp-validation-for="ParentNumber" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="ParentNumber" class="form-control" placeholder="Parent's phone number" />
+                <span asp-validation-for="ParentNumber" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <div class="select-wrapper">
-                        <select asp-for="Grade" class="form-control"
-                                asp-items="@(new SelectList(new List<SelectListItem> {
+            <div class="form-group">
+                <div class="select-wrapper">
+                    <select asp-for="Grade" class="form-control"
+                            asp-items="@(new SelectList(new List<SelectListItem> {
                                     new SelectListItem { Text = "Select your grade", Value = "", Disabled = true },
                                     new SelectListItem { Text = "Grade 7", Value = "7" },
                                     new SelectListItem { Text = "Grade 8", Value = "8" },
@@ -52,37 +51,38 @@
                                     new SelectListItem { Text = "Grade 11", Value = "11" },
                                     new SelectListItem { Text = "Grade 12", Value = "12" }
                                 }, "Value", "Text"))">
-                        </select>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
                     <span asp-validation-for="Grade" class="error-message"></span>
                 </div>
+            </div>
 
-                <div class="form-group password-group">
-                    <input asp-for="Password" class="form-control" placeholder="Create a password" />
-                    <i class="far fa-eye-slash toggle-password" data-target="Password"></i>
-                    <span asp-validation-for="Password" class="error-message"></span>
-                </div>
+            <div class="form-group password-group">
+                <input asp-for="Password" class="form-control" placeholder="Create a password" />
+                <i class="far fa-eye-slash toggle-password" data-target="Password"></i>
+                <span asp-validation-for="Password" class="error-message"></span>
+            </div>
 
-                <div class="form-group password-group">
-                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat a password" />
-                    <i class="far fa-eye-slash toggle-password" data-target="ConfirmPassword"></i>
-                    <span asp-validation-for="ConfirmPassword" class="error-message"></span>
-                </div>
+            <div class="form-group password-group">
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat a password" />
+                <i class="far fa-eye-slash toggle-password" data-target="ConfirmPassword"></i>
+                <span asp-validation-for="ConfirmPassword" class="error-message"></span>
+            </div>
 
 
-                <button type="submit" class="btn-primary">Sign up</button>
+            <button type="submit" class="btn-primary">Sign up</button>
 
-                <p class="login-link">
-                    Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
-                </p>
-            </form>
-        </div>
-    </main>
+            <p class="login-link">
+                Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
+            </p>
+        </form>
+    </div>
+</main>
 
-   
-@section Scripts{
+
+@section Scripts {
     <script src="/js/TogglePassword.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
+   
