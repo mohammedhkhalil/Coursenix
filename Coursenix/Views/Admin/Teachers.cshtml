@@ -1,0 +1,75 @@
+﻿@model List<AdminManagementVM>
+@{
+    Layout = "_Layout";
+}
+@section css {
+<link rel="stylesheet" href="~/css/teacher_management.css" />
+}
+
+
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Teacher Management</h1>
+        <p class="page-subtitle">Manage all teachers in the system</p>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control search-input" placeholder="Search by teacher name">
+            </div>
+        </div>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="student-info">
+                                 <img src="@i.PP" class="student-avatar">
+                                <span>@i.UserName</span>
+                            </div>
+                        </td>
+                        <td>@i.UserEmail</td>
+                        <td>
+                            <span class="status @(i.Status ? "active" : "blocked")">
+                                @(i.Status ? "active" : "blocked")
+                            </span>
+                        </td>
+                        <td>
+                            <form asp-action="@(i.Status ? "block" : "unblock")" method="post">
+                                <input type="hidden" name="userId" value="@i.AppUserId" />
+                                <button type="submit" class="action-btn @(i.Status ? "block" : "unblock")">
+                                    @(i.Status ? "block" : "unblock")
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button>‹</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>›</button>
+        </div>
+    </div>
+</div>
+<!--javaScript-->
+@section scripts {
+    <script src="/js/teacher_management.js"> </script>
+    }
