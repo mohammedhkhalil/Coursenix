@@ -1,0 +1,162 @@
+[
+  {
+    "Id": 1,
+    "AppUserId": "user-001",
+    "Name": "Alice Johnson",
+    "Email": "alice.johnson@coursenix.com",
+    "PhoneNumber": "+1234567890",
+    "Biography": "Expert in Computer Science with over 10 years of teaching experience."
+  },
+  {
+    "Id": 2,
+    "AppUserId": "user-002",
+    "Name": "Bob Smith",
+    "Email": "bob.smith@coursenix.com",
+    "PhoneNumber": "+0987654321",
+    "Biography": "Software engineer turned educator. Passionate about teaching algorithms."
+  },
+  {
+    "Id": 3,
+    "AppUserId": "user-003",
+    "Name": "Clara Davis",
+    "Email": "clara.davis@coursenix.com",
+    "PhoneNumber": null,
+    "Biography": null
+  },
+  {
+    "Id": 4,
+    "AppUserId": "user-004",
+    "Name": "Daniel Thompson",
+    "Email": "daniel.thompson@coursenix.com",
+    "PhoneNumber": "+14152223333",
+    "Biography": "Data science enthusiast and experienced ML instructor."
+  },
+  {
+    "Id": 5,
+    "AppUserId": "user-005",
+    "Name": "Eva Wilson",
+    "Email": "eva.wilson@coursenix.com",
+    "PhoneNumber": "+16175551234",
+    "Biography": "Loves teaching web development and frontend design."
+  },
+  {
+    "Id": 6,
+    "AppUserId": "user-006",
+    "Name": "Frank Martin",
+    "Email": "frank.martin@coursenix.com",
+    "PhoneNumber": "+441234567890",
+    "Biography": "Veteran backend developer with a focus on C# and .NET."
+  },
+  {
+    "Id": 7,
+    "AppUserId": "user-007",
+    "Name": "Grace Lee",
+    "Email": "grace.lee@coursenix.com",
+    "PhoneNumber": null,
+    "Biography": "Specializes in mobile app development with Flutter."
+  },
+  {
+    "Id": 8,
+    "AppUserId": "user-008",
+    "Name": "Henry Walker",
+    "Email": "henry.walker@coursenix.com",
+    "PhoneNumber": "+33123456789",
+    "Biography": "Enjoys breaking down complex math concepts."
+  },
+  {
+    "Id": 9,
+    "AppUserId": "user-009",
+    "Name": "Ivy Brown",
+    "Email": "ivy.brown@coursenix.com",
+    "PhoneNumber": "+5511987654321",
+    "Biography": null
+  },
+  {
+    "Id": 10,
+    "AppUserId": "user-010",
+    "Name": "Jack Miller",
+    "Email": "jack.miller@coursenix.com",
+    "PhoneNumber": "+819012345678",
+    "Biography": "Teaches cybersecurity and ethical hacking."
+  },
+  {
+    "Id": 11,
+    "AppUserId": "user-011",
+    "Name": "Karen White",
+    "Email": "karen.white@coursenix.com",
+    "PhoneNumber": "+61234567890",
+    "Biography": "Machine learning and AI instructor."
+  },
+  {
+    "Id": 12,
+    "AppUserId": "user-012",
+    "Name": "Liam Scott",
+    "Email": "liam.scott@coursenix.com",
+    "PhoneNumber": null,
+    "Biography": null
+  },
+  {
+    "Id": 13,
+    "AppUserId": "user-013",
+    "Name": "Mia Clark",
+    "Email": "mia.clark@coursenix.com",
+    "PhoneNumber": "+49301234567",
+    "Biography": "Loves inspiring students in game development."
+  },
+  {
+    "Id": 14,
+    "AppUserId": "user-014",
+    "Name": "Nathan Lopez",
+    "Email": "nathan.lopez@coursenix.com",
+    "PhoneNumber": "+390612345678",
+    "Biography": "Teaches systems programming and OS internals."
+  },
+  {
+    "Id": 15,
+    "AppUserId": "user-015",
+    "Name": "Olivia Young",
+    "Email": "olivia.young@coursenix.com",
+    "PhoneNumber": null,
+    "Biography": "Database design and SQL expert."
+  },
+  {
+    "Id": 16,
+    "AppUserId": "user-016",
+    "Name": "Paul Hernandez",
+    "Email": "paul.hernandez@coursenix.com",
+    "PhoneNumber": "+8613812345678",
+    "Biography": "Cloud computing specialist with Azure and AWS."
+  },
+  {
+    "Id": 17,
+    "AppUserId": "user-017",
+    "Name": "Quinn Ramirez",
+    "Email": "quinn.ramirez@coursenix.com",
+    "PhoneNumber": "+972501234567",
+    "Biography": "DevOps engineer turned instructor."
+  },
+  {
+    "Id": 18,
+    "AppUserId": "user-018",
+    "Name": "Rachel Kim",
+    "Email": "rachel.kim@coursenix.com",
+    "PhoneNumber": "+821012345678",
+    "Biography": "Frontend expert with deep React knowledge."
+  },
+  {
+    "Id": 19,
+    "AppUserId": "user-019",
+    "Name": "Samuel Turner",
+    "Email": "samuel.turner@coursenix.com",
+    "PhoneNumber": null,
+    "Biography": null
+  },
+  {
+    "Id": 20,
+    "AppUserId": "user-020",
+    "Name": "Tina Nguyen",
+    "Email": "tina.nguyen@coursenix.com",
+    "PhoneNumber": "+6591234567",
+    "Biography": "Blockchain developer with real-world experience."
+  }
+]

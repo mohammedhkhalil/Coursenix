@@ -35,7 +35,7 @@ namespace Coursenix.Controllers
                     UserName = t.Name,
                     PP = string.IsNullOrEmpty(t.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{t.ProfilePicture}",
                     UserEmail = t.Email,
-                    Status = t.AppUser.LockoutEnd == DateTime.Now
+                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd == null
                     ? true
                     : false,
                     AppUserId = t.AppUserId
@@ -52,7 +52,7 @@ namespace Coursenix.Controllers
                     UserName = t.Name,
                     //PP = string.IsNullOrEmpty(t.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{t.ProfilePicture}",
                     UserEmail = t.Email,
-                    Status = t.AppUser.LockoutEnd < DateTime.Now
+                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd==null
                     ? true 
                     : false,
                     AppUserId = t.AppUserId
@@ -73,15 +73,20 @@ namespace Coursenix.Controllers
             if (user.RoleType == "Teacher")
             {
                 var Teacher = await _context.Teachers.FirstOrDefaultAsync(i => i.Id.ToString() == userId);
-                Teacher.Courses.Clear();
+                if (Teacher != null && Teacher.Courses != null)
+                {
+                    Teacher.Courses.Clear();
+                }
                 return RedirectToAction("Teachers");
 
             }
             else if (user.RoleType == "Student")
             {
                 var Student = await _context.Students.FirstOrDefaultAsync(i => i.Id.ToString() == userId);
-                Student.Bookings.Clear();
-                Student.Attendances.Clear();
+                if (Student != null && Student.Bookings != null)
+                    Student.Bookings.Clear();
+                if (Student != null && Student.Attendances != null)
+                    Student.Attendances.Clear();
                 return RedirectToAction("Students");
             }
             return View("Index");

@@ -161,33 +161,6 @@
                     </div>
                 </section>
 
-                @* <!-- ── Enrolled Students Management ────────────────────────── -->
-                @if (Model.EnrolledStudents.Any())
-                {
-                    <section class="mb-4">
-                        <h2 class="section-title">Enrolled Students (@Model.EnrolledStudents.Count)</h2>
-                        <div class="enrolled-students-container">
-                            @foreach (var student in Model.EnrolledStudents)
-                            {
-                                <div class="student-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>@student.Name</strong>
-                                        <br>
-                                        <small class="text-muted">@student.Email</small>
-                                        <br>
-                                        <small class="text-muted">Enrolled: @student.EnrollmentDate.ToString("MMM dd, yyyy")</small>
-                                    </div>
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="removeStudent(@student.Id, '@student.Name')">
-                                        <i class="bi bi-person-dash me-1"></i>Remove
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    </section>
-                } *@
-
                 <div class="text-end">
                     <a href="@Url.Action("ViewCourse", "Course", new { id = Model.CourseId })" class="btn btn-secondary px-4 py-2 me-2">Cancel</a>
                     <button type="submit" class="btn btn-success px-4 py-2">
@@ -203,7 +176,6 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Time validation
             const startTimeInput = document.getElementById('startTime');
             const endTimeInput = document.getElementById('endTime');
             const timeValidationMessage = document.getElementById('timeValidationMessage');
@@ -229,9 +201,7 @@
             startTimeInput.addEventListener('change', validateTime);
             endTimeInput.addEventListener('change', validateTime);
 
-            // Form submission validation
             document.getElementById('groupForm').addEventListener('submit', function(e) {
-                // Validate days selection
                 const selectedDays = document.querySelectorAll('input[name="SelectedDays"]:checked');
                 if (selectedDays.length === 0) {
                     e.preventDefault();
@@ -239,41 +209,12 @@
                     return false;
                 }
 
-                // Validate time
                 if (!validateTime()) {
                     e.preventDefault();
                     return false;
                 }
             });
         });
-
-        // Remove student function
-        function removeStudent(studentId, studentName) {
-            if (confirm(`Are you sure you want to remove ${studentName} from this group?`)) {
-                // Create a form to submit the removal request
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '@Url.Action("RemoveStudent", "Group")';
-
-                const groupIdInput = document.createElement('input');
-                groupIdInput.type = 'hidden';
-                groupIdInput.name = 'groupId';
-                groupIdInput.value = '@Model.Id';
-
-                const studentIdInput = document.createElement('input');
-                studentIdInput.type = 'hidden';
-                studentIdInput.name = 'studentId';
-                studentIdInput.value = studentId;
-
-                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
-
-                form.appendChild(groupIdInput);
-                form.appendChild(studentIdInput);
-                form.appendChild(tokenInput);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
         }
     </script>
 }

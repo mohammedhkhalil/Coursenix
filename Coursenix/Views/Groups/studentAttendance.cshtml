@@ -64,12 +64,11 @@
                             <td>@student.ParentPhoneNumber</td>
                             <td><span class="absence @student.AbsenceClass">@student.AbsencePercentage%</span></td>
                             <td>
-                                <form asp-action="DeleteStudent" method="post" style="display: inline;"
-                                      onsubmit="return confirm('Are you sure you want to remove this student from the group?');">
-                                    <input type="hidden" name="studentId" value="@student.StudentId" />
-                                    <input type="hidden" name="groupId" value="@Model.GroupId" />
-                                    <button type="submit" class="delete-btn">&#10060;</button>
-                                </form>
+                            <form asp-action="DeleteStudent" method="post" style="display: inline;"
+                                  onsubmit="return confirm('Are you sure you want to remove this student from the group?');">
+                                <input type="hidden" name="studentId" value="@student.StudentId" />
+                                <input type="hidden" name="id" value="@Model.GroupId" />  <button type="submit" class="delete-btn">&#10060;</button>
+                            </form>
                             </td>
                         </tr>
                     }
