@@ -7,7 +7,7 @@
                 Glad to see you again! As an admin, you play a vital role in maintaining and optimizing the platform.
                 Manage courses, oversee instructors and students, and ensure everything runs smoothly across the system.
             </p>
-            <a href="@Url.Action("Create", "Course")" class="btn cn-courses-btn">Add New Course →</a>
+            <a href="#cnPath" class="btn cn-courses-btn">Manage →</a>
         </div>
     </div>
 </section>
@@ -25,27 +25,25 @@
         <div class="cn-paths">
             <div class="cn-path-card">
                 <div class="cn-path-icon">
-                    <img src="~/assets/admin-dashboard.svg" alt="Create Course icon" />
+                    <img src="/images/Admin.jpg" alt="Create Course icon" />
                 </div>
-                <h3>Manage Courses</h3>
+                <h3>Manage Teachers</h3>
                 <p>
-                    Create, update, and remove courses to ensure students have access to the most relevant and high-quality content.
+                    Oversee teachers by managing their profiles, assigning courses, and ensuring they contribute to a high-quality learning environment.
                 </p>
-                <a href="@Url.Action("Create", "Course")" class="cn-create-course-btn">Add Course</a>
+                <a href="@Url.Action("Teachers", "Admin")" class="cn-create-course-btn">Manage</a>
             </div>
             <div class="cn-path-card">
                 <div class="cn-path-icon">
-                    <img src="~/assets/users.svg" alt="Manage Users icon" />
+                    <img src="/images/Admin.jpg" alt="Manage Users icon" />
                 </div>
-                <h3>Manage Users</h3>
+                <h3>Manage Students</h3>
                 <p>
-                    View and manage instructors and students, assign roles, and maintain an efficient user experience.
+                    Monitor student progress, manage enrollments, and optimize their experience to maintain an efficient learning platform.
                 </p>
-                <a href="@Url.Action("Index", "UserManagement")" class="btn cn-courses-btn">Manage Users</a>
+                <a href="@Url.Action("Students", "Admin")" class="btn cn-courses-btn">Manage</a>
             </div>
         </div>
     </div>
     <img src="~/assets/lamp.svg" alt="" class="cn-decoration cn-decoration-2" />
 </section>
-
-<script src="~/js/profile-drop-down.js"></script>

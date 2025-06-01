@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Coursenix.Models;
 using Coursenix.Repository;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +71,7 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
+    await SeedAdminAsync(services);
     var context = services.GetRequiredService<Context>();
 
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
@@ -87,4 +88,56 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+static async Task SeedAdminAsync(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+    string adminEmail = configuration["AdminUser:Email"];
+    string adminPassword = configuration["AdminUser:Password"];
+    string adminName = configuration["AdminUser:Name"];
+
+    // Create Admin role if it doesn't exist
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    // Check if admin user already exists
+    var existingUser = await userManager.FindByEmailAsync(adminEmail);
+    if (existingUser == null)
+    {
+        var adminUser = new AppUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            Name = adminName,
+            EmailConfirmed = true,
+            RoleType = "Admin"
+        };
+
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.AddClaimsAsync(adminUser, new List<Claim>
+            {
+                new Claim("FullName", adminUser.Name),
+                new Claim("Email", adminUser.Email)
+            });
+            Console.WriteLine("Admin user created and seeded successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Admin user creation failed:");
+            foreach (var error in result.Errors)
+                Console.WriteLine($"- {error.Description}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Admin user already exists.");
+    }
+}
 app.Run();

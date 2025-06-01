@@ -7,7 +7,7 @@
             <!-- Don't forget to change the name -->
             <h1>Welcome Back, Mr.@(User.FindFirst("FullName")?.Value)!</h1>
             <p>We're thrilled to have you back! Continue making a difference in students' lives by sharing your expertise. Create engaging courses, manage your classes, and connect with eager learners. Your dedication to education helps shape the future of learning.</p>
-            <a href="@Url.Action("Create", "Course")" class="btn cn-courses-btn">Create New Course →</a>
+            <a href="#cnPath" class="btn cn-courses-btn">Explore →</a>
         </div>
     </div>
 </section>
@@ -48,5 +48,3 @@
     <img src="~/assets/lamp.svg" alt="" class="cn-decoration cn-decoration-2" />
 </section>
 
-
-<script src="~/js/profile-drop-down.js"></script>

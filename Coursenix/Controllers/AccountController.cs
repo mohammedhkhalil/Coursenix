@@ -240,8 +240,14 @@ namespace Coursenix.Controllers
                                : DateTimeOffset.UtcNow.AddMinutes(30)     // 30-minute cookie
             };
 
-            //await userManager.AddToRoleAsync(userModel, userVM.RoleType);  // add role 
+          
+            //-----------------///// if blocked /////--------------
+            if (userModel.LockoutEnd <= DateTime.Now)
+            {
+                return RedirectToAction("Logout");
+            }
 
+            //await userManager.AddToRoleAsync(userModel, userVM.RoleType);  // add role 
             // 6) Sign the user in (creates the authentication cookie & cliams).
             await signInManager.SignInWithClaimsAsync(
                  userModel,
@@ -260,6 +266,9 @@ namespace Coursenix.Controllers
 
             if (await userManager.IsInRoleAsync(userModel, "Teacher"))
                 return RedirectToAction("Index", "Teacher");
+
+            if (await userManager.IsInRoleAsync(userModel, "Admin"))
+                return RedirectToAction("Index", "Admin");
 
             // 8) If the user has no recognized role, sign out and show error.
             await signInManager.SignOutAsync();

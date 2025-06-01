@@ -37,9 +37,25 @@
                     <li class="cn-nav-item">
                         <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Home")">Home</a>
                     </li>
-                    <li class="cn-nav-item">
-                        <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Course")">Courses</a>
-                    </li>
+                     @if (User.IsInRole("Teacher"))
+                     {
+                        <li class="cn-nav-item">
+                            <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Teacher")">Courses</a>
+                        </li>
+                     }
+					else if (User.IsInRole("Student"))
+					{
+						<li class="cn-nav-item">
+							<a class="cn-nav-link nav-link" href="@Url.Action("Index", "Course")">Courses</a>
+						</li>
+					}
+				    else // Admin
+                    {
+                        <li class="cn-nav-item">
+                            <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Admin")">Management</a>
+                        </li>
+                       
+                    }
                     <li class="cn-nav-item">
                         <a class="cn-nav-link nav-link" href="#cnFooter">Contact</a>
                     </li>
