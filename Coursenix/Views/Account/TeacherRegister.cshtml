@@ -1,40 +1,39 @@
-﻿@model RegisterUserViewModel 
+﻿@model RegisterUserViewModel
 
 @{
-	ViewData["Title"] = "Teacher Sign Up";
-	Layout = "_Layout";
+    ViewData["Title"] = "Teacher Sign Up";
+    Layout = "_Layout";
 }
 
 @section css {
-	<link rel="stylesheet" href="~/css/sign-up.css" />
+    <link rel="stylesheet" href="~/css/sign-up.css" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 }
 
 
-    <!-- form -->
-    <main>
-        <div class="form-container">
-            <h1>Start your journey</h1>
-            <p class="subtitle">Create your teacher account</p>
+<!-- form -->
+<main>
+    <div class="form-container">
+        <h1>Start your journey</h1>
+        <p class="subtitle">Create your teacher account</p>
 
-            <form asp-controller="Account" asp-action="Register" method="post" novalidate>
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <input type="hidden" asp-for="RoleType" value="Teacher" />
-                <div class="form-group">
-                    <input asp-for="FullName" class="form-control" placeholder="Full name" minlength="3" />
-                    <span asp-validation-for="FullName" class="error-message"></span>
-                </div>
+        <form asp-controller="Account" asp-action="Register" method="post" novalidate>
+            <input type="hidden" asp-for="RoleType" value="Teacher" />
+            <div class="form-group">
+                <input asp-for="FullName" class="form-control" placeholder="Full name" minlength="3" />
+                <span asp-validation-for="FullName" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <input asp-for="Email" class="form-control" placeholder="Email address" />
-                    <span asp-validation-for="Email" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="Email" class="form-control" placeholder="Email address" />
+                <span asp-validation-for="Email" class="error-message"></span>
+            </div>
 
-                <div class="form-group">
-                    <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
-                    <span asp-validation-for="PhoneNumber" class="error-message"></span>
-                </div>
+            <div class="form-group">
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Phone number" />
+                <span asp-validation-for="PhoneNumber" class="error-message"></span>
+            </div>
 
             <div class="form-group password-group">
                 <input asp-for="Password" class="form-control" placeholder="Create a password" />
@@ -49,34 +48,34 @@
             </div>
 
 
-                <div class="form-group">
-                    <label asp-for="Biography" class="bio-label"></label>
-                    <textarea asp-for="Biography"
-                              class="form-control"
-                              placeholder="Tell students a bit about yourself and your teaching approach (max 200 words)"
-                              maxlength="1000"
-                              required></textarea>
-                    <div class="word-counter">
-                        <span id="bio-word-count">0</span>/200 words
-                    </div>
-                    <span asp-validation-for="Biography" class="error-message"></span>
+            <div class="form-group">
+                <label asp-for="Biography" class="bio-label"></label>
+                <textarea asp-for="Biography"
+                          class="form-control"
+                          placeholder="Tell students a bit about yourself and your teaching approach (max 200 words)"
+                          maxlength="1000"
+                          required></textarea>
+                <div class="word-counter">
+                    <span id="bio-word-count">0</span>/200 words
                 </div>
+                <span asp-validation-for="Biography" class="error-message"></span>
+            </div>
 
 
-                <button type="submit" class="btn-primary">Sign up</button>
+            <button type="submit" class="btn-primary">Sign up</button>
 
-                <p class="login-link">
-                    Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
-                </p>
-            </form>
-        </div>
-    </main>
+            <p class="login-link">
+                Already have an account? <a href="@Url.Action("Login", "Account")">Sign in</a>
+            </p>
+        </form>
+    </div>
+</main>
 
 
- 
-    @section Scripts{
-        <script src="/js/TogglePassword.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-    }
+@section Scripts {
+    <script src="/js/TogglePassword.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}

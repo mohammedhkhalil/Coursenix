@@ -85,33 +85,6 @@
     <footer>
         <p>© 2025 Eduvera. All Rights reserved</p>
     </footer>
-@* <script src="~/js/Student-Attendance.js" defer></script> *@
-@*     <script> *@
-@*         document.addEventListener('DOMContentLoaded', function() { *@
-@*             // Search functionality *@
-@*             const searchInput = document.getElementById('studentSearch'); *@
-@*             const studentRows = document.querySelectorAll('.student-row'); *@
-
-@*             searchInput.addEventListener('input', function() { *@
-@*                 const searchTerm = this.value.toLowerCase(); *@
-
-@*                 studentRows.forEach(row => { *@
-@*                     const studentName = row.getAttribute('data-student-name'); *@
-@*                     if (studentName.includes(searchTerm)) { *@
-@*                         row.style.display = ''; *@
-@*                     } else { *@
-@*                         row.style.display = 'none'; *@
-@*                     } *@
-@*                 }); *@
-@*             }); *@
-
-@*             // Success/Error message handling with present students *@
-            
-@*             @if (TempData["ErrorMessage"] != null) *@
-@*             { *@
-@*                     <text> *@
-@*                     alert('@TempData["ErrorMessage"]'); *@
-@*                     </text> *@
-@*             } *@
-@*         }); *@
-    @* </script> *@
+@section Scripts {
+    <script src="/js/Student-Attendance.js"> </script>
+    }
