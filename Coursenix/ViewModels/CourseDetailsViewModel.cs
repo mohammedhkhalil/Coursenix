@@ -1,7 +1,7 @@
 ﻿// Models/ViewModels/CourseDetailsViewModel.cs
-using Coursenix.Models; // لاستخدام نماذج Subject, Teacher, Group
-using System.Collections.Generic; // لاستخدام List
-using System.ComponentModel.DataAnnotations; // لاستخدام Validation Attributes if needed
+using Coursenix.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations; 
 
 namespace Coursenix.ViewModels
 {

@@ -19,11 +19,17 @@ namespace Coursenix.ViewModels
         public IFormFile ProfilePicture { get; set; }
 
         // Password change
-        [Required]
+        [Required(ErrorMessage = "Email is required.")]
+        [DataType(DataType.Password)]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
         public string CurrentPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [StringLength(100, ErrorMessage = "Use 8 characters or more for your password\r\n", MinimumLength = 8)]
         public string? password { get; set; }
 
-        [Compare("password", ErrorMessage = "Passwords do not match")]
+        [DataType(DataType.Password)]
+        [StringLength(100, ErrorMessage = "Use 8 characters or more for your password\r\n", MinimumLength = 8)]
         public string? ConfirmPassword { get; set; }
     }
 

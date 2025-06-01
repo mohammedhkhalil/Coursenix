@@ -47,7 +47,7 @@ body {
     color: #777;
 }
 
-.content{
+.content {
     max-width: 500px;
     margin: 50px auto;
     background-color: white;
@@ -62,11 +62,6 @@ h1 {
     font-size: 24px;
 }
 
-p {
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
 
 .code-inputs {
     display: flex;
@@ -94,16 +89,18 @@ p {
     cursor: pointer;
     margin-bottom: 15px;
 }
- .verify-btn:hover {
-    background-color: #299a9a;
-   
-}
+
+    .verify-btn:hover {
+        background-color: #299a9a;
+    }
 
 .resend-link {
     color: #2DA5A2;
     text-decoration: none;
     cursor: pointer;
     font-weight: bold;
+    background-color: white;
+    border: none;
 }
 
 .back-link {
@@ -111,10 +108,8 @@ p {
     text-decoration: none;
     font-weight: bold;
     margin-top: 35px;
-  }
-  
-  .back-link:hover {
-    text-decoration: underline;
-  }
+}
 
-  
+    .back-link:hover {
+        text-decoration: underline;
+    }

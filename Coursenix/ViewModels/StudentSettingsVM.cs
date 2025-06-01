@@ -9,7 +9,9 @@ namespace Coursenix.ViewModels
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
         public string fullName { get; set; }
 
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [DataType(DataType.EmailAddress)]
         public string email { get; set; }
 
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Phone number must be an 11-digit number.")]
@@ -21,17 +23,17 @@ namespace Coursenix.ViewModels
         public int? gradeLevel { get; set; }
 
         // --- Password section ---
-        [Required]
+        [Required(ErrorMessage = "Email is required.")]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
         public string CurrPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
+        [StringLength(100, ErrorMessage = "Use 8 characters or more for your password\r\n", MinimumLength = 8)]
         public string? password { get; set; }
 
         [DataType(DataType.Password)]
-        [Compare("password", ErrorMessage = "The new password and confirmation password do not match.")]
+        [StringLength(100, ErrorMessage = "Use 8 characters or more for your password\r\n", MinimumLength = 8)]
         public string? ConfirmPassword { get; set; }
     }
 }

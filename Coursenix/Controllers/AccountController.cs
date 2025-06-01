@@ -324,6 +324,55 @@ namespace Coursenix.Controllers
             return RedirectToAction("CheckYourEmail", new { Purpose = "ResetPassword" });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ResendCode(string Purpose)
+        {
+            /*
+             catch curr mail -> delet resetcode -> make new resetcode -> sent it -> verify (check you mail)
+             */
+            var email = HttpContext.Session.GetString("VerifyEmail");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                if (Purpose == "ResetPassword")
+                    return RedirectToAction("ForgotPassword");
+                else
+                    return RedirectToAction("Index", "Home");
+            }
+
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                if (Purpose == "ResetPassword")
+                    return RedirectToAction("ForgotPassword");
+                else
+                    return RedirectToAction("Index", "Home");
+            }
+
+            var oldCodes = context.ResetCodes.Where(c => c.Email == email && c.Purpose == Purpose);
+            context.ResetCodes.RemoveRange(oldCodes);
+
+            var code = new Random().Next(100000, 999999).ToString();
+
+            var ResetCode = new ResetCode
+            {
+                Email = email,
+                Code = code,
+                Expiry = DateTime.UtcNow.AddMinutes(10),
+                Purpose = Purpose
+            };
+
+            context.ResetCodes.Add(ResetCode);
+            await context.SaveChangesAsync();
+
+            await emailService.SendEmailAsync(email, "Password Reset Code", $"Your new code is: {code}");
+
+            TempData["Message"] = "A new code has been sent to your email.";
+
+            return RedirectToAction("CheckYourEmail", new { Purpose });
+        }
+
         [HttpGet]
         public IActionResult CheckYourEmail(string Purpose)
         {
