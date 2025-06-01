@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coursenix.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

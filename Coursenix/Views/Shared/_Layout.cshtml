@@ -43,7 +43,7 @@
                             <a class="cn-nav-link nav-link" href="@Url.Action("Index", "Teacher")">Courses</a>
                         </li>
                      }
-					else if (User.IsInRole("Student"))
+                    else if (User.IsInRole("Student") || !User.Identity.IsAuthenticated)
 					{
 						<li class="cn-nav-item">
 							<a class="cn-nav-link nav-link" href="@Url.Action("Index", "Course")">Courses</a>
