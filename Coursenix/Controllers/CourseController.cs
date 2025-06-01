@@ -29,7 +29,6 @@ namespace Coursenix.Controllers
         [Authorize]
         public async Task<IActionResult> Index(string selectedSubject = "", int selectedGrade = 0, string searchQuery = "", int page = 1)
         {
-            // Get all courses with related data
             var coursesQuery = _context.Courses
                 .Include(c => c.Teacher)
                 .Include(c => c.GradeLevels)
@@ -51,17 +50,14 @@ namespace Coursenix.Controllers
                 coursesQuery = coursesQuery.Where(c => c.Teacher.Name.Contains(searchQuery));
             }
 
-            // Get total count for pagination
             var totalCourses = await coursesQuery.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalCourses / PageSize);
 
-            // Apply pagination
             var courses = await coursesQuery
                 .Skip((page - 1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
 
-            // Get filter options
             var availableSubjects = await _context.Courses
                 .Select(c => c.Name)
                 .Distinct()
@@ -90,11 +86,10 @@ namespace Coursenix.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "Teacher")] // Only teachers can create courses
+        [Authorize(Roles = "Teacher")] 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            // Ensure user is a teacher
             var user = await _userManager.GetUserAsync(User);
             if (user == null || !await _userManager.IsInRoleAsync(user, "Teacher"))
             {
@@ -105,18 +100,16 @@ namespace Coursenix.Controllers
             return View("Create", model);
         }
 
-        [Authorize(Roles = "Teacher")] // Only teachers can create courses
+        [Authorize(Roles = "Teacher")] 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCourseVM model)
         {
-            // Validate model state
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Get current teacher
             var user = await _userManager.GetUserAsync(User);
             var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.AppUserId == user.Id);
 
@@ -126,14 +119,12 @@ namespace Coursenix.Controllers
                 return View(model);
             }
 
-            // Validate that at least one grade is selected
             if (model.GradeGroups == null || !model.GradeGroups.Any())
             {
                 ModelState.AddModelError("", "Please select at least one grade and add groups.");
                 return View(model);
             }
 
-            // Handle thumbnail upload
             string thumbnailFileName = null;
             if (model.ThumbnailFile != null && model.ThumbnailFile.Length > 0)
             {
@@ -145,7 +136,6 @@ namespace Coursenix.Controllers
                 }
             }
 
-            // Create the course
             var course = new Course
             {
                 Name = model.CourseTitle,
@@ -159,7 +149,6 @@ namespace Coursenix.Controllers
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
 
-            // Process each grade and its groups
             foreach (var gradeGroupsKvp in model.GradeGroups)
             {
                 int gradeNumber = gradeGroupsKvp.Key;
@@ -167,10 +156,8 @@ namespace Coursenix.Controllers
 
                 if (groups == null || !groups.Any()) continue;
 
-                // Get the price from the first group (assuming same price for all groups in a grade)
                 decimal gradePrice = groups.FirstOrDefault()?.Price ?? 0;
 
-                // Create GradeLevel
                 var gradeLevel = new GradeLevel
                 {
                     CourseId = course.Id,
@@ -181,13 +168,12 @@ namespace Coursenix.Controllers
                 _context.GradeLevels.Add(gradeLevel);
                 await _context.SaveChangesAsync();
 
-                // Create groups for this grade
                 foreach (var groupModel in groups)
                 {
                     if (string.IsNullOrEmpty(groupModel.GroupName) ||
                         groupModel.Days == null || !groupModel.Days.Any())
                     {
-                        continue; // Skip incomplete groups
+                        continue; 
                     }
 
                     var group = new Group
@@ -212,26 +198,22 @@ namespace Coursenix.Controllers
             return RedirectToAction("Index", "Teacher");
         }
 
-        // Helper method to save thumbnail
         private async Task<string> SaveThumbnailAsync(IFormFile thumbnailFile)
         {
             if (thumbnailFile == null || thumbnailFile.Length == 0)
                 return null;
 
-            // Validate file type
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
             var fileExtension = Path.GetExtension(thumbnailFile.FileName).ToLowerInvariant();
 
             if (!allowedExtensions.Contains(fileExtension))
             {
-                return null; // Return null instead of throwing exception
+                return null; 
             }
 
-            // Generate unique filename
             var fileName = Guid.NewGuid().ToString() + fileExtension;
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "thumbnails");
 
-            // Create directory if it doesn't exist
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -239,7 +221,6 @@ namespace Coursenix.Controllers
 
             var filePath = Path.Combine(uploadsFolder, fileName);
 
-            // Save file
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await thumbnailFile.CopyToAsync(fileStream);
@@ -248,7 +229,6 @@ namespace Coursenix.Controllers
             return fileName;
         }
 
-        // Helper method to delete thumbnail
         private void DeleteThumbnail(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) return;
@@ -302,8 +282,8 @@ namespace Coursenix.Controllers
             var course = await _context.Courses
                 .Include(c => c.Teacher)
                 .Include(c => c.GradeLevels)
-                    .ThenInclude(gl => gl.Groups) // Include Groups to calculate TotalGroups and check for grade level deletion constraint
-                        .ThenInclude(g => g.Bookings) // Include Bookings to calculate TotalEnrollments
+                    .ThenInclude(gl => gl.Groups) 
+                        .ThenInclude(g => g.Bookings) 
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (course == null)
@@ -316,7 +296,7 @@ namespace Coursenix.Controllers
                 Id = course.Id,
                 Name = course.Name,
                 Description = course.Description,
-                Location = course.Location, // Corrected from course.L
+                Location = course.Location, 
                 StudentsPerGroup = course.StudentsPerGroup,
                 CurrentThumbnailUrl = course.ThumbnailFileName,
                 TeacherId = course.TeacherId,
@@ -331,7 +311,6 @@ namespace Coursenix.Controllers
                 }).ToList() ?? new List<GradeLevelVM>()
             };
 
-            // Ensure there's at least one empty grade level for new entry if no grade levels exist
             if (!viewModel.GradeLevels.Any())
             {
                 viewModel.GradeLevels.Add(new GradeLevelVM());
@@ -345,10 +324,9 @@ namespace Coursenix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCourse(EditCourseVM viewModel)
         {
-            // Fetch the course with its grade levels and groups for update and validation checks
             var courseToUpdate = await _context.Courses
                 .Include(c => c.GradeLevels)
-                    .ThenInclude(gl => gl.Groups) // Important for checking if a grade level can be deleted
+                    .ThenInclude(gl => gl.Groups) 
                 .FirstOrDefaultAsync(c => c.Id == viewModel.Id);
 
             if (courseToUpdate == null)
@@ -356,7 +334,6 @@ namespace Coursenix.Controllers
                 return NotFound();
             }
 
-            // Manually update scalar properties
             courseToUpdate.Name = viewModel.Name;
             courseToUpdate.Description = viewModel.Description;
             courseToUpdate.Location = viewModel.Location;
@@ -400,24 +377,22 @@ namespace Coursenix.Controllers
                 courseToUpdate.ThumbnailFileName = "/uploads/" + uniqueFileName;
             }
 
-            // --- Handle GradeLevels ---
             var gradeLevelsInDb = courseToUpdate.GradeLevels.ToList();
-            var gradeLevelsFromForm = viewModel.GradeLevels.Where(gl => !gl.IsDeleted).ToList(); // Only consider non-deleted ones from the form
+            var gradeLevelsFromForm = viewModel.GradeLevels.Where(gl => !gl.IsDeleted).ToList();
 
-            // Identify and update existing grade levels, and add new ones
             foreach (var gradeLevelVM in gradeLevelsFromForm)
             {
-                if (gradeLevelVM.Id.HasValue && gradeLevelVM.Id.Value != 0) // Existing grade level
+                if (gradeLevelVM.Id.HasValue && gradeLevelVM.Id.Value != 0) 
                 {
                     var existingGl = gradeLevelsInDb.FirstOrDefault(gl => gl.Id == gradeLevelVM.Id.Value);
                     if (existingGl != null)
                     {
                         existingGl.NumberOfGrade = gradeLevelVM.NumberOfGrade;
                         existingGl.Price = gradeLevelVM.Price;
-                        _context.Entry(existingGl).State = EntityState.Modified; // Explicitly mark as modified
+                        _context.Entry(existingGl).State = EntityState.Modified; 
                     }
                 }
-                else // New grade level
+                else 
                 {
                     courseToUpdate.GradeLevels.Add(new GradeLevel
                     {
@@ -428,23 +403,19 @@ namespace Coursenix.Controllers
                 }
             }
 
-            // Identify and remove deleted grade levels
             foreach (var dbGradeLevel in gradeLevelsInDb)
             {
-                // If a grade level from the database is not found in the form's submitted list
                 if (!gradeLevelsFromForm.Any(glvm => glvm.Id == dbGradeLevel.Id))
                 {
-                    // Check if it has associated groups before deleting
                     if (dbGradeLevel.Groups != null && dbGradeLevel.Groups.Any())
                     {
                         ModelState.AddModelError("", $"Cannot delete Grade Level {dbGradeLevel.NumberOfGrade} as it has associated groups. Please delete its groups first.");
-                        // Re-add this grade level to the view model so it is displayed again with the error
                         viewModel.GradeLevels.Add(new GradeLevelVM
                         {
                             Id = dbGradeLevel.Id,
                             NumberOfGrade = dbGradeLevel.NumberOfGrade,
                             Price = dbGradeLevel.Price,
-                            IsDeleted = false // Ensure it's not marked as deleted in the VM for display
+                            IsDeleted = false 
                         });
                     }
                     else
@@ -456,12 +427,10 @@ namespace Coursenix.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Re-populate display-only properties if validation fails
                 viewModel.TeacherName = courseToUpdate.Teacher?.Name;
                 viewModel.TotalGroups = courseToUpdate.GradeLevels?.SelectMany(gl => gl.Groups).Count() ?? 0;
                 viewModel.TotalEnrollments = courseToUpdate.GradeLevels?.SelectMany(gl => gl.Groups).SelectMany(g => g.Bookings).Count() ?? 0;
 
-                // Ensure there's at least one empty grade level if all were removed or none existed
                 if (!viewModel.GradeLevels.Any(gl => !gl.IsDeleted))
                 {
                     viewModel.GradeLevels.Add(new GradeLevelVM());
@@ -497,17 +466,13 @@ namespace Coursenix.Controllers
             {
                 return NotFound();
             }
-            // --- Calculate the sequential group number within its grade ---
-            // 1. Get all groups for the current grade level, ordered by Id (or Name, StartTime, etc.)
             var groupsInGrade = await _context.Groups
                                               .Where(g => g.GradeLevelId == group.GradeLevelId)
-                                              .OrderBy(g => g.Id) // Order by Id to get a consistent sequence
+                                              .OrderBy(g => g.Id) 
                                               .ToListAsync();
 
-            // 2. Find the 0-based index of the current group in that ordered list
             int groupIndex = groupsInGrade.FindIndex(g => g.Id == group.Id);
 
-            // 3. Convert to 1-based number (add 1)
             int groupNumber = groupIndex + 1;
             // ---------------------------------------------------------------
 
@@ -534,7 +499,7 @@ namespace Coursenix.Controllers
                         Email = b.Student.Email,
                         EnrollmentDate = b.BookingDate
                     }).ToList(),
-                GroupNumberInGrade = groupNumber // Assign the calculated sequential number
+                GroupNumberInGrade = groupNumber 
 
             };
 
@@ -570,17 +535,15 @@ namespace Coursenix.Controllers
                 return NotFound();
             }
 
-            // Check if reducing total seats below current enrollments
             if (model.TotalSeats < group.EnrolledStudentsCount)
             {
                 ModelState.AddModelError("TotalSeats",
                     $"Cannot reduce total seats below current enrollments ({group.EnrolledStudentsCount})");
                 return View(model);
             }
-            // Re-calculate GroupNumberInGrade for re-display if validation fails
             var groupsInGrade = await _context.Groups
                                               .Where(g => g.GradeLevelId == model.GradeLevelId)
-                                              .OrderBy(g => g.Id) // Must use the same order as GET
+                                              .OrderBy(g => g.Id) 
                                               .ToListAsync();
             int groupIndex = groupsInGrade.FindIndex(g => g.Id == model.Id);
             model.GroupNumberInGrade = groupIndex + 1;
@@ -641,7 +604,6 @@ namespace Coursenix.Controllers
             {
                 _context.Bookings.Remove(booking);
 
-                // Update enrolled students count
                 group.EnrolledStudentsCount = Math.Max(0, group.EnrolledStudentsCount - 1);
 
                 await _context.SaveChangesAsync();
@@ -663,14 +625,14 @@ namespace Coursenix.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken] // Highly recommended for POST requests
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> DeleteCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
             if (course == null)
             {
                 TempData["ErrorMessage"] = "Course not found.";
-                return RedirectToAction("Index", "Teacher"); // Redirect to a suitable list page
+                return RedirectToAction("Index", "Teacher"); 
             }
 
             try
@@ -682,10 +644,9 @@ namespace Coursenix.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An error occurred while deleting the course. Please try again.";
-                // Log the exception (ex) here for debugging
             }
 
-            return RedirectToAction("Index", "Teacher"); // Redirect after deletion
+            return RedirectToAction("Index", "Teacher"); 
         }
 
 
@@ -698,20 +659,20 @@ namespace Coursenix.Controllers
 
             if (gradeLevel == null || gradeLevel.CourseId != courseId)
             {
-                return NotFound(); // Or redirect to an error page
+                return NotFound(); 
             }
 
             ViewBag.CourseId = courseId;
             ViewBag.GradeId = gradeId;
             ViewBag.CourseName = gradeLevel.Course.Name;
-            ViewBag.GradeNumber = gradeLevel.NumberOfGrade; // Assuming NumberOfGrade exists on GradeLevel
-            ViewBag.MaxStudentsPerGroup = 500; // Example: Set a default or fetch from configuration
+            ViewBag.GradeNumber = gradeLevel.NumberOfGrade; 
+            ViewBag.MaxStudentsPerGroup = 500; 
 
             var model = new CreateGroupVM
             {
                 CourseId = courseId,
                 GradeId = gradeId,
-                SelectedDays = new List<string>() // Ensure it's not null on initial load
+                SelectedDays = new List<string>() 
             };
 
             return View(model);
@@ -719,11 +680,9 @@ namespace Coursenix.Controllers
 
         // --- POST: Course/CreateGroup
         [HttpPost]
-        [ValidateAntiForgeryToken] // Important for security
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> CreateGroup(CreateGroupVM model)
         {
-            // Re-populate ViewBag properties in case ModelState is invalid and we return the view
-            // This ensures context info like CourseName, GradeNumber is displayed again.
             var gradeLevel = await _context.GradeLevels
                                          .Include(gl => gl.Course)
                                          .FirstOrDefaultAsync(gl => gl.Id == model.GradeId);
@@ -739,7 +698,6 @@ namespace Coursenix.Controllers
             ViewBag.GradeNumber = gradeLevel.NumberOfGrade;
             ViewBag.MaxStudentsPerGroup = 500; // Keep consistent with GET action
 
-            // Server-side validation based on your ViewModel and Model
             if (model.SelectedDays == null || !model.SelectedDays.Any())
             {
                 ModelState.AddModelError("SelectedDays", "Please select at least one day for the group schedule.");
@@ -752,11 +710,9 @@ namespace Coursenix.Controllers
 
             if (!ModelState.IsValid)
             {
-                // If validation fails, return the view with the model to show errors
                 return View(model);
             }
 
-            // Create a new Group entity from the ViewModel
             var group = new Group
             {
                 GradeLevelId = model.GradeId,
@@ -765,8 +721,8 @@ namespace Coursenix.Controllers
                 StartTime = model.StartTime,
                 EndTime = model.EndTime,
                 TotalSeats = model.TotalSeats,
-                Location = model.Description, // Assuming Description in VM maps to Location in Group model
-                EnrolledStudentsCount = 0 // New groups start with 0 enrolled students
+                Location = model.Description, 
+                EnrolledStudentsCount = 0 
             };
 
             try
@@ -775,7 +731,6 @@ namespace Coursenix.Controllers
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Group created successfully!";
-                // Redirect to the Course details page, or wherever appropriate
                 return RedirectToAction("ViewCourse", "Course", new { id = model.CourseId });
             }
             catch (Exception ex)
@@ -789,15 +744,14 @@ namespace Coursenix.Controllers
 
         // POST: Course/DeleteGroup
         [HttpPost]
-        [ValidateAntiForgeryToken] // Crucial for security with POST requests
-        public async Task<IActionResult> DeleteGroup(int id, int courseId) // 'id' is GroupId, 'courseId' is for redirection
+        [ValidateAntiForgeryToken] 
+        public async Task<IActionResult> DeleteGroup(int id, int courseId) 
         {
             var group = await _context.Groups.FindAsync(id);
 
             if (group == null)
             {
                 TempData["ErrorMessage"] = "Group not found.";
-                // Redirect back to the course page even if the group wasn't found
                 return RedirectToAction("ViewCourse", "Course", new { id = courseId });
             }
 
@@ -811,9 +765,7 @@ namespace Coursenix.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception (ex) here for debugging purposes
                 TempData["ErrorMessage"] = $"An error occurred while deleting group '{group.Name ?? "Unnamed Group"}'. It might have associated records. Please ensure no students are enrolled before deleting.";
-                // Redirect back to the same edit page or the course page to show the error
                 return RedirectToAction("EditGroup", "Course", new { id = id }); // Stay on current page to show error
             }
         }

@@ -58,7 +58,6 @@ namespace Coursenix.Controllers
         {
             try
             {
-                // Create a new session
                 var session = new Session
                 {
                     GroupId = model.GroupId,
@@ -68,7 +67,6 @@ namespace Coursenix.Controllers
                 _context.Sessions.Add(session);
                 await _context.SaveChangesAsync();
 
-                // Create attendance records
                 var attendanceRecords = model.Students.Select(s => new Attendance
                 {
                     StudentId = s.StudentId,
@@ -79,7 +77,6 @@ namespace Coursenix.Controllers
                 _context.Attendances.AddRange(attendanceRecords);
                 await _context.SaveChangesAsync();
 
-                // Create success view model to show attendance results
                 var successViewModel = new AttendanceSuccessViewModel
                 {
                     GroupId = model.GroupId,
@@ -114,12 +111,6 @@ namespace Coursenix.Controllers
                 .ThenInclude(a => a.Session)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
-            //string userId = _userManager.GetUserId(User);
-            //int? numericTeacherId = _context.Teachers
-            //                                .Where(t => t.AppUserId == userId)
-            //                                .Select(t => t.Id)
-            //                                .FirstOrDefault();
-
             if (group == null)
             {
                 return NotFound();
@@ -134,7 +125,6 @@ namespace Coursenix.Controllers
                 //CourseName = group.GradeLevel?.Subject ?? "N/A",
                 Grade = group.GradeLevel?.NumberOfGrade ?? 0,
                 Days = string.Join(" & ", group.SelectedDays),
-                //TeacherId = numericTeacherId,
                 CourseId = group.GradeLevel.CourseId,
                 StartTime = group.StartTime.ToString("h:mm tt"),
                 EndTime = group.EndTime.ToString("h:mm tt"),
@@ -155,14 +145,12 @@ namespace Coursenix.Controllers
         {
             var totalSessions = _context.Sessions.Count(s => s.GroupId == id);
 
-            // If no sessions yet, return 100% absence
             if (totalSessions == 0) return 100.0;
 
             var studentAttendances = student.Attendances?
                 .Where(a => a.Session.GroupId == id)
                 .ToList() ?? new List<Attendance>();
 
-            // If student has no attendance records, return 100% absence
             if (!studentAttendances.Any()) return 100.0;
 
             var absentSessions = studentAttendances.Count(a => !a.IsPresent);

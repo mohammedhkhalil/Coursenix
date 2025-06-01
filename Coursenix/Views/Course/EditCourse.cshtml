@@ -6,7 +6,6 @@
 @section css {
     <link rel="stylesheet" href="/css/create_course.css" />
     <style>
-        /* Keep existing styles as provided */
         .grade-level-card {
             border: 1px solid #e0e0e0;
             border-radius: 8px;
@@ -139,7 +138,7 @@
             font-size: 14px;
         }
 
-        .form-group input:focus, .form-group select:focus { /* Added select */
+        .form-group input:focus, .form-group select:focus { 
             outline: none;
             border-color: #26a69a;
             box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.2);
@@ -177,14 +176,14 @@
 
         .btn-outline-primary 
         {
-            color: #26a69a; /* Text color */
-            border-color: #26a69a; /* Border color */
+            color: #26a69a; 
+            border-color: #26a69a; 
         }
 
         .btn-outline-primary:hover 
         {
-            background-color: #26a69a; /* Background on hover if needed */
-            color: white; /* Text color on hover */
+            background-color: #26a69a; 
+            color: white; 
         }
 
     </style>
@@ -403,39 +402,33 @@
     <script>
         let gradeIndex = @(Model.GradeLevels?.Count ?? 0);
 
-        // File upload preview functionality
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('input');
             const img = document.getElementById('img');
             const removeThumbnailBtn = document.getElementById('removeThumbnail');
             const fileLabel = document.querySelector('.file_up');
 
-            // File input change handler
             if (input) {
                 input.addEventListener('change', function() {
                     if (this.files && this.files[0]) {
                         const file = this.files[0];
 
-                        // Validate file type
                         if (!file.type.startsWith('image/')) {
                             alert('Please select a valid image file.');
                             this.value = '';
                             return;
                         }
 
-                        // Validate file size (5MB max)
                         if (file.size > 5 * 1024 * 1024) {
                             alert('File size must be less than 5MB.');
                             this.value = '';
                             return;
                         }
 
-                        // Preview the image
                         img.src = URL.createObjectURL(file);
                         img.style.display = 'block';
                         fileLabel.innerHTML = '<i class="bi bi-upload me-1"></i>change file';
 
-                        // Add remove button if it doesn't exist
                         if (!removeThumbnailBtn) {
                             const removeBtn = document.createElement('button');
                             removeBtn.type = 'button';
@@ -450,21 +443,17 @@
                 });
             }
 
-            // Remove thumbnail functionality
             function removeThumbnailHandler() {
                 img.src = '';
                 img.style.display = 'none';
                 input.value = '';
                 fileLabel.innerHTML = '<i class="bi bi-upload me-1"></i>upload file';
 
-                // Add hidden input to indicate thumbnail removal
                 const hiddenInput = document.createElement('input');
                 hiddenInput.type = 'hidden';
                 hiddenInput.name = 'RemoveThumbnail';
                 hiddenInput.value = 'true';
                 document.getElementById('courseForm').appendChild(hiddenInput);
-
-                // Remove the button
                 this.remove();
             }
 
@@ -473,10 +462,9 @@
             }
         });
 
-        // Grade Level Management Functions
         function addGradeLevel() {
             const container = document.getElementById('gradeLevelsContainer');
-            const gradeOptions = generateGradeOptions(null); // Generate options for a new grade
+            const gradeOptions = generateGradeOptions(null); 
             const newGradeHtml = `
                 <div class="grade-level-card" data-index="${gradeIndex}" data-grade-id="0" data-is-new="true">
                     <div class="grade-level-header">
@@ -533,18 +521,12 @@
             container.insertAdjacentHTML('beforeend', newGradeHtml);
             gradeIndex++;
 
-            // Re-enable validation for new elements
             if (typeof jQuery !== 'undefined' && jQuery.validator && jQuery.validator.unobtrusive) {
                 jQuery.validator.unobtrusive.parse(document);
             }
         }
 
-        // /**
-        //  * Generates HTML options for grade numbers from 7 to 12.
-        //  * Optionally pre-selects a value.
-        //  * param {number|null} selectedValue - The grade number to be pre-selected.
-        //  * returns {string} HTML string of <option> elements.
-        //  */
+       
         function generateGradeOptions(selectedValue) {
             let options = '';
             for (let i = 7; i <= 12; i++) {
@@ -554,10 +536,7 @@
             return options;
         }
 
-        /**
-         * Populates the grade number dropdown for an existing grade level.
-         * This is called on page load for each existing grade.
-         */
+        
         function populateExistingGradeDropdowns() {
             const existingGradeCards = document.querySelectorAll('#gradeLevelsContainer .grade-level-card');
             existingGradeCards.forEach(gradeCard => {
@@ -578,12 +557,10 @@
             const editMode = gradeCard.querySelector('.grade-edit-mode');
             const editButton = gradeCard.querySelector('button[onclick*="editGradeLevel"]');
 
-            // Get current displayed grade number to pre-select in dropdown
             const currentGradeNumber = parseInt(gradeCard.querySelector('.grade-number-display').textContent.replace('Grade ', ''));
             const gradeNumberSelect = gradeCard.querySelector('.grade-number-input');
             gradeNumberSelect.innerHTML = generateGradeOptions(currentGradeNumber); // Repopulate dropdown with current value selected
 
-            // Hide display mode and show edit mode
             displayMode.style.display = 'none';
             editMode.style.display = 'block';
             editButton.style.display = 'none';
@@ -597,43 +574,35 @@
             const gradeNumberSelect = gradeCard.querySelector('.grade-number-input');
             const gradePriceInput = gradeCard.querySelector('.grade-price-input');
 
-            // Client-side validation for required fields
             if (!gradeNumberSelect.value || !gradePriceInput.value) {
                 alert('Please fill in all required fields.');
                 return;
             }
 
             const currentGradeNumber = parseInt(gradeNumberSelect.value);
-            // Client-side validation for grade range (7-12)
             if (currentGradeNumber < 7 || currentGradeNumber > 12) {
                 alert('Grade number must be between 7 and 12.');
                 return;
             }
 
-            // Client-side validation for price (non-negative)
             if (parseFloat(gradePriceInput.value) < 0) {
                 alert('Price cannot be negative.');
                 return;
             }
 
-            // Check for duplicate grade numbers among all visible, non-deleted grade cards
             const allGradeCards = document.querySelectorAll('#gradeLevelsContainer .grade-level-card');
             let hasDuplicate = false;
 
             allGradeCards.forEach(card => {
-                // Only consider cards that are not the current card and are not marked for deletion
                 const isDeleted = card.querySelector('.is-deleted-input')?.value === 'true';
                 if (card !== gradeCard && !isDeleted) {
                     let otherGradeNumber;
                     const otherGradeInput = card.querySelector('.grade-number-input');
                     const otherDisplaySpan = card.querySelector('.grade-number-display');
 
-                    // Determine the other grade's number based on its current mode (edit or display)
-                    // Check if the other card is currently in edit mode and its input has a value
                     if (otherGradeInput && otherGradeInput.closest('.grade-edit-mode').style.display !== 'none' && otherGradeInput.value) {
                         otherGradeNumber = parseInt(otherGradeInput.value);
                     }
-                    // Otherwise, if it's in display mode and its display span has content
                     else if (otherDisplaySpan && otherDisplaySpan.closest('.grade-display-mode').style.display !== 'none' && otherDisplaySpan.textContent) {
                         otherGradeNumber = parseInt(otherDisplaySpan.textContent.replace('Grade ', ''));
                     }
@@ -649,7 +618,6 @@
                 return;
             }
 
-            // Update display values
             const gradeNumberDisplay = gradeCard.querySelector('.grade-number-display');
             const gradePriceDisplay = gradeCard.querySelector('.grade-price-display');
             const gradeTitle = gradeCard.querySelector('.grade-level-title');
@@ -658,7 +626,6 @@
             if (gradePriceDisplay) gradePriceDisplay.textContent = gradePriceInput.value + ' EGP';
             if (gradeTitle) gradeTitle.textContent = 'Grade ' + currentGradeNumber;
 
-            // If it's a new grade, ensure display mode elements are created and shown
             if (gradeCard.dataset.isNew === 'true') {
                 const displayHtml = `
                     <div class="grade-display-mode">
@@ -672,13 +639,10 @@
                         </div>
                     </div>
                 `;
-                // Remove existing display mode if it was a new card that just saved for the first time
                 const existingDisplayMode = gradeCard.querySelector('.grade-display-mode');
                 if (existingDisplayMode) existingDisplayMode.remove();
 
-                editMode.insertAdjacentHTML('beforebegin', displayHtml); // Insert new display mode before edit mode
-
-                // Add edit button if it was a new card (it wouldn't have one initially)
+                editMode.insertAdjacentHTML('beforebegin', displayHtml); 
                 const actionsDiv = gradeCard.querySelector('.grade-actions');
                 const existingEditButton = actionsDiv.querySelector('button[onclick*="editGradeLevel"]');
                 if (!existingEditButton) {
@@ -689,10 +653,9 @@
                     `;
                     actionsDiv.insertAdjacentHTML('afterbegin', editButtonHtml);
                 }
-                gradeCard.removeAttribute('data-is-new'); // Mark as no longer new
+                gradeCard.removeAttribute('data-is-new'); 
             }
 
-            // Switch back to display mode
             editMode.style.display = 'none';
             const newDisplayMode = gradeCard.querySelector('.grade-display-mode');
             if (newDisplayMode) newDisplayMode.style.display = 'block';
@@ -700,7 +663,6 @@
             if (editButton) {
                 editButton.style.display = 'inline-block';
             } else {
-                // For newly created grade levels, show the edit button that was just added
                 const newlyAddedEditButton = gradeCard.querySelector('button[onclick*="editGradeLevel"]');
                 if (newlyAddedEditButton) {
                     newlyAddedEditButton.style.display = 'inline-block';
@@ -715,14 +677,12 @@
             const displayMode = gradeCard.querySelector('.grade-display-mode');
             const editButton = gradeCard.querySelector('button[onclick*="editGradeLevel"]');
 
-            // If this is a new grade level being cancelled, remove it
             if (gradeCard.dataset.isNew === 'true') {
                 gradeCard.remove();
-                updateGradeIndices(); // Reindex after removal
+                updateGradeIndices(); 
                 return;
             }
 
-            // For existing grade levels, reset input values to original displayed values
             const gradeNumberSelect = gradeCard.querySelector('.grade-number-input');
             const gradePriceInput = gradeCard.querySelector('.grade-price-input');
             const gradeNumberDisplay = gradeCard.querySelector('.grade-number-display');
@@ -736,7 +696,6 @@
                 gradePriceInput.value = parseFloat(gradePriceDisplay.textContent.replace(' EGP', ''));
             }
 
-            // Switch back to display mode
             editMode.style.display = 'none';
             if (displayMode) displayMode.style.display = 'block';
             if (editButton) editButton.style.display = 'inline-block';
@@ -747,39 +706,33 @@
             const isDeletedInput = gradeCard.querySelector('.is-deleted-input');
 
             if (gradeCard.dataset.isNew === 'true') {
-                // If it's a newly added grade not yet saved to DB, just remove it from DOM
                 gradeCard.remove();
             } else {
-                // For existing grade levels, mark as deleted and hide
                 if (isDeletedInput) {
                     isDeletedInput.value = 'true';
                 }
-                gradeCard.style.display = 'none'; // Hide the card
+                gradeCard.style.display = 'none'; 
             }
-            updateGradeIndices(); // Reindex after removal or hiding
+            updateGradeIndices(); 
         }
 
-        // Function to re-index the name attributes of grade level inputs after additions/removals
         function updateGradeIndices() {
             const allGradeCards = document.querySelectorAll('#gradeLevelsContainer .grade-level-card:not([style*="display: none"])'); // Only visible cards
-            gradeIndex = 0; // Reset global index for new additions
+            gradeIndex = 0; 
 
             allGradeCards.forEach(card => {
                 card.dataset.index = gradeIndex;
 
-                // Update hidden ID input
                 const idInput = card.querySelector(`input[name$=".Id"]`);
                 if (idInput) {
                     idInput.name = `GradeLevels[${gradeIndex}].Id`;
                 }
 
-                // Update hidden IsDeleted input
                 const isDeletedInput = card.querySelector('.is-deleted-input');
                 if (isDeletedInput) {
                     isDeletedInput.name = `GradeLevels[${gradeIndex}].IsDeleted`;
                 }
 
-                // Update inputs in edit mode
                 const gradeNumberSelect = card.querySelector('.grade-number-input');
                 if (gradeNumberSelect) {
                     gradeNumberSelect.id = `GradeLevels_${gradeIndex}__NumberOfGrade`;
@@ -792,7 +745,6 @@
                     gradePriceInput.name = `GradeLevels[${gradeIndex}].Price`;
                 }
 
-                // Update validation messages' data-valmsg-for attribute
                 const gradeNumberValidationSpan = card.querySelector(`span[data-valmsg-for*="NumberOfGrade"]`);
                 if (gradeNumberValidationSpan) {
                     gradeNumberValidationSpan.dataset.valmsgFor = `GradeLevels[${gradeIndex}].NumberOfGrade`;
@@ -807,7 +759,6 @@
             });
         }
 
-        // Initial call to populate dropdowns for existing grades and update indices on page load
         document.addEventListener('DOMContentLoaded', () => {
             populateExistingGradeDropdowns();
             updateGradeIndices();
