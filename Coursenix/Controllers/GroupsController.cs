@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Coursenix.Models;
 using Coursenix.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Coursenix.Controllers
 {
+    [Authorize(Roles = "Teacher")]
     public class GroupsController : Controller
     {
         private readonly Context _context;
