@@ -69,8 +69,8 @@
                     {
                         var name = User.FindFirst("FullName")?.Value;
                         <li class="cn-user-profile" id="cnUserProfile">
-                            <span class="cn-username"> @name </span>
                             <div class="cn-user-icon">@(name != null ? char.ToUpper(name[0]) : "U")</div>
+                            <span style="padding-inline:5px" class="cn-username"> @name </span>
                             <div class="cn-dropdown-menu" id="cnUserDropdown">
                                 <ul>
                                     @if (User.IsInRole("Teacher"))
