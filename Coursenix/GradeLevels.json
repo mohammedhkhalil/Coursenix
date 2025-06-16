@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 1,
+    "CourseId": 1,
+    "NumberOfGrade": 6,
+    "Price": 100
+  },
+  {
+    "Id": 2,
+    "CourseId": 2,
+    "NumberOfGrade": 6,
+    "Price": 120
+  },
+
+  {
+    "Id": 3,
+    "CourseId": 3,
+    "NumberOfGrade": 7,
+    "Price": 130
+  },
+  {
+    "Id": 4,
+    "CourseId": 4,
+    "NumberOfGrade": 7,
+    "Price": 125
+  },
+
+  {
+    "Id": 5,
+    "CourseId": 5,
+    "NumberOfGrade": 8,
+    "Price": 140
+  },
+  {
+    "Id": 6,
+    "CourseId": 6,
+    "NumberOfGrade": 8,
+    "Price": 135
+  },
+
+  {
+    "Id": 7,
+    "CourseId": 7,
+    "NumberOfGrade": 9,
+    "Price": 145
+  },
+  {
+    "Id": 8,
+    "CourseId": 8,
+    "NumberOfGrade": 9,
+    "Price": 150
+  },
+
+  {
+    "Id": 9,
+    "CourseId": 9,
+    "NumberOfGrade": 10,
+    "Price": 155
+  },
+  {
+    "Id": 10,
+    "CourseId": 10,
+    "NumberOfGrade": 10,
+    "Price": 160
+  },
+
+  {
+    "Id": 11,
+    "CourseId": 11,
+    "NumberOfGrade": 11,
+    "Price": 165
+  },
+  {
+    "Id": 12,
+    "CourseId": 12,
+    "NumberOfGrade": 11,
+    "Price": 170
+  },
+
+  {
+    "Id": 13,
+    "CourseId": 13,
+    "NumberOfGrade": 12,
+    "Price": 180
+  },
+  {
+    "Id": 14,
+    "CourseId": 14,
+    "NumberOfGrade": 12,
+    "Price": 185
+  }
+]

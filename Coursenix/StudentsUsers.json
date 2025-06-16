@@ -1,0 +1,92 @@
+[
+  {
+    "Id": "11",
+    "UserName": "oliver.stone",
+    "Email": "oliver.stone@coursenix.com",
+    "Name": "Oliver Stone",
+    "PhoneNumber": "+11234567801",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "12",
+    "UserName": "amelia.knight",
+    "Email": "amelia.knight@coursenix.com",
+    "Name": "Amelia Knight",
+    "PhoneNumber": "+11234567802",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "13",
+    "UserName": "liam.hunter",
+    "Email": "liam.hunter@coursenix.com",
+    "Name": "Liam Hunter",
+    "PhoneNumber": "+11234567803",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "14",
+    "UserName": "charlotte.foster",
+    "Email": "charlotte.foster@coursenix.com",
+    "Name": "Charlotte Foster",
+    "PhoneNumber": "+11234567804",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "15",
+    "UserName": "elijah.cole",
+    "Email": "elijah.cole@coursenix.com",
+    "Name": "Elijah Cole",
+    "PhoneNumber": "+11234567805",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "16",
+    "UserName": "harper.rivers",
+    "Email": "harper.rivers@coursenix.com",
+    "Name": "Harper Rivers",
+    "PhoneNumber": "+11234567806",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "17",
+    "UserName": "william.dennis",
+    "Email": "william.dennis@coursenix.com",
+    "Name": "William Dennis",
+    "PhoneNumber": "+11234567807",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "18",
+    "UserName": "ava.steele",
+    "Email": "ava.steele@coursenix.com",
+    "Name": "Ava Steele",
+    "PhoneNumber": "+11234567808",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "19",
+    "UserName": "mason.blake",
+    "Email": "mason.blake@coursenix.com",
+    "Name": "Mason Blake",
+    "PhoneNumber": "+11234567809",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  },
+  {
+    "Id": "20",
+    "UserName": "ella.hendrix",
+    "Email": "ella.hendrix@coursenix.com",
+    "Name": "Ella Hendrix",
+    "PhoneNumber": "+11234567810",
+    "RoleType": "Student",
+    "Password": "Student@123"
+  }
+]

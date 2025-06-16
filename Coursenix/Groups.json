@@ -1,0 +1,162 @@
+[
+  {
+    "Id": 1,
+    "GradeLevelId": 1,
+    "Name": "Group 6A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-10T09:00:00",
+    "EndTime": "2025-06-10T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Room 101"
+  },
+  {
+    "Id": 2,
+    "GradeLevelId": 1,
+    "Name": "Group 6B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-10T11:00:00",
+    "EndTime": "2025-06-10T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 2,
+    "Location": "Room 101"
+  },
+
+  {
+    "Id": 3,
+    "GradeLevelId": 3,
+    "Name": "Group 7A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-11T09:00:00",
+    "EndTime": "2025-06-11T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 4,
+    "Location": "Room 201"
+  },
+  {
+    "Id": 4,
+    "GradeLevelId": 3,
+    "Name": "Group 7B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-11T11:00:00",
+    "EndTime": "2025-06-11T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Room 201"
+  },
+
+  {
+    "Id": 5,
+    "GradeLevelId": 5,
+    "Name": "Group 8A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-12T09:00:00",
+    "EndTime": "2025-06-12T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Lab A"
+  },
+  {
+    "Id": 6,
+    "GradeLevelId": 5,
+    "Name": "Group 8B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-12T11:00:00",
+    "EndTime": "2025-06-12T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Lab A"
+  },
+
+  {
+    "Id": 7,
+    "GradeLevelId": 7,
+    "Name": "Group 9A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-13T09:00:00",
+    "EndTime": "2025-06-13T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Lab C"
+  },
+  {
+    "Id": 8,
+    "GradeLevelId": 7,
+    "Name": "Group 9B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-13T11:00:00",
+    "EndTime": "2025-06-13T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 2,
+    "Location": "Lab C"
+  },
+
+  {
+    "Id": 9,
+    "GradeLevelId": 9,
+    "Name": "Group 10A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-14T09:00:00",
+    "EndTime": "2025-06-14T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Room 301"
+  },
+  {
+    "Id": 10,
+    "GradeLevelId": 9,
+    "Name": "Group 10B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-14T11:00:00",
+    "EndTime": "2025-06-14T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Room 301"
+  },
+
+  {
+    "Id": 11,
+    "GradeLevelId": 11,
+    "Name": "Group 11A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-15T09:00:00",
+    "EndTime": "2025-06-15T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 2,
+    "Location": "Lab E"
+  },
+  {
+    "Id": 12,
+    "GradeLevelId": 11,
+    "Name": "Group 11B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-15T11:00:00",
+    "EndTime": "2025-06-15T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Lab E"
+  },
+
+  {
+    "Id": 13,
+    "GradeLevelId": 13,
+    "Name": "Group 12A",
+    "SelectedDays": [ "Mon", "Wed" ],
+    "StartTime": "2025-06-16T09:00:00",
+    "EndTime": "2025-06-16T10:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 3,
+    "Location": "Room 501"
+  },
+  {
+    "Id": 14,
+    "GradeLevelId": 13,
+    "Name": "Group 12B",
+    "SelectedDays": [ "Tue", "Thu" ],
+    "StartTime": "2025-06-16T11:00:00",
+    "EndTime": "2025-06-16T12:30:00",
+    "TotalSeats": 10,
+    "EnrolledStudentsCount": 2,
+    "Location": "Room 501"
+  }
+]

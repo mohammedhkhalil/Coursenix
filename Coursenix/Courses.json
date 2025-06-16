@@ -1,0 +1,171 @@
+[
+  {
+    "Id": 1,
+    "Name": "Introduction to Programming",
+    "Description": "Basics of programming",
+    "Location": "Room 101",
+    "StudentsPerGroup": 10,
+    "TeacherId": 1
+  },
+  {
+    "Id": 2,
+    "Name": "Web Development",
+    "Description": "HTML, CSS, JS fundamentals",
+    "Location": "Room 102",
+    "StudentsPerGroup": 10,
+    "TeacherId": 1
+  },
+
+  {
+    "Id": 3,
+    "Name": "Advanced Mathematics",
+    "Description": "Algebra & Calculus",
+    "Location": "Room 201",
+    "StudentsPerGroup": 8,
+    "TeacherId": 2
+  },
+  {
+    "Id": 4,
+    "Name": "Statistics & Probability",
+    "Description": "High school statistics",
+    "Location": "Room 202",
+    "StudentsPerGroup": 8,
+    "TeacherId": 2
+  },
+
+  {
+    "Id": 5,
+    "Name": "Physics Basics",
+    "Description": "Forces, energy, motion",
+    "Location": "Lab A",
+    "StudentsPerGroup": 12,
+    "TeacherId": 3
+  },
+  {
+    "Id": 6,
+    "Name": "Electromagnetism",
+    "Description": "Circuits & fields",
+    "Location": "Lab B",
+    "StudentsPerGroup": 12,
+    "TeacherId": 3
+  },
+
+  {
+    "Id": 7,
+    "Name": "General Chemistry",
+    "Description": "Atomic structure, bonding",
+    "Location": "Lab C",
+    "StudentsPerGroup": 10,
+    "TeacherId": 4
+  },
+  {
+    "Id": 8,
+    "Name": "Organic Chemistry",
+    "Description": "Hydrocarbons & reactions",
+    "Location": "Lab D",
+    "StudentsPerGroup": 10,
+    "TeacherId": 4
+  },
+
+  {
+    "Id": 9,
+    "Name": "English Grammar",
+    "Description": "Writing and grammar",
+    "Location": "Room 301",
+    "StudentsPerGroup": 15,
+    "TeacherId": 5
+  },
+  {
+    "Id": 10,
+    "Name": "Creative Writing",
+    "Description": "Storytelling techniques",
+    "Location": "Room 302",
+    "StudentsPerGroup": 15,
+    "TeacherId": 5
+  },
+
+  {
+    "Id": 11,
+    "Name": "Biology Intro",
+    "Description": "Cells, genetics, ecology",
+    "Location": "Lab E",
+    "StudentsPerGroup": 10,
+    "TeacherId": 6
+  },
+  {
+    "Id": 12,
+    "Name": "Human Anatomy",
+    "Description": "Body systems overview",
+    "Location": "Lab F",
+    "StudentsPerGroup": 10,
+    "TeacherId": 6
+  },
+
+  {
+    "Id": 13,
+    "Name": "Geography Fundamentals",
+    "Description": "Maps, climate, landforms",
+    "Location": "Room 401",
+    "StudentsPerGroup": 12,
+    "TeacherId": 7
+  },
+  {
+    "Id": 14,
+    "Name": "Environmental Studies",
+    "Description": "Ecosystems & sustainability",
+    "Location": "Room 402",
+    "StudentsPerGroup": 12,
+    "TeacherId": 7
+  },
+
+  {
+    "Id": 15,
+    "Name": "History of Civilization",
+    "Description": "Ancient to modern world",
+    "Location": "Room 501",
+    "StudentsPerGroup": 15,
+    "TeacherId": 8
+  },
+  {
+    "Id": 16,
+    "Name": "Modern World History",
+    "Description": "20th century focus",
+    "Location": "Room 502",
+    "StudentsPerGroup": 15,
+    "TeacherId": 8
+  },
+
+  {
+    "Id": 17,
+    "Name": "Art & Design",
+    "Description": "Visual creativity",
+    "Location": "Studio A",
+    "StudentsPerGroup": 10,
+    "TeacherId": 9
+  },
+  {
+    "Id": 18,
+    "Name": "Photography Basics",
+    "Description": "Framing & lighting",
+    "Location": "Studio B",
+    "StudentsPerGroup": 10,
+    "TeacherId": 9
+  },
+
+  {
+    "Id": 19,
+    "Name": "Computer Science",
+    "Description": "Algorithms & logic",
+    "Location": "Lab G",
+    "StudentsPerGroup": 10,
+    "TeacherId": 10
+  },
+  {
+    "Id": 20,
+    "Name": "Data Science Basics",
+    "Description": "Data, Python & stats",
+    "Location": "Lab H",
+    "StudentsPerGroup": 10,
+    "TeacherId": 10
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "Id": "1",
+    "UserName": "alice.johnson",
+    "Email": "alice.johnson@coursenix.com",
+    "Name": "Alice Johnson",
+    "PhoneNumber": "+1234567890",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "2",
+    "UserName": "bob.smith",
+    "Email": "bob.smith@coursenix.com",
+    "Name": "Bob Smith",
+    "PhoneNumber": "+0987654321",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "3",
+    "UserName": "clara.davis",
+    "Email": "clara.davis@coursenix.com",
+    "Name": "Clara Davis",
+    "PhoneNumber": "+14150000000",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "4",
+    "UserName": "daniel.thompson",
+    "Email": "daniel.thompson@coursenix.com",
+    "Name": "Daniel Thompson",
+    "PhoneNumber": "+14152223333",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "5",
+    "UserName": "eva.wilson",
+    "Email": "eva.wilson@coursenix.com",
+    "Name": "Eva Wilson",
+    "PhoneNumber": "+16175551234",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "6",
+    "UserName": "frank.martin",
+    "Email": "frank.martin@coursenix.com",
+    "Name": "Frank Martin",
+    "PhoneNumber": "+441234567890",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "7",
+    "UserName": "grace.lee",
+    "Email": "grace.lee@coursenix.com",
+    "Name": "Grace Lee",
+    "PhoneNumber": "+14155557777",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "8",
+    "UserName": "henry.walker",
+    "Email": "henry.walker@coursenix.com",
+    "Name": "Henry Walker",
+    "PhoneNumber": "+33123456789",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "9",
+    "UserName": "ivy.brown",
+    "Email": "ivy.brown@coursenix.com",
+    "Name": "Ivy Brown",
+    "PhoneNumber": "+5511987654321",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  },
+  {
+    "Id": "10",
+    "UserName": "jack.miller",
+    "Email": "jack.miller@coursenix.com",
+    "Name": "Jack Miller",
+    "PhoneNumber": "+819012345678",
+    "RoleType": "Teacher",
+    "Password": "Teacher@123"
+  }
+]
