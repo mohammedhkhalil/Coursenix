@@ -42,6 +42,6 @@ Coursenix provides an end-to-end solution for organizing private lessons:
 ## 🔧 Setup Instructions
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/mohammedhkhalil/Coursenix.git
-   cd Coursenix
+```bash
+git clone https://github.com/mohammedhkhalil/Coursenix.git
+cd Coursenix
