@@ -35,7 +35,7 @@ namespace Coursenix.Controllers
                     UserName = t.Name,
                     PP = string.IsNullOrEmpty(t.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{t.ProfilePicture}",
                     UserEmail = t.Email,
-                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd == null
+                    Status = t.AppUser.LockoutEnd <= DateTime.Now || t.AppUser.LockoutEnd == null
                     ? true
                     : false,
                     AppUserId = t.AppUserId
@@ -52,7 +52,7 @@ namespace Coursenix.Controllers
                     UserName = t.Name,
                     //PP = string.IsNullOrEmpty(t.ProfilePicture) ? "/assets/OIP1.svg" : $"/uploads/thumbnails/{t.ProfilePicture}",
                     UserEmail = t.Email,
-                    Status = t.AppUser.LockoutEnd < DateTime.Now || t.AppUser.LockoutEnd == null
+                    Status = t.AppUser.LockoutEnd <= DateTime.Now || t.AppUser.LockoutEnd == null
                     ? true
                     : false,
                     AppUserId = t.AppUserId
@@ -67,7 +67,9 @@ namespace Coursenix.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            user.LockoutEnd = DateTime.Now.AddYears(100);
+            user.LockoutEnd = DateTime.UtcNow.AddYears(100);
+            await _userManager.UpdateAsync(user);
+
 
             await _userManager.UpdateAsync(user);
             if (user.RoleType == "Teacher")
@@ -96,7 +98,9 @@ namespace Coursenix.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            user.LockoutEnd = DateTime.Now;
+            user.LockoutEnd = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+
 
             await _userManager.UpdateAsync(user);
             if (user.RoleType == "Teacher")

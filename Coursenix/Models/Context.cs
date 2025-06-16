@@ -111,6 +111,30 @@ namespace Coursenix.Models
             modelBuilder.Entity<Group>()
                 .Property(g => g.EndTime)
                 .HasColumnType("datetime2"); // Use datetime2 for DateTime properties
+
+            //modelBuilder.Entity<Course>().ToTable("Courses");
+            //string CoursesJson = System.IO.File.ReadAllText("Courses.json");
+            //List<Course> courses = System.Text.Json.JsonSerializer.Deserialize<List<Course>>(CoursesJson);
+            //foreach (var i in courses)
+            //{
+            //    modelBuilder.Entity<Course>().HasData(i);
+            //}
+
+            //modelBuilder.Entity<GradeLevel>().ToTable("GradeLevels");
+            //string GradeLevelsJson = System.IO.File.ReadAllText("GradeLevels.json");
+            //List<GradeLevel> GradeLevels = System.Text.Json.JsonSerializer.Deserialize<List<GradeLevel>>(GradeLevelsJson);
+            //foreach (var i in GradeLevels)
+            //{
+            //    modelBuilder.Entity<GradeLevel>().HasData(i);
+            //}
+
+            //modelBuilder.Entity<Group>().ToTable("Groups");
+            //string GroupsJson = System.IO.File.ReadAllText("Groups.json");
+            //List<Group> Groups = System.Text.Json.JsonSerializer.Deserialize<List<Group>>(GroupsJson);
+            //foreach (var i in Groups)
+            //{
+            //    modelBuilder.Entity<Group>().HasData(i);
+            //}
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

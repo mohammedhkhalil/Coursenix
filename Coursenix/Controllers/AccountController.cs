@@ -242,10 +242,10 @@ namespace Coursenix.Controllers
 
           
             //-----------------///// if blocked /////--------------
-            if (userModel.LockoutEnd <= DateTime.Now)
-            {
-                return RedirectToAction("Logout");
-            }
+            //if (userModel.LockoutEnd <= DateTime.Now)
+            //{
+            //    return RedirectToAction("Logout");
+            //}
 
             //await userManager.AddToRoleAsync(userModel, userVM.RoleType);  // add role 
             // 6) Sign the user in (creates the authentication cookie & cliams).
